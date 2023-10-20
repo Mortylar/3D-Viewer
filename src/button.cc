@@ -1,6 +1,5 @@
 #include <gtk/gtk.h>
 
-#include "input_pannel.h"
 
 static void Activate(GtkApplication *app, gpointer user_data) {
   GtkWidget *window;

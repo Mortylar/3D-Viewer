@@ -3,51 +3,58 @@
 
 #include<gtk/gtk.h>
 
-#include "common_pannel.h"
+#include "mother_pannel.h"
 
-class InputPannel: private CommonPannel{
+class InputPannel: public MotherPannel{
 
   public:
     InputPannel() {
       InitPannel();
     };
+    
     ~InputPannel(){};
 
     void InitPannel() {
-      base_grid_ = gtk_grid_new();
-      x_label_ = gtk_label_new("x_label");
-      x_line_ = gtk_text_new();
-
-      label_frame_ = gtk_frame_new(nullptr);
-      gtk_frame_set_child(GTK_FRAME(label_frame_), x_label_);
-
-      line_frame_ = gtk_frame_new(nullptr); 
-      gtk_frame_set_child(GTK_FRAME(line_frame_), x_line_);
-
-      gtk_grid_attach(GTK_GRID(base_grid_), label_frame_, 0, 0, 1, 1);
-      gtk_grid_attach(GTK_GRID(base_grid_), line_frame_, 1, 0, 1, 1);
-
-      gtk_frame_set_child(GTK_FRAME(frame_), base_grid_);
-      //common_frame_ = gtk_frame_new(NULL);
-      //gtk_frame_set_child(GTK_FRAME(common_frame_), base_grid_);
-      //common_grid_ = gtk_grid_new();
-      //gtk_grid_attach(GTK_GRID(common_grid_), common_frame_, 0,0,1,1);
+      InitGrid();
+      InitLabel();
+      InitButton();
     }
 
-    GtkWidget* GetRoot() {
-     // return common_grid_;
-    return grid_;
+    void SetLabelText(const char* text) {
+      gtk_label_set_text(GTK_LABEL(label_), text);
     }
+
 
   private:
-    GtkWidget* base_grid_ = nullptr;
-    GtkWidget* x_label_ = nullptr;
-    GtkWidget* x_line_ = nullptr;
-    GtkWidget* label_frame_ = nullptr;
-    GtkWidget* line_frame_ = nullptr;
+    GtkWidget* grid_ = nullptr;
 
-    //GtkWidget* common_frame_;
-    //GtkWidget* common_grid_;
+    GtkWidget* label_ = nullptr;
+    GtkWidget* frame_label_ = nullptr;
+
+    GtkWidget* spin_button_ = nullptr;
+    GtkWidget* frame_spin_button_ = nullptr;
+    GtkAdjustment* adjustment_ = nullptr;
+
+    void InitGrid() {
+      grid_ = gtk_grid_new();
+      gtk_frame_set_child(GTK_FRAME(GetFrame()), grid_);
+    }
+
+    void InitLabel() { 
+      label_ = gtk_label_new("AAAAAAAAAAAAAAAA");
+      frame_label_ = gtk_frame_new(nullptr);
+      gtk_frame_set_child(GTK_FRAME(frame_label_), label_);
+      gtk_grid_attach(GTK_GRID(grid_), frame_label_, 0, 0, 1, 1);
+    }
+
+    void InitButton() {
+      adjustment_ = gtk_adjustment_new(0.0, -1e100, 1e100, 1, 0, 0);
+      spin_button_ = gtk_spin_button_new(adjustment_, 100, 20);
+      frame_spin_button_ = gtk_frame_new(nullptr);
+      gtk_frame_set_child(GTK_FRAME(frame_spin_button_), spin_button_);
+      gtk_grid_attach(GTK_GRID(grid_), frame_spin_button_, 1, 0, 1, 1);
+    }
+
 };
 
 #endif

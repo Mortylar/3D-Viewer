@@ -1,11 +1,11 @@
 #include <gtk/gtk.h>
 
-#include "input_pannel.h"
+#include "pannel.h"
 
 static void Activate(GtkApplication *app, gpointer user_data) {
   GtkWidget *window;
   GtkWidget* grid;
-  InputPannel pannel;
+  Pannel pannel(3);
 
   window = gtk_application_window_new (app);
   gtk_window_set_title (GTK_WINDOW (window), "Window");
@@ -16,7 +16,12 @@ static void Activate(GtkApplication *app, gpointer user_data) {
 
 
   gtk_grid_attach(GTK_GRID(grid), pannel.GetRoot(), 0,0,1,1);
-
+  pannel.SetName("pannel");
+  const char** names = new const char*;
+  names[0] = "lable_x";
+  names[1] = "lable_y";
+  names[2] = "lable_z";
+  pannel.SetLabels(names);
 
   gtk_widget_show (window);
 }
