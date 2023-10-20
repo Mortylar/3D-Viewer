@@ -4,6 +4,8 @@
 #include "mother_pannel.h"
 #include "input_pannel.h"
 
+#include <initializer_list>
+
 class Pannel: public MotherPannel {
   public:
     Pannel():size_(1) {
@@ -16,11 +18,26 @@ class Pannel: public MotherPannel {
       InitGrid();
     }
 
+    Pannel(std::initializer_list<const char*> const &names):Pannel(names.size()) {
+      auto it = names.begin();
+      for (size_t i = 0; i < size_; ++i) {
+        SetLabel(i, *it++);
+      }
+    }
+
     ~Pannel() {
       delete[] pannels_;
     }
 
+
+    size_t GetSize() {
+      return size_;
+    }
+
     void SetLabels(const char** name_arr);
+    void SetLabel(size_t pos, const char* name);
+    double GetValue(size_t pos);
+
 
 
 

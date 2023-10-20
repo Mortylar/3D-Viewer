@@ -24,6 +24,9 @@ class InputPannel: public MotherPannel{
       gtk_label_set_text(GTK_LABEL(label_), text);
     }
 
+    double GetValue() {
+      return gtk_spin_button_get_value(GTK_SPIN_BUTTON(spin_button_));
+    }
 
   private:
     GtkWidget* grid_ = nullptr;
@@ -41,7 +44,7 @@ class InputPannel: public MotherPannel{
     }
 
     void InitLabel() { 
-      label_ = gtk_label_new("AAAAAAAAAAAAAAAA");
+      label_ = gtk_label_new("");
       frame_label_ = gtk_frame_new(nullptr);
       gtk_frame_set_child(GTK_FRAME(frame_label_), label_);
       gtk_grid_attach(GTK_GRID(grid_), frame_label_, 0, 0, 1, 1);

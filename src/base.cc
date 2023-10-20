@@ -5,7 +5,7 @@
 static void Activate(GtkApplication *app, gpointer user_data) {
   GtkWidget *window;
   GtkWidget* grid;
-  Pannel pannel(3);
+  Pannel pannel{"label_x", "label_y", "label_z"};
 
   window = gtk_application_window_new (app);
   gtk_window_set_title (GTK_WINDOW (window), "Window");
@@ -21,7 +21,7 @@ static void Activate(GtkApplication *app, gpointer user_data) {
   names[0] = "lable_x";
   names[1] = "lable_y";
   names[2] = "lable_z";
-  pannel.SetLabels(names);
+ // pannel.SetLabels(names);
 
   gtk_widget_show (window);
 }

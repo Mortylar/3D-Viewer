@@ -1,5 +1,5 @@
 #include "pannel.h"
-
+#include <stdexcept>
 
 void Pannel::PannelsAllocate() {
   pannels_ = new InputPannel [size_];
@@ -13,8 +13,19 @@ void Pannel::InitGrid() {
   gtk_frame_set_child(GTK_FRAME(GetFrame()), grid_);
 }
 
+void Pannel::SetLabel(size_t pos, const char* name) {
+  pannels_[pos].SetLabelText(name);
+}
+
 void Pannel::SetLabels(const char** name_arr) {
   for(size_t i = 0; i < size_; ++i) {
-    pannels_[i].SetLabelText(name_arr[i]);
+    SetLabel(i, name_arr[i]);
   }
+}
+
+double Pannel::GetValue(size_t pos) {
+  if (pos >= size_) {
+    throw std::out_of_range("Out of range");
+  }
+  return pannels_[pos].GetValue();
 }
