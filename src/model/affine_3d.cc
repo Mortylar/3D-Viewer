@@ -42,8 +42,15 @@ void s21::Affine3D::Scaling(std::vector<double>& v, double x_scale, double y_sca
   }
 }
 
-
-
+void s21::Affine3D::Normalize(std::vector<double>& v) {
+  size_t size = v.size();
+  CheckDimension(size);
+  double common_wide = abs(v[0]);
+  for (size_t i = 1; i < size; ++i) {
+    if (abs(v[i]) > common_wide) common_wide = abs(v[i]);
+  }
+  if (common_wide > 1.0) Scaling(v, 1.0/common_wide, 1.0/common_wide, 1.0/common_wide);
+}
 
 
 
