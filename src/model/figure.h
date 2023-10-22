@@ -11,7 +11,8 @@ class Figure {
 	}
 
 	size_t GetVertexCount();
-	const double* GetVertex();
+	const double* GetVertexData();
+	std::vector<double>& GetVertex();
 	void AddVertex(double x, double y, double z);
     void SwapVertex(std::vector<double>*);  //TODO is needed??
 
