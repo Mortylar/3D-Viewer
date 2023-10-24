@@ -13,7 +13,7 @@ int main() {
     buffer = '\0';
     fin >> buffer;
 	std::cout << i << "<=>" << buffer << "|||" << std::endl;
-	+i;
+	++i;
   }
   return 0;
 }

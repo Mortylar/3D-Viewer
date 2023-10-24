@@ -5,6 +5,11 @@
 #include <vector>
 
 s21::Figure* s21::Figure::self_ = nullptr;
+s21::FigureKiller s21::Figure::killer_;
+
+s21::FigureKiller::~FigureKiller() {
+  delete figure_;
+}
 
 //---------------------------vertexes--------------------------//
 

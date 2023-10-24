@@ -1,11 +1,11 @@
 #include "parser.h"
 
 #include <fstream>
-#include <std::exception>
+#include <stdexcept>
 
 
-void s21::Parser::ParserMethod(const char* file name) {
-  ifstream fin(file_name);
+void s21::Parser::ParserMethod(const char* file_name) {
+  std::ifstream fin(file_name);
   if (!fin.is_open())
     throw std::runtime_error("s21::Parser::ParserMethod(const char*) - couldn't open the file");
 

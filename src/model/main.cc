@@ -28,5 +28,6 @@ int main() {
   Print();
   A.Normalize(v);
   Print();
+  //s21::Figure::GetInstance()->Remove();
   return 0;
 }

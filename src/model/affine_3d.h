@@ -2,6 +2,7 @@
 #define SRC_AFFINE_3D_H_
 
 #include <vector>
+#include <cstddef>
 
 namespace s21 {
 class Affine3D {
