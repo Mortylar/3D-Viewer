@@ -6,7 +6,10 @@ a:
 	./a.out
 
 p:
-	$(CC) $(CC_FLAGS) test.cc
+	$(CC) $(CC_FLAGS) parser.cc
+
+t:
+	$(CC) test.cc
 
 leaks: a
 	leaks -atExit -- ./a.out
