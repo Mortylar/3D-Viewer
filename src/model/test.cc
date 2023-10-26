@@ -24,7 +24,9 @@ int main() {
   std::cout << "\n=========================================" << std::endl;
   
   //fin.seekg(0);
-  fin.seekg(v_pos);
+  int shift = 0;
+  std::cin >> shift;
+  fin.seekg(v_pos - shift);
   fin >> buffer;
   std::cout <<"buffer is" << buffer << std::endl;
   return 0;
