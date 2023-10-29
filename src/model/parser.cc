@@ -7,6 +7,8 @@
 
 #include <iostream> //TODO remove
 
+#include "figure.h"
+
 void s21::Parser::ParserMethod(const char* file_name) {
   std::ifstream fin(file_name);
   if (!fin.is_open())
@@ -30,39 +32,56 @@ void s21::Parser::ParserMethod(const char* file_name) {
 void s21::Parser::ReadVertexes(std::ifstream& fin) {
   char buffer[buffer_length_]{0};
   double vertex[3]{0};
-  std::cout << "\n =====vertex===== " << std::endl;
   for (int i = 0; i < 3; ++i) {
     fin >> buffer;
     if (!IsNumber(buffer[0]))
       throw std::invalid_argument("s21::Parser - object file include less " 
                  "then 3 coordinates in one vertex");
     vertex[i] = std::strtod(buffer, nullptr);
-    std::cout << i << " <=> " << vertex[i] << std::endl;
   }
+  s21::Figure::GetInstance()->AddVertex(vertex[0], vertex[1], vertex[2]);
 }
 
 void s21::Parser::ReadSurface(std::ifstream& fin) {
   char buffer[buffer_length_]{0};
   std::vector<int> surface;
+  int v_count = static_cast<int>(s21::Figure::GetInstance()->GetVertexCount());
   fin >> buffer;
   while(IsNumber(buffer[0])) {
-    surface.push_back(std::atoi(buffer));
+    int vertex_id = std::atoi(buffer);
+    if (vertex_id < 0) {
+      vertex_id = v_count + 1 + vertex_id;
+    }
+    if ((vertex_id <= 0) || (vertex_id > v_count))
+      throw std::invalid_argument("s21::Parser - invalid number of vertex");
+
+    surface.push_back(vertex_id);
     fin >> buffer;
   }
+  s21::Figure::GetInstance()->AddSurface(static_cast<const std::vector<int>>(surface));
   fin.seekg(fin.tellg() - static_cast<long int>(strlen(buffer) + 1));
-  std::cout << "\n----surface-----" << std::endl;
-  for(size_t i = 0; i < surface.size(); ++i) {
-    std::cout << i << " <=> " << surface[i] << std::endl;
-  }
 }
 
 bool s21::Parser::IsNumber(char ch) {
   return std::isdigit(static_cast<unsigned char>(ch)) || ('+' == ch ) || ('-' == ch);
 }
 
+/*
 int main() {
   s21::Parser A;
   A.ParserMethod("123");
+  s21::Figure* fig = s21::Figure::GetInstance();
+
+  std::cout << "vertex count = " << fig->GetSurfacesCount() << std::endl;
+  for (int i = 0; i < fig->GetSurfacesCount(); ++i) {
+    std::cout << "surfaces #" << i << std::endl;
+    const std::vector<int> sur = fig->GetSurface(i);
+    for (int j = 0; j < sur.size(); ++j) {
+      std::cout << j << " <=> " << sur[j] << std::endl;
+    }
+  }
+  
+  
   return 0;
 }
-
+*/

@@ -14,7 +14,7 @@ s21::FigureKiller::~FigureKiller() {
 //---------------------------vertexes--------------------------//
 
 size_t s21::Figure::GetVertexCount() {
-  return vertex_->size();
+  return vertex_->size() / 3;
 }
 
 std::vector<double>& s21::Figure::GetVertex() {
@@ -43,11 +43,11 @@ size_t s21::Figure::GetSurfacesCount() {
   return surfaces_->size();
 }
 
-const std::vector<double>& s21::Figure::GetSurface(size_t i) {
+const std::vector<int>& s21::Figure::GetSurface(size_t i) {
   return surfaces_->at(i);
 }
 
-void s21::Figure::AddSurface(const std::vector<double>& surface) {
+void s21::Figure::AddSurface(const std::vector<int>& surface) {
   surfaces_->push_back(surface);
 }
 
