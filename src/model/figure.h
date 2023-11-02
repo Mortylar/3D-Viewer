@@ -6,8 +6,6 @@
 
 
 //singleton
-
-
 namespace s21 {
 
 class Figure;
@@ -36,14 +34,12 @@ class Figure {
 
     size_t GetVertexCount();
     const double* GetVertexData();
-    std::vector<double>& GetVertex();
+    const std::vector<double>& GetVertex();
     void AddVertex(double x, double y, double z);
-    void SwapVertex(std::vector<double>*);  //TODO is needed??
 
     size_t GetSurfacesCount();
     const std::vector<int>& GetSurface(size_t n);
     void AddSurface(const std::vector<int>& x);
-    void SwapSurface(size_t pos, const std::vector<int>& surface);
 
   private:
     static Figure* self_;

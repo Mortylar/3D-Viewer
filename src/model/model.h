@@ -1,7 +1,7 @@
 #ifndef SRC_MODEL_MODEL_H_
 #define SRC_MODEL_MODEL_H_
 
-//facade
+//fasade
 
 #include "affine_3d.h"
 #include "parser.h"
@@ -9,8 +9,15 @@
 namespace s21 {
 class Model {
   public:
-    Model() = default;
-    ~Model() = default;
+    Model() {
+      affine_ = new Affine3D();
+      parser_ = new Parser();
+    };
+
+    ~Model() {
+      delete affine_;
+      delete parser_;
+    };
 
     void ReadFile(const char* file_name);
 
@@ -19,9 +26,16 @@ class Model {
     void Scaling(std::vector<double>& v, double, double, double);
     void Normalize(std::vector<double>& v);
 
+    size_t GetVertexCount();
+    const double* GetVertexData();
+    const std::vector<double>& GetVertex();
+
+    size_t GetSurfacesCount();
+    const std::vector<int>& GetSurface(size_t n);
+
   private:
-    Affine3D affine_;
-    Parser parser_;
+    Affine3D* affine_;
+    Parser* parser_;
 };
 }
 

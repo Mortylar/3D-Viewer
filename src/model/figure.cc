@@ -17,7 +17,7 @@ size_t s21::Figure::GetVertexCount() {
   return vertex_->size() / 3;
 }
 
-std::vector<double>& s21::Figure::GetVertex() {
+const std::vector<double>& s21::Figure::GetVertex() {
   return *vertex_;
 }
 
@@ -29,11 +29,6 @@ void s21::Figure::AddVertex(double x, double y, double z) {
   vertex_->push_back(x);
   vertex_->push_back(y);
   vertex_->push_back(z);
-}
-
-
-void s21::Figure::SwapVertex(std::vector<double>* x) {
-  std::swap(vertex_, x);
 }
 
 

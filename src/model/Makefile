@@ -1,15 +1,11 @@
 CC = g++ -std=c++17
-CC_FLAGS = -Wall -Werror -Wextra
+CFLAGS = -Wall -Werror -Wextra
+GTK_FLAGS=`pkg-config --cflags --libs gtk4`
+SOURCE=$(wildcard *.cc)
 
 a:
-	$(CC)  $(CC_FLAGS) main.cc affine_3d.cc figure.cc
+	$(CC) $(GTK_FLAGS) $(SOURCE)
 	./a.out
-
-p:
-	$(CC) $(CC_FLAGS) parser.cc
-
-t:
-	$(CC) test.cc
 
 leaks: a
 	leaks -atExit -- ./a.out

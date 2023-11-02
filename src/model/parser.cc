@@ -5,8 +5,6 @@
 #include <vector>
 #include <cstring>
 
-#include <iostream> //TODO remove
-
 #include "figure.h"
 
 void s21::Parser::ParserMethod(const char* file_name) {
@@ -66,22 +64,3 @@ bool s21::Parser::IsNumber(char ch) {
   return std::isdigit(static_cast<unsigned char>(ch)) || ('+' == ch ) || ('-' == ch);
 }
 
-/*
-int main() {
-  s21::Parser A;
-  A.ParserMethod("123");
-  s21::Figure* fig = s21::Figure::GetInstance();
-
-  std::cout << "vertex count = " << fig->GetSurfacesCount() << std::endl;
-  for (int i = 0; i < fig->GetSurfacesCount(); ++i) {
-    std::cout << "surfaces #" << i << std::endl;
-    const std::vector<int> sur = fig->GetSurface(i);
-    for (int j = 0; j < sur.size(); ++j) {
-      std::cout << j << " <=> " << sur[j] << std::endl;
-    }
-  }
-  
-  
-  return 0;
-}
-*/
