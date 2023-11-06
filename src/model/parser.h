@@ -16,6 +16,7 @@ class Parser {
     
     void ReadVertexes(std::ifstream& fin);
     void ReadSurface(std::ifstream& fin);
+    void ResetFigure();
 
     bool IsNumber(char ch);
 };

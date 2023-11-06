@@ -41,6 +41,8 @@ class Figure {
     const std::vector<int>& GetSurface(size_t n);
     void AddSurface(const std::vector<int>& x);
 
+    void Clear();
+
   private:
     static Figure* self_;
     static FigureKiller killer_;

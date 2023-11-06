@@ -7,11 +7,14 @@
 
 #include "figure.h"
 
+#include <iostream> //TODO remove
+
 void s21::Parser::ParserMethod(const char* file_name) {
   std::ifstream fin(file_name);
   if (!fin.is_open())
     throw std::runtime_error("s21::Parser::ParserMethod(const char*) - couldn't open the file");
 
+  ResetFigure();
   char buffer[buffer_length_]{0};
   fin >> buffer;
   while (buffer[0]) {
@@ -25,6 +28,8 @@ void s21::Parser::ParserMethod(const char* file_name) {
   }
 
   fin.close();
+  if (!s21::Figure::GetInstance()->GetVertexCount())
+    throw std::invalid_argument("Empty figure");
 }
 
 void s21::Parser::ReadVertexes(std::ifstream& fin) {
@@ -32,7 +37,7 @@ void s21::Parser::ReadVertexes(std::ifstream& fin) {
   double vertex[3]{0};
   for (int i = 0; i < 3; ++i) {
     fin >> buffer;
-    if (!IsNumber(buffer[0]))
+    if ((!IsNumber(buffer[0])) || (fin.eof()))
       throw std::invalid_argument("s21::Parser - object file include less " 
                  "then 3 coordinates in one vertex");
     vertex[i] = std::strtod(buffer, nullptr);
@@ -64,3 +69,6 @@ bool s21::Parser::IsNumber(char ch) {
   return std::isdigit(static_cast<unsigned char>(ch)) || ('+' == ch ) || ('-' == ch);
 }
 
+void s21::Parser::ResetFigure() {
+  s21::Figure::GetInstance()->Clear();
+}

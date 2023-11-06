@@ -11,6 +11,11 @@ s21::FigureKiller::~FigureKiller() {
   delete figure_;
 }
 
+void s21::Figure::Clear() {
+  vertex_->clear();
+  surfaces_->clear();
+}
+
 //---------------------------vertexes--------------------------//
 
 size_t s21::Figure::GetVertexCount() {
