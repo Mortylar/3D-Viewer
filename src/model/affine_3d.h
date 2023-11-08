@@ -14,6 +14,7 @@ class Affine3D {
     void Rotation(std::vector<double>& v, double x_rad, double y_rad, double z_rad);
     void Scaling(std::vector<double>& v, double x_scale, double y_scale, double z_scale);
     void Normalize(std::vector<double>& v);
+    void Centring(std::vector<double> & v);
 
   private:
     const size_t dim_ = 3;

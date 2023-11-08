@@ -26,9 +26,9 @@ const std::vector<double>& s21::Figure::GetVertex() {
   return *vertex_;
 }
 
-const double* s21::Figure::GetVertexData() {
-  return vertex_->data();
-}
+//const double* s21::Figure::GetVertexData() {
+//  return vertex_->data();
+//}
 
 void s21::Figure::AddVertex(double x, double y, double z) {
   vertex_->push_back(x);

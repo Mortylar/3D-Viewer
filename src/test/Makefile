@@ -34,5 +34,5 @@ coverage:
 
 
 clean:
-	-rm -rf report/ *.info *.gcda *.gcno *.o ##$(EXECUTION)
+	-rm -rf report/ *.info *.gcda *.gcno *.o $(EXECUTION)
 

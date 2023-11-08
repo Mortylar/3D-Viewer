@@ -25,9 +25,9 @@ class Model {
     void Rotation(std::vector<double>& v, double, double, double);
     void Scaling(std::vector<double>& v, double, double, double);
     void Normalize(std::vector<double>& v);
+    void Centring(std::vector<double>& v);
 
     size_t GetVertexCount();
-    const double* GetVertexData();
     const std::vector<double>& GetVertex();
 
     size_t GetSurfacesCount();
@@ -36,6 +36,10 @@ class Model {
   private:
     Affine3D* affine_;
     Parser* parser_;
+
+    Model(const Model&);
+    Model(const Model&&);
+    Model& operator=(const Model&);
 };
 }
 

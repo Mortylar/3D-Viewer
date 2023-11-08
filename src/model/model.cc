@@ -24,16 +24,17 @@ void s21::Model::Normalize(std::vector<double>& v) {
   affine_->Normalize(v);
 }
 
+void s21::Model::Centring(std::vector<double>& v) {
+  affine_->Centring(v);
+}
+
+
 size_t s21::Model::GetVertexCount() {
   return s21::Figure::GetInstance()->GetVertexCount();
 }
 
 const std::vector<double>& s21::Model::GetVertex() { 
   return s21::Figure::GetInstance()->GetVertex();
-}
-
-const double* s21::Model::GetVertexData() {
-  return s21::Figure::GetInstance()->GetVertexData();
 }
 
 

@@ -3,6 +3,8 @@
 #include <cmath>
 #include <stdexcept>
 
+#include <iostream> //TODO remove
+
 void s21::Affine3D::Translation(std::vector<double>& v, double dx, double dy, double dz) {
   size_t size = v.size();
   CheckDimension(size);
@@ -45,15 +47,27 @@ void s21::Affine3D::Scaling(std::vector<double>& v, double x_scale, double y_sca
 void s21::Affine3D::Normalize(std::vector<double>& v) {
   size_t size = v.size();
   CheckDimension(size);
-  double common_wide = abs(v[0]);
+  double common_wide = fabs(v[0]);
   for (size_t i = 1; i < size; ++i) {
-    if (abs(v[i]) > common_wide) common_wide = abs(v[i]);
+    if (fabs(v[i]) > common_wide) common_wide = fabs(v[i]);
   }
-  if (common_wide > 1.0) Scaling(v, 1.0/common_wide, 1.0/common_wide, 1.0/common_wide);
+  if ((common_wide > 1.0) || (common_wide < 0.5))
+    Scaling(v, 1.0/common_wide, 1.0/common_wide, 1.0/common_wide);
 }
 
-
-
+void s21::Affine3D::Centring(std::vector<double>& v) {
+  size_t size = v.size();
+  CheckDimension(size);
+  std::vector<double> min_v{v[0], v[1], v[2]};
+  std::vector<double> max_v(min_v);
+  for (size_t i = 3; i < size; i += 3) {
+    for (size_t j = 0; j < dim_; ++j) {
+      if (min_v[j] > v[i + j]) min_v[j] = v[i + j];
+      if (max_v[j] < v[i + j]) max_v[j] = v[i + j];
+    }
+  }
+  Translation(v, -(max_v[0]+min_v[0])/2, -(max_v[1]+min_v[1])/2, -(max_v[2]+min_v[2])/2);
+}
 
 void s21::Affine3D::CheckScalingNilpotency(double x_scale, double y_scale, double z_scale) {
   const double zero = 0.0;

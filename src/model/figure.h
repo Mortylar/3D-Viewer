@@ -12,13 +12,14 @@ class Figure;
 
 class FigureKiller {
   public:
+//   FigureKiller();
   ~FigureKiller();
 
   void Initialize(Figure* figure) {
     figure_ = figure;
   }
   private:
-    Figure* figure_;  
+    Figure* figure_;
 };
 
 
@@ -33,7 +34,6 @@ class Figure {
     }
 
     size_t GetVertexCount();
-    const double* GetVertexData();
     const std::vector<double>& GetVertex();
     void AddVertex(double x, double y, double z);
 
