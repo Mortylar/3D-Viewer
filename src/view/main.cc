@@ -1,10 +1,14 @@
 #include <gtk/gtk.h>
 
+#include <iostream>
 
-static void Activate(GtkApplication *app, gpointer user_data) {
+#include "widget.h"
+#include "pair_widget.h"
+#include "pannel.h"
+
+ void Activate(GtkApplication *app, gpointer user_data) {
   GtkWidget *window;
   GtkWidget* grid;
-  GtkWidget* spin_button;
 
   window = gtk_application_window_new (app);
   gtk_window_set_title (GTK_WINDOW (window), "Window");
@@ -13,11 +17,14 @@ static void Activate(GtkApplication *app, gpointer user_data) {
   grid = gtk_grid_new();
   gtk_window_set_child(GTK_WINDOW(window), grid);
 
-  GtkAdjustment* adj = gtk_adjustment_new(0.0, 0.0, 1e2, 1, 0, 0);
-  spin_button = gtk_spin_button_new(adj, 100, 12);
-  gtk_grid_attach(GTK_GRID(grid), spin_button, 0, 0, 1, 1);
 
 
+  s21::DSpinButtonPannel pannel(5);
+  gtk_grid_attach(GTK_GRID(grid), pannel.GetRoot(), 1, 1, 1, 1);
+  pannel.SetNames(0, "first");
+  pannel.SetNames(1, "first");
+  pannel.SetValue("Second");
+  pannel.SetName("123");
   gtk_widget_show (window);
 }
 
