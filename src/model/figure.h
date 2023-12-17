@@ -28,7 +28,7 @@ class Figure {
     static Figure* GetInstance() {
       if (!self_) {
         self_ = new Figure();
-	killer_.Initialize(self_);
+        killer_.Initialize(self_);
       }
       return self_;
     }
