@@ -11,5 +11,5 @@ a:
 
 t: 
 	g++ -c -g t.cc $(EPOXY_FLAGS) $(GTK_FLAGS)
-	g++ t.o $(GTK_FLAGS) -lepoxy
+	g++ t.o $(GTK_FLAGS) $(EPOXY_FLAGS)
 	./a.out
