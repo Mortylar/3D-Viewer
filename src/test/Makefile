@@ -6,7 +6,7 @@ COVERAGE_FLAGS = -lgcov --coverage
 TARGET=../model/*.cc
 EXECUTION=test
 
-OS=`uname -s`
+OS=$(shell uname -s)
 
 ifeq ($(OS),Linux)
 OPEN=xdg-open
@@ -35,6 +35,7 @@ else
 	lcov -t "report" -o figure.info -c -d figure.gcda
 	lcov -t "report" -o model.info -c -d model.gcda
 	lcov -t "report" -o parser.info -c -d parser.gcda
+
 endif	
 	lcov -a affine.info -a figure.info -a parser.info -a model.info -o test.info
 	lcov --remove test.info "/usr/include/*" "/Library/*" "/usr/local/*" -o mini_test.info
