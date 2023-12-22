@@ -13,3 +13,10 @@ t:
 	g++ -c -g t.cc $(EPOXY_FLAGS) $(GTK_FLAGS)
 	g++ t.o $(GTK_FLAGS) $(EPOXY_FLAGS)
 	./a.out
+
+
+b: 
+	g++ -c -g b.cc $(EPOXY_FLAGS) $(GTK_FLAGS)
+	g++ b.o $(GTK_FLAGS) $(EPOXY_FLAGS)
+	./a.out
+
