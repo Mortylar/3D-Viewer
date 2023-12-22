@@ -9,14 +9,17 @@ static GtkWidget *demo_window = NULL;
 /* the GtkGLArea widget */
 static GtkWidget *gl_area = NULL;
 
-static std::vector<float> v{1.0/2,-1.0/2,-1.0/2,1.0/2,-1.0/2,1.0/2,-1.0/2,
-                     -1.0/2,1.0/2,-1.0/2,-1.0/2, -1.0/2,1.0/2,1.0/2,-1.0/2,
-                      1.0/2, 1.0/2,1.0/2,-1.0/2,1.0/2,1.0/2,-1.0/2,1.0/2,
-                     -1.0/2}; //24 = 8*3
+//static std::vector<float> v{1.0/2, -1.0/2, -2.0,  1.0/2, -1.0/2, 0.0,   -1.0/2, -1.0/2, 0.0,   -1.0/2, -1.0/2, -2.0,  1.0/2, 1.0/2, -2.0,
+//                            1.0/2, 1.0/2, 0.0,   -1.0/2, 1.0/2, 0.0,  -1.0/2, 1.0/2, -2.0 }; //24 = 8*3
 
 
-static std::vector<int> s{2,3,3,4,4,2, 8,7,7,6,6,8,
-	5,6,6,2,2,5, 6,7,7,3,3,6, 3,7,7,8,8,3,1,4,4,8,8,1};
+//static std::vector<int> s{2,3,3,4,4,2, 8,7,7,6,6,8,
+//	5,6,6,2,2,5, 6,7,7,3,3,6, 3,7,7,8,8,3,1,4,4,8,8,1};
+
+static std::vector<float> v1{0.0, 0.2, 0.0,   0.5,0.5,0.0,   -0.5,0.5,0.0,   0.0,-0.2,0.0,   0.5,-0.5,0.0,  -0.5,-0.5,0.0};
+
+static std::vector<unsigned int> f1{1,2,3};
+static std::vector<unsigned int> f2{4,5,6};
 
 enum {
   X_AXIS,
@@ -60,15 +63,16 @@ static void init_buffers (GLuint *vao_out, GLuint *buffer_out, GLuint* el_buff) 
   /* This is the buffer that holds the vertices */
   glGenBuffers (1, &buffer);
   glBindBuffer (GL_ARRAY_BUFFER, buffer);
-//  glBufferData (GL_ARRAY_BUFFER, sizeof (vertex_data), vertex_data, GL_STATIC_DRAW); 
-  glBufferData (GL_ARRAY_BUFFER, sizeof(float)*v.size()*3, v.data(), GL_DYNAMIC_DRAW);
+  glBufferData (GL_ARRAY_BUFFER, sizeof(float) * v1.size(), v1.data(), GL_STATIC_DRAW); 
+  //glBufferData (GL_ARRAY_BUFFER, sizeof(float)*v.size()*3, v1.data(), GL_DYNAMIC_DRAW);
 
   glBindBuffer (GL_ARRAY_BUFFER, 0);
 
   glGenBuffers(1, &element_buffer);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int)*s.size(), s.data(), GL_STATIC_DRAW);
-  //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, f1.size(), f1.data(), GL_STATIC_DRAW);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, f2.size(), f2.data(), GL_STATIC_DRAW);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer);
 
   if (vao_out != NULL)
     *vao_out = vao;
@@ -76,7 +80,7 @@ static void init_buffers (GLuint *vao_out, GLuint *buffer_out, GLuint* el_buff) 
   if (buffer_out != NULL)
     *buffer_out = buffer;
   if (el_buff != NULL) *el_buff = element_buffer;
-  //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 }
 
 /* Create and compile a shader */
@@ -285,15 +289,29 @@ static void draw_triangle (void) {
   glEnableVertexAttribArray (0);
   glBindBuffer (GL_ARRAY_BUFFER, position_buffer);
   //glEnableVertexAttribArray (0);
-  glVertexAttribPointer (0, 4, GL_FLOAT, GL_FALSE, 0, 0);
+  glVertexAttribPointer (0, 3, GL_FLOAT, GL_TRUE, 0, 0);
 
   //glDisableVertexAttribArray (0);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer);
-  glDrawElements(GL_TRIANGLES, sizeof(int)*s.size(), GL_INT, NULL);
+ // glDrawElementsBaseVertex(GL_LINE_LOOP, 3, GL_UNSIGNED_INT, f1.data(), 0);
+ // glDrawElementsBaseVertex(GL_LINE_LOOP, 3, GL_UNSIGNED_INT, f2.data(), 0);
+  //glDrawElements(GL_TRIANGLES, sizeof(int)*f1.size(), GL_UNSIGNED_INT, NULL); // ->glDrawElementsBaseVertex();
   /* Draw the three vertices as a triangle */
-  //glDrawArrays (GL_TRIANGLE_STRIP, 0, 12*3);
-
-  glDrawArrays (GL_LINE_LOOP, 0, 8);
+  std::vector<std::vector<unsigned int>> faces{f1,f2};
+  for (size_t i = 0; i < faces.size(); ++i) {
+    std::vector<float> tmp;
+    for (int j = 0; j < faces[i].size(); ++j) {
+      unsigned int v_count = faces[i][j] - 1;
+      tmp.push_back(v1[3*v_count]);
+      tmp.push_back(v1[3*v_count+1]);
+      tmp.push_back(v1[3*v_count+2]);
+    }
+    g_print("\ni=%li\nsize = %li\n, %f-%f-%f", i, tmp.size(), tmp[0], tmp[1], tmp[2]);
+    glDrawArrays(GL_LINE_LOOP, 0, tmp.size());
+  }
+    //glDrawArrays (GL_LINE_LOOP, 0, 3);
+    //glDrawArrays (GL_LINE_LOOP, 3, 3);
+  //glDrawArrays (GL_LINE_LOOP, 0, 8);
   /* We finished using the buffers and program */
   glDisableVertexAttribArray (0);
   glBindBuffer (GL_ELEMENT_ARRAY_BUFFER, 0);
