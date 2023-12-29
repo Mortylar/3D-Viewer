@@ -16,7 +16,7 @@ static GtkWidget *gl_area = NULL;
 //static std::vector<int> s{2,3,3,4,4,2, 8,7,7,6,6,8,
 //	5,6,6,2,2,5, 6,7,7,3,3,6, 3,7,7,8,8,3,1,4,4,8,8,1};
 
-static std::vector<float> v1{0.0, 0.2, 0.0,   0.5,0.5,0.0,   -0.5,0.5,0.0,   0.0,-0.2,0.0,   0.5,-0.5,0.0,  -0.5,-0.5,0.0};
+static std::vector<float> v1{0.0, 0.2, 0.0,   0.5,0.5,0.0,   -0.5,0.5,0.0,   0.0,-0.2,0.5,   0.5,-0.5,1,  -0.5,-0.5,1};
 
 static std::vector<unsigned int> f1{1,2,3};
 static std::vector<unsigned int> f2{4,5,6};
@@ -66,13 +66,13 @@ static void init_buffers (GLuint *vao_out, GLuint *buffer_out, GLuint* el_buff) 
   glBufferData (GL_ARRAY_BUFFER, sizeof(float) * v1.size(), v1.data(), GL_STATIC_DRAW); 
   //glBufferData (GL_ARRAY_BUFFER, sizeof(float)*v.size()*3, v1.data(), GL_DYNAMIC_DRAW);
 
-  glBindBuffer (GL_ARRAY_BUFFER, 0);
+  //glBindBuffer (GL_ARRAY_BUFFER, 0);
 
   glGenBuffers(1, &element_buffer);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, f1.size(), f1.data(), GL_STATIC_DRAW);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, f2.size(), f2.data(), GL_STATIC_DRAW);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer);
+  //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer);
 
   if (vao_out != NULL)
     *vao_out = vao;
@@ -80,7 +80,7 @@ static void init_buffers (GLuint *vao_out, GLuint *buffer_out, GLuint* el_buff) 
   if (buffer_out != NULL)
     *buffer_out = buffer;
   if (el_buff != NULL) *el_buff = element_buffer;
-  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+  //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 }
 
 /* Create and compile a shader */
@@ -165,16 +165,25 @@ static void init_shaders(const char *vertex_path, const char *fragment_path,
       glDeleteProgram (program);
       program = 0;
 
-      goto out;
-    }
+  //    goto out;
+
+  glDeleteShader (vertex);
+  glDeleteShader (fragment);
+
+  if (program_out != NULL)
+    *program_out = program;
+
+  if (mvp_out != NULL)
+    *mvp_out = mvp;
+   return;
+  }
 
   /* Get the location of the "mvp" uniform */
   mvp = glGetUniformLocation (program, "mvp");
 
   glDetachShader (program, vertex);
   glDetachShader (program, fragment);
-
-out:
+//
   glDeleteShader (vertex);
   glDeleteShader (fragment);
 
@@ -306,7 +315,7 @@ static void draw_triangle (void) {
       tmp.push_back(v1[3*v_count+1]);
       tmp.push_back(v1[3*v_count+2]);
     }
-    g_print("\ni=%li\nsize = %li\n, %f-%f-%f", i, tmp.size(), tmp[0], tmp[1], tmp[2]);
+   // g_print("\ni=%li\nsize = %li\n, %f-%f-%f", i, tmp.size(), tmp[0], tmp[1], tmp[2]);
     glDrawArrays(GL_LINE_LOOP, 0, tmp.size());
   }
     //glDrawArrays (GL_LINE_LOOP, 0, 3);
@@ -316,7 +325,7 @@ static void draw_triangle (void) {
   glDisableVertexAttribArray (0);
   glBindBuffer (GL_ELEMENT_ARRAY_BUFFER, 0);
   //glfwSwapBuffers();
- // glFlush();
+  //glFlush();
   glUseProgram (0);
 }
 
@@ -331,7 +340,7 @@ static gboolean render (GtkGLArea *area, GdkGLContext *context) {
 
   /* Draw our object */
   draw_triangle ();
-  glOrtho(0.0, 1.0, 0.0, 1.0, -1.0, 1.0);
+  //glOrtho(0.0, 1.0, 0.0, 1.0, -1.0, 1.0);
   /* Flush the contents of the pipeline */
   glFlush ();
 

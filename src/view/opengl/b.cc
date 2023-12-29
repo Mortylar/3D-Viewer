@@ -234,7 +234,7 @@ realize (GtkWidget *widget)
   if (gtk_gl_area_get_error (GTK_GL_AREA (widget)) != NULL)
     return;
 
-  if (gtk_gl_area_get_api (GTK_GL_AREA (widget)) == GDK_GL_API_GLES)
+  if (gdk_gl_context_get_use_es(gtk_gl_area_get_context(GTK_GL_AREA (widget))))
     {
       vertex_path = "/glarea/glarea-gles.vs.glsl";
       fragment_path = "/glarea/glarea-gles.fs.glsl";
@@ -472,7 +472,7 @@ static void activate(GtkApplication* app, gpointer user_data) {
 int main() {
   //GtkWidget* win = gtk_window_new();
   //do_glarea(win);
-  GtkApplication* app = gtk_application_new("AAA.BBB", G_APPLICATION_DEFAULT_FLAGS);
+  GtkApplication* app = gtk_application_new("AAA.BBB", G_APPLICATION_FLAGS_NONE);
   g_signal_connect(app, "activate", G_CALLBACK(activate), NULL);
   return g_application_run(G_APPLICATION(app), 0, 0);
 }

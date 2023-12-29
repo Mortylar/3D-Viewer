@@ -1,0 +1,18 @@
+
+void s21::Affine3D::Rotation(std::vector<double>& v, double x_rad, double y_rad, double z_rad) {
+  size_t size = v.size();
+  CheckDimension(size);
+
+  for (size_t i = 0; i < size; i += dim_) {
+    double x_tmp = v[i + 0];
+	double x_rot_1 = sin(x_rad) * v[i + 1] - cos(x_rad) * v[i + 2];
+	double x_rot_2 = cos(x_rad) * v[i + 1] + sin(x_rad) * v[i + 2];
+	double y_z_rot = cos(y_rad) * x_tmp;
+
+	v[i + 0] = cos(z_rad) * (y_z_rot + sin(y_rad) * x_rot_1) + sin(z_rad) * x_rot_2;
+	v[i + 1] = sin(z_rad) * (-y_z_rot - sin(y_rad) * x_rot_1)  + cos(z_rad) * x_rot_2;
+	v[i + 2] = x_tmp * sin(y_rad) - x_rot_1 * cos(y_rad);
+  }
+
+}
+
