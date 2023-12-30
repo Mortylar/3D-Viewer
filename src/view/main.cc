@@ -2,9 +2,12 @@
 
 #include <iostream>
 
-#include "widget.h"
-#include "pair_widget.h"
-#include "pannel.h"
+#include "widget/widget.h"
+
+void PrintDouble(GtkWidget* button, s21::DSpinButton* data) {
+  double x = data->GetValue();
+  g_print("\nvalue = %p, %lf\n", button, x);
+}
 
  void Activate(GtkApplication *app, gpointer user_data) {
   GtkWidget *window;
@@ -18,13 +21,17 @@
   gtk_window_set_child(GTK_WINDOW(window), grid);
 
 
+  s21::Label lab("label");
+  gtk_grid_attach(GTK_GRID(grid), lab.GetRoot(), 0,0,1,1);
 
-  s21::DSpinButtonPannel pannel(5);
-  gtk_grid_attach(GTK_GRID(grid), pannel.GetRoot(), 1, 1, 1, 1);
-  pannel.SetNames(0, "first");
-  pannel.SetNames(1, "first");
-  pannel.SetValue("Second");
-  pannel.SetName("123");
+  s21::DSlider* slider = new s21::DSlider();
+  gtk_grid_attach(GTK_GRID(grid), slider->GetRoot(), 0,1,1,1);
+  //sp->SetValue(100.0);
+
+  GtkWidget* button = gtk_button_new_with_label("button");
+  gtk_grid_attach(GTK_GRID(grid), button, 0,2,1,1);
+  g_signal_connect(button, "clicked", G_CALLBACK(PrintDouble), slider);
+
   gtk_widget_set_visible(window, true);
 }
 

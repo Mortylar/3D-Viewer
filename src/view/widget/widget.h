@@ -25,11 +25,6 @@ class Widget {
       gtk_frame_set_label_align(GTK_FRAME(frame_), 0.5);
     }
 
-    virtual const char* GetValue(const char* str) = 0;
-    virtual double GetValue(double x) = 0;
-    virtual void SetValue(const char* value) = 0;
-    virtual void SetValue(const double value) = 0;
-
   private:
     GtkWidget* frame_ = nullptr;
 };
@@ -52,20 +47,17 @@ class Label: public Widget {
       gtk_label_set_text(GTK_LABEL(label_), name);
     }
 
-    const char* GetValue(const char* str = nullptr) override {
+    const char* GetValue() {
       return (gtk_label_get_text(GTK_LABEL(label_)));
     };
 
-    void SetValue(const char* value) override {
+    void SetValue(const char* value) {
       gtk_label_set_text(GTK_LABEL(label_), value);
     }
 
-    double GetValue(double x = 0.0) {return x;};
-
-    void SetValue(const double value) override {};
-
   private:
     GtkWidget* label_ = nullptr;
+    //TODO value_;
 
     void InitLabel() {
       label_ = gtk_label_new(nullptr);
@@ -78,35 +70,82 @@ class DSpinButton: public Widget {
   public:
     DSpinButton() {
       adjustment_ = gtk_adjustment_new(0.0, -1e100, 1e100, 1, 0, 0);
-      spin_button_ = gtk_spin_button_new(adjustment_, 100, 20);
-      gtk_frame_set_child(GTK_FRAME(GetFrame()), spin_button_);
+      InitSpinButton();
     }
 
-    DSpinButton(GtkAdjustment* adjustment) {
-      spin_button_ = gtk_spin_button_new(adjustment, 100, 20);
-      gtk_frame_set_child(GTK_FRAME(GetFrame()), spin_button_);
+    DSpinButton(GtkAdjustment* adjustment): adjustment_(adjustment) {
+      InitSpinButton();
     }
 
     ~DSpinButton(){};
 
-    const char* GetValue(const char* str = nullptr) override {return str;};
-
-    double GetValue(double x = 0) override {
-      return gtk_spin_button_get_value(GTK_SPIN_BUTTON(spin_button_));
+    double GetValue() {
+      return value_;
     }
 
-    void SetValue(const char* value) override {};
-
-    //void SetName(const char* name){};
-
-    void SetValue(const double value) override {
+    void SetValue(const double value) {
       gtk_spin_button_set_value(GTK_SPIN_BUTTON(spin_button_), value);
     };
+
+    void PrintPtr() {
+      g_print("\nptr = %p\n", spin_button_);
+    }
 
   private:
     GtkWidget* spin_button_ = nullptr;
     GtkAdjustment* adjustment_ = nullptr;
+    double value_ = 0.0;
 
+    DSpinButton(DSpinButton&);
+    DSpinButton(DSpinButton&&);
+
+    static void ValueReboot(GtkAdjustment* adjustment, DSpinButton* self) {
+      self->value_ = gtk_adjustment_get_value(self->adjustment_);
+    }
+
+    void InitSpinButton() {
+      spin_button_ = gtk_spin_button_new(adjustment_, 100, 20);
+      gtk_frame_set_child(GTK_FRAME(GetFrame()), spin_button_);
+      g_signal_connect(spin_button_, "value_changed", G_CALLBACK(ValueReboot), this);
+    }
+
+};
+
+class DSlider: public Widget {
+  public:
+    DSlider() {
+      adjustment_ = gtk_adjustment_new(0.0, -100.0, 100.0, 1, 12, 0);
+      InitSlider();
+    }
+
+    DSlider(GtkAdjustment* adjustment): adjustment_(adjustment) {
+      InitSlider();
+    }
+
+    ~DSlider(){};
+
+     double GetValue() {
+       return value_;
+     }
+
+     void SetValue(double x) {
+       gtk_adjustment_set_value(adjustment_, x);
+     }
+
+  private:
+    GtkWidget* scale_button_ = nullptr;
+    GtkAdjustment* adjustment_ = nullptr;
+    double value_ = 0.0;
+
+    static void ValueReboot(GtkAdjustment* adjustment, DSlider* self) {
+      self->value_ = gtk_adjustment_get_value(self->adjustment_);
+    }
+
+    void InitSlider() {
+      scale_button_ = gtk_scale_new(GTK_ORIENTATION_HORIZONTAL, adjustment_);
+      gtk_frame_set_child(GTK_FRAME(GetFrame()), scale_button_);
+      g_signal_connect(adjustment_, "value_changed", G_CALLBACK(ValueReboot), this);
+    }
 };
 
 }
