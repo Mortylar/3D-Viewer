@@ -22,10 +22,17 @@ static std::vector<int> s{2,3,3,4,4,2, 8,7,7,6,6,8,
 	5,6,6,2,2,5, 6,7,7,3,3,6, 3,7,7,8,8,3,1,4,4,8,8,1};
 
 
-static std::vector<double> v3{0.0, 0.2, 0.0,   0.5, 0.5, 0.0,   -0.5, 0.5, 0.0,  
-                              0.0, -0.2 ,0.5,   0.5, -0.5, 1.0,   -0.5,-0.5,1.0};
-static std::vector<int> f3 {1,2,3};
-static std::vector<int> f4 {4,5,6};
+static std::vector<float> v3{ 0.1, 0.1, -0.1,
+                              -0.1, 0.1, -0.1,   
+                              -0.1, -0.1, -0.1,  
+                              0.1, -0.1 ,-0.1, 
+                              0.2, 0.2, 0.1,
+                              -0.2, 0.2, 0.1,   
+                              -0.2, -0.2, 0.1,  
+                              0.2, -0.2 ,0.1};
+
+static std::vector<int> f3 {1,2,3,4};
+static std::vector<int> f4 {5,6,7,8};
 
 void ResetRotMatrix() {
   rot_matrix = {1,0,0,  0,1,0,  0,0,1};
@@ -53,13 +60,13 @@ static void InitBuffers(GLuint* vao_out, GLuint* buffer_out, GLuint* el_buff) {
 
   glGenBuffers(1, &buffer);
   glBindBuffer(GL_ARRAY_BUFFER, buffer);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(double)*v3.size(), v3.data(), GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(float)*v3.size(), v3.data(), GL_STATIC_DRAW);
   //glBindBuffer(GL_ARRAY_BUFFER, 0); //TODO
 
   glGenBuffers(1, &element_buff);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buff);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int)*f3.size(), f3.data(), GL_STATIC_DRAW);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int)*f4.size(), f4.data(), GL_STATIC_DRAW);
+//  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int)*f3.size(), f3.data(), GL_STATIC_DRAW);
+//  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int)*f4.size(), f4.data(), GL_STATIC_DRAW);
  // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 
@@ -67,7 +74,7 @@ static void InitBuffers(GLuint* vao_out, GLuint* buffer_out, GLuint* el_buff) {
   if(buffer_out != NULL) *buffer_out = buffer;
   if(el_buff != NULL) *el_buff = element_buff;
 
-  //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+ // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 }
 
 static GLuint CreateShader(int type, const char* src) {
@@ -171,8 +178,12 @@ static void DrawFigure() {
 
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer);
 
-  glDrawArrays(GL_LINE_LOOP, 0, 9);
-  glDrawArrays(GL_LINE_LOOP, 0, 3);
+  //glLineWidth(1);
+  glEnable(GL_POINT_SMOOTH);
+  glPointSize(10);
+  glEnable(GL_POINT_SMOOTH);
+  glDrawArrays(GL_POINTS, 0, 4);
+  glDrawArrays(GL_POINTS, 4, 4);
   //glDrawArrays(GL_LINE_LOOP, 6, 9);
 
   glDisableVertexAttribArray(0);

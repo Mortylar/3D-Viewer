@@ -1,7 +1,9 @@
-#ifndef SRC_VIEW_WIDGET_H_
-#define SRC_VIEW_WIDGET_H_
+#ifndef SRC_VIEW_WIDGET_WIDGET_H_
+#define SRC_VIEW_WIDGET_WIDGET_H_
 
 #include <gtk/gtk.h>
+#include "observer.h"
+
 
 namespace s21 {
 class Widget {
@@ -10,17 +12,17 @@ class Widget {
       frame_ = gtk_frame_new(nullptr);
     }
 
-    ~Widget() {};
+    virtual ~Widget(){};
 
-    virtual GtkWidget* GetFrame() {
+    virtual GtkWidget* GetFrame() {//TODO virtual
       return frame_;
     }
 
-    virtual GtkWidget* GetRoot() {
+    virtual GtkWidget* GetRoot() { //TODO virtual
       return frame_;
     }
 
-    virtual void SetName(const char* name) {
+    virtual void SetName(const char* name) { //TODO virual
       gtk_frame_set_label(GTK_FRAME(frame_), name);
       gtk_frame_set_label_align(GTK_FRAME(frame_), 0.5);
     }
@@ -43,7 +45,7 @@ class Label: public Widget {
 
     ~Label(){};
 
-    void SetName(const char* name) override {
+    void SetName(const char* name) override { //TODO override
       gtk_label_set_text(GTK_LABEL(label_), name);
     }
 
@@ -81,6 +83,10 @@ class DSpinButton: public Widget {
 
     double GetValue() {
       return value_;
+    }
+
+    double* GetData() {
+      return &value_;
     }
 
     void SetValue(const double value) {
@@ -127,6 +133,10 @@ class DSlider: public Widget {
      double GetValue() {
        return value_;
      }
+
+    double* GetData() {
+      return &value_;
+    }
 
      void SetValue(double x) {
        gtk_adjustment_set_value(adjustment_, x);

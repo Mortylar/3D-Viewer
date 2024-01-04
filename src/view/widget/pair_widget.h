@@ -38,25 +38,22 @@ class LabelPair: public PairWidget {
       delete second_;
     };
 
-    void SetName(const char* name) override {
+    void SetName(const char* name) override { //TODO override
       first_->SetName(name);
     }
 
-    void SetValue(const char* value) override {
+    const char* GetName() {
+      return first_->GetValue();
+    }
+
+    void SetValue(const char* value) {
       second_->SetValue(value);
     }
 
-    const char* GetValue(const char* str) override {
-      return second_->GetValue(str);
+    const char* GetValue() {
+      return second_->GetValue();
     }
 
-    void SetValue(const double value) override {
-      second_->SetValue(value);
-    }
-
-    double GetValue(double x) override {
-      return second_->GetValue(x);
-    }
 
   private:
     Label* first_ = nullptr;
@@ -77,29 +74,34 @@ class LabelDSpinButtonPair: public PairWidget {
       InitDSpinButton();
     };
 
+    LabelDSpinButtonPair(GtkAdjustment* adjustment) {
+      InitLabel();
+      InitDSpinButton(adjustment);
+    }
+
     ~LabelDSpinButtonPair() {
       delete first_;
       delete second_;
     };
 
-    void SetName(const char* name) override {
+    void SetName(const char* name) override { //TODO override
       first_->SetName(name);
     }
 
-    void SetValue(const char* value) override {
+    const char* GetName() {
+      return first_->GetValue();
+    }
+
+    void SetValue(const double value) {
       second_->SetValue(value);
     }
 
-    const char* GetValue(const char* str) override {
-      return second_->GetValue(str);
+    double GetValue() {
+      return second_->GetValue();
     }
 
-    void SetValue(const double value) override {
-      second_->SetValue(value);
-    }
-
-    double GetValue(double x) override {
-      return second_->GetValue(x);
+    double* GetData() {
+      return second_->GetData();
     }
 
   private:
@@ -116,6 +118,70 @@ class LabelDSpinButtonPair: public PairWidget {
       gtk_grid_attach(GTK_GRID(GetGrid()), second_->GetRoot(), 1, 0, 1, 1);
     }
 
+    void InitDSpinButton(GtkAdjustment* adjustment) { 
+      second_ = new DSpinButton(adjustment);
+      gtk_grid_attach(GTK_GRID(GetGrid()), second_->GetRoot(), 1, 0, 1, 1);
+    }
+
+};
+
+class LabelDSliderPair: public PairWidget {
+  public:
+    LabelDSliderPair() {
+      InitLabel();
+      InitSlider();
+    }
+
+    LabelDSliderPair(GtkAdjustment* adjustment) {
+      InitLabel();
+      InitSlider(adjustment);
+    }
+
+    ~LabelDSliderPair() {
+      delete first_;
+      delete second_;
+    }
+
+    void SetName(const char* name) override { //TODO override
+      first_->SetName(name);
+    }
+
+    const char* GetName() {
+      return first_->GetValue();
+    }
+
+    void SetValue(const double value) {
+      second_->SetValue(value);
+    }
+
+    double GetValue() {
+      return second_->GetValue();
+    }
+
+    double* GetData() {
+      return second_->GetData();
+    }
+
+  private:
+    Label* first_ = nullptr;
+    DSlider* second_ = nullptr;
+
+    void InitLabel() { 
+      first_ = new Label();
+      gtk_grid_attach(GTK_GRID(GetGrid()), first_->GetRoot(), 0, 0, 1, 1);
+    }
+
+    void InitSlider() {
+      second_ = new DSlider();
+      gtk_grid_attach(GTK_GRID(GetGrid()), second_->GetRoot(), 1,0,1,1);
+      gtk_grid_set_column_homogeneous(GTK_GRID(GetGrid()), true);
+    }
+
+    void InitSlider(GtkAdjustment* adjustment) { 
+      second_ = new DSlider(adjustment);
+      gtk_grid_attach(GTK_GRID(GetGrid()), second_->GetRoot(), 1,0,1,1);
+      gtk_grid_set_column_homogeneous(GTK_GRID(GetGrid()), true);
+    }
 };
 
 

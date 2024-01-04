@@ -5,6 +5,7 @@ uniform mat4 mvp;
 
 void main() {
   gl_Position = mvp * position;
+  gl_PointSize = 5.0;
   //gl_Position.xyzw = position;
   //gl_Position.w = 1.0;
 }
