@@ -54,6 +54,18 @@ class LabelPair: public PairWidget {
       return second_->GetValue();
     }
 
+	void SetMother(s21::Widget* mother) override {
+	  first_->SetMother(mother);
+	  second_->SetMother(mother);
+	}
+    
+    void CatchSignal() override {
+	  g_print("\nWarning: s21::LabelPair::CatchSignal() has no implementation!\n");
+	}
+
+	void SendSignal() override {
+	  g_print("\nWarning: s21::LabelPair::SendSignal() has no implementation!\n");
+	}
 
   private:
     Label* first_ = nullptr;
@@ -103,6 +115,19 @@ class LabelDSpinButtonPair: public PairWidget {
     double* GetData() {
       return second_->GetData();
     }
+
+	void SetMother(s21::Widget* mother) override {
+	  first_->SetMother(mother);
+	  second_->SetMother(mother);
+	}
+
+    void CatchSignal() override {
+	  g_print("\nWarning: s21::LabeliDSpinButtonPair::CatchSignal() has no implementation!\n");
+	}
+
+	void SendSignal() override {
+	  g_print("\nWarning: s21::LabelDSpinButtonPair::SendSignal() has no implementation!\n");
+	}
 
   private:
     Label* first_ = nullptr;
@@ -162,6 +187,19 @@ class LabelDSliderPair: public PairWidget {
       return second_->GetData();
     }
 
+	void SetMother(s21::Widget* mother) override {
+	  first_->SetMother(mother);
+	  second_->SetMother(mother);
+	}
+
+    void CatchSignal() override {
+	  g_print("\nWarning: s21::LabelDSliderPair::CatchSignal() has no implementation!\n");
+	}
+
+	void SendSignal() override {
+	  g_print("\nWarning: s21::LabelDSliderPair::SendSignal() has no implementation!\n");
+	}
+
   private:
     Label* first_ = nullptr;
     DSlider* second_ = nullptr;
@@ -183,7 +221,6 @@ class LabelDSliderPair: public PairWidget {
       gtk_grid_set_column_homogeneous(GTK_GRID(GetGrid()), true);
     }
 };
-
 
 }
 

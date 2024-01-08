@@ -46,6 +46,20 @@ class LabelPannel: public PairWidget {
       s21::Widget::SetName(name);
     }
 
+	void SetMother(s21::Widget* mother) {
+	  for(size_t i = 0; i < size_; ++i) {
+	    pair_[i]->SetMother(mother);
+	  }
+	}
+
+	void CatchSignal() override {
+	  g_print("\nWarning: s21::LabelPannel::CatchSignal() has no implementation!\n");
+	}
+
+	void SendSignal() override {	
+	  g_print("\nWarning: s21::LabelPannel::SendSignal() has no implementation!\n");
+	}
+
   private:
     std::vector<LabelPair*> pair_;
     size_t size_;
@@ -114,6 +128,20 @@ class DSpinButtonPannel: public PairWidget {
     void SetName(const char* name) override { //TODO override
       s21::Widget::SetName(name);
     }
+
+	void SetMother(s21::Widget* mother) {
+	  for(size_t i = 0; i < size_; ++i) {
+	    pair_[i]->SetMother(mother);
+	  }
+	}
+
+	void CatchSignal() override {
+	  g_print("\nWarning: s21::DSpinButtonPannel::CatchSignal() has no implementation!\n");
+	}
+
+	void SendSignal() override {	
+	  g_print("\nWarning: s21::DSpinButtonPannel::SendSignal() has no implementation!\n");
+	}
 
   private:
     std::vector<LabelDSpinButtonPair*> pair_;
@@ -189,6 +217,20 @@ class DSliderPannel: public PairWidget {
       pair_[pos]->SetName(name);
     }
 
+	void SetMother(s21::Widget* mother) {
+	  for(size_t i = 0; i < size_; ++i) {
+	    pair_[i]->SetMother(mother);
+	  }
+	}
+
+	void CatchSignal() override {
+	  g_print("\nWarning: s21::DSliderPannel::CatchSignal() has no implementation!\n");
+	}
+
+	void SendSignal() override {	
+	  g_print("\nWarning: s21::DSliderPannel::SendSignal() has no implementation!\n");
+	}
+
   private:
     std::vector<LabelDSliderPair*> pair_;
     std::vector<double*> data_;
@@ -197,8 +239,8 @@ class DSliderPannel: public PairWidget {
     void InitPannel() {
       for (size_t i = 0; i < size_; ++i) {
         pair_.push_back(new LabelDSliderPair());
-	data_.push_back(pair_[i]->GetData());
-	gtk_grid_attach(GTK_GRID(GetGrid()), pair_[i]->GetRoot(), 0, i, 1, 1);
+        data_.push_back(pair_[i]->GetData());
+        gtk_grid_attach(GTK_GRID(GetGrid()), pair_[i]->GetRoot(), 0, i, 1, 1);
       }
     }
 };

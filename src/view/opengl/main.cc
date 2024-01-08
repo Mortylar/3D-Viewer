@@ -169,6 +169,7 @@ static void DrawFigure() {
   //g_print("End\n");
   ResetRotMatrix();
   glUseProgram(program);
+  g_print("\nmvp = %i\n", mvp_location);
 
   glUniformMatrix4fv(mvp_location, 1, GL_FALSE, &mvp[0]);
 
@@ -179,15 +180,15 @@ static void DrawFigure() {
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer);
 
   //glLineWidth(1);
-  glEnable(GL_POINT_SMOOTH);
+ // glEnable(GL_POINT_SMOOTH);
   glPointSize(10);
   glEnable(GL_POINT_SMOOTH);
   glDrawArrays(GL_POINTS, 0, 4);
   glDrawArrays(GL_POINTS, 4, 4);
   //glDrawArrays(GL_LINE_LOOP, 6, 9);
 
-  glDisableVertexAttribArray(0);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+  //glDisableVertexAttribArray(0);
+  //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
   glUseProgram(0);
 }
 

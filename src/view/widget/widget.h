@@ -2,8 +2,6 @@
 #define SRC_VIEW_WIDGET_WIDGET_H_
 
 #include <gtk/gtk.h>
-#include "observer.h"
-
 
 namespace s21 {
 class Widget {
@@ -26,6 +24,10 @@ class Widget {
       gtk_frame_set_label(GTK_FRAME(frame_), name);
       gtk_frame_set_label_align(GTK_FRAME(frame_), 0.5);
     }
+
+    virtual void SetMother(s21::Widget* mother)=0;
+    virtual void CatchSignal()=0;
+    virtual void SendSignal()=0;
 
   private:
     GtkWidget* frame_ = nullptr;
@@ -57,8 +59,19 @@ class Label: public Widget {
       gtk_label_set_text(GTK_LABEL(label_), value);
     }
 
+	void SendSignal() override {};
+
+	void SetMother(s21::Widget* mother) override {
+	  mother_ = mother;
+	}
+
+	void CatchSignal() override {
+	  g_print("\nWarning: s21::Label::CatchSignal() has no implementation!\n");
+	}
+
   private:
     GtkWidget* label_ = nullptr;
+	s21::Widget* mother_ = nullptr;
     //TODO value_;
 
     void InitLabel() {
@@ -93,13 +106,22 @@ class DSpinButton: public Widget {
       gtk_spin_button_set_value(GTK_SPIN_BUTTON(spin_button_), value);
     };
 
-    void PrintPtr() {
-      g_print("\nptr = %p\n", spin_button_);
-    }
+	void SetMother(s21::Widget* mother) override {
+	  mother_ = mother;
+	}
+
+	void SendSignal() override {
+	  if(mother_) mother_->CatchSignal();
+	}
+
+	void CatchSignal() override {
+	  g_print("\nWarning: s21::DSpinButton::CatchSignal() has no implementation!\n");
+	}
 
   private:
     GtkWidget* spin_button_ = nullptr;
     GtkAdjustment* adjustment_ = nullptr;
+	s21::Widget* mother_ = nullptr;
     double value_ = 0.0;
 
     DSpinButton(DSpinButton&);
@@ -107,6 +129,7 @@ class DSpinButton: public Widget {
 
     static void ValueReboot(GtkAdjustment* adjustment, DSpinButton* self) {
       self->value_ = gtk_adjustment_get_value(self->adjustment_);
+	  self->SendSignal();
     }
 
     void InitSpinButton() {
@@ -142,13 +165,27 @@ class DSlider: public Widget {
        gtk_adjustment_set_value(adjustment_, x);
      }
 
+	void SetMother(s21::Widget* mother) override {
+	  mother_ = mother;
+	}
+
+	void SendSignal() override {
+	  if(mother_) mother_->CatchSignal();
+	}
+
+	void CatchSignal() override {
+	  g_print("\nWarning: s21::DSlider::CatchSignal() has no implementation!\n");
+	}
+
   private:
     GtkWidget* scale_button_ = nullptr;
     GtkAdjustment* adjustment_ = nullptr;
-    double value_ = 0.0;
+	s21::Widget* mother_ = nullptr;
+	double value_ = 0.0;
 
     static void ValueReboot(GtkAdjustment* adjustment, DSlider* self) {
       self->value_ = gtk_adjustment_get_value(self->adjustment_);
+	  self->SendSignal();
     }
 
     void InitSlider() {
