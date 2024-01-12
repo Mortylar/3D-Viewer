@@ -5,6 +5,7 @@ EPOXY_FLAGS=`pkg-config --cflags --libs epoxy`
 a:
 	$(CC) -g main.cc $(GTK_FLAGS) $(EPOXY_FLAGS)
 	./a.out
+
 b:
-	$(CC) button.cc $(GTK_FLAGS)
+	$(CC) -g asd.cc $(GTK_FLAGS) $(EPOXY_FLAGS)
 	./a.out
