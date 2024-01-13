@@ -8,6 +8,9 @@ class AffineData {
   public:
     AffineData() {
       ReserveMemory();
+	  data_[Position::kScaling + 0] = 1.0;
+	  data_[Position::kScaling + 1] = 1.0;
+	  data_[Position::kScaling + 2] = 1.0;
     }
 
     ~AffineData() {
@@ -22,7 +25,7 @@ class AffineData {
       return *this;
     }
 
-    double* GetData() {
+    float* GetData() {
       return data_;
     }
 
@@ -55,14 +58,14 @@ class AffineData {
   private:
     static const size_t kDim_ = 3;
     static const size_t kCommonSize_ = 9;
-    double* data_ = nullptr; //Rotation, Translation, Scaling
+    float* data_ = nullptr; //Rotation, Translation, Scaling
 
     AffineData(const AffineData&);
     AffineData(const AffineData&&);
     AffineData& operator=(const AffineData&&);
     
     void ReserveMemory() {
-      data_ = new double[kCommonSize_]();
+      data_ = new float[kCommonSize_]();
     }
 
     void ClearMemory() {

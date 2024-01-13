@@ -1,5 +1,5 @@
-#ifndef SRC_VIEW_WIDGET_GL_AREA_H_
-#define SRC_VIEW_WIDGET_GL_AREA_H_
+#ifndef SRC_VIEW_WIDGET_DRAWING_AREA_H_
+#define SRC_VIEW_WIDGET_DRAWING_AREA_H_
 
 #include <gtk/gtk.h>
 
@@ -17,7 +17,11 @@ class DrawingArea: public Widget {
 	~DrawingArea(){};
 
 	void SetMother(s21::Widget* mother) {} //TODO
-	void CatchSignal() {} //TODO
+	void CatchSignal() {
+     g_print("\ngo\n");
+	 gtk_widget_queue_draw(area_);
+
+	} //TODO
 	void SendSignal() {} //TODO
 
 
@@ -38,34 +42,94 @@ class DrawingArea: public Widget {
 	}
 
 	static void Unrealize(GtkWidget* area, s21::DrawingArea* self) {
-	  self->RemoveBuffer();
-	  self->RemoveShader();
+	  //self->RemoveBuffer();
+	  //self->RemoveShader();
 	}
 
-	void DrawFigure() {
-	  float mvp[16] = {1, 0, 0, 0,   0,1,0,0,  0,0,1,0, 0,0,0,0};
+  void ComputeMVP(float* mvp) {
+    float tmp[9] = {1,0,0,  0,1,0, 0,0,1};
+    float* array = affine_data_->GetData();
+ 
+    Rotate(tmp, array[0], array[1], array[2]);
+	for (size_t i = 0; i < 3; ++i) {
+	  mvp[i] = tmp[i];
+	  mvp[4+i] = tmp[3 + i];
+	  mvp[8+i] = tmp[6 + i];
+	}
 
-	  glUseProgram(shader_->GetProgram());
-	  g_print("\nmvp = %i\n", shader_->GetMVP());
-	  glUniformMatrix4fv(shader_->GetMVP(), 1, GL_FALSE, &mvp[0]);
+
+	mvp[0] *=  array[6];
+    mvp[5] *= array[7];
+    mvp[10] *= array[8];
+
+//	Rotate(mvp, array[0], array[1], array[2]);
+
+	mvp[12] = array[3];
+	mvp[13] = array[4];
+	mvp[14] = array[5];
+
+	
+/*    Rotate(tmp, array[0], array[1], array[2]);
+	for (size_t i = 0; i < 3; ++i) {
+	  mvp[i] = tmp[i];
+	  mvp[4+i] = tmp[3 + i];
+	  mvp[8+i] = tmp[6 + i];
+	}*/
+  }
+
+  void Rotate(float* mvp, float x_rad, float y_rad, float z_rad) {
+    for (size_t i = 0; i < 9; i += 3) {
+      float x_tmp = mvp[i + 0];
+      float x_rot_1 = sin(x_rad) * mvp[i + 1] - cos(x_rad) * mvp[i + 2];
+      float x_rot_2 = cos(x_rad) * mvp[i + 1] + sin(x_rad) * mvp[i + 2];
+      float y_z_rot = cos(y_rad) * x_tmp;
+
+      mvp[i + 0] = cos(z_rad) * (y_z_rot + sin(y_rad) * x_rot_1) + sin(z_rad) * x_rot_2;
+      mvp[i + 1] = sin(z_rad) * (-y_z_rot - sin(y_rad) * x_rot_1)  + cos(z_rad) * x_rot_2;
+      mvp[i + 2] = x_tmp * sin(y_rad) - x_rot_1 * cos(y_rad);
+	  //g_print("\ni = %i\n", i);
+	  //g_print("\nmvp is %f %f %f %f\n", mvp[i], mvp[i+1], mvp[i+2], mvp[i+3]);
+    }
+  }
+
+	void DrawFigure() {
+	  float mvp[16] = {1, 0, 0, 0,   0,1,0,0,  0,0,1,0, 0,0,0,1};
+
+	  ComputeMVP(mvp);
+
+	  glUseProgram(program_);
+	  glUniformMatrix4fv(mvp_, 1, GL_FALSE, &mvp[0]);
 	  
 
 	  glEnableVertexAttribArray(0);
-	  glBindBuffer(GL_ARRAY_BUFFER, buffer_->GetVertexBuffer());
+	  glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_);
 	  glVertexAttribPointer(0, 3, GL_FLOAT, GL_TRUE, 0, 0);
 
-	  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer_->GetElementBuffer());
-      glDrawArrays(GL_LINE_LOOP, 0, 3);
+	  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer_);
+      glDrawArrays(GL_TRIANGLES, 0, 3);
+      //glDrawArrays(GL_LINE_LOOP, 3, 3);
 	  //TODO
 	  glDisableVertexAttribArray(0);
 	  glUseProgram(0);
 
 	}
+
+	void AttachAffineData(s21::AffineData* data) {
+	  affine_data_ = data;
+	}
+
   private:
     GtkWidget* area_ = nullptr;
 	GdkGLContext* context_ = nullptr;
-	s21::Buffer* buffer_ = nullptr;
-	s21::Shader* shader_ = nullptr;
+    
+	GLuint vao_ = 0;
+    GLuint vertex_buffer_ = 0;
+    GLuint element_buffer_ = 0;
+    GLuint program_ = 0;
+    GLuint mvp_ = 0;
+
+	s21::AffineData* affine_data_ = nullptr;
+
 
 	void InitArea() {
 	  area_ = gtk_gl_area_new();
@@ -77,23 +141,91 @@ class DrawingArea: public Widget {
 	  g_signal_connect(area_, "unrealize", G_CALLBACK(Unrealize), this);
 	}
 
-    s21::Buffer* AllocateBufferMemory() {return new s21::Buffer();}
-	s21::Shader* AllocateShaderMemory() {return new s21::Shader();}
-    void RemoveBuffer() {if(buffer_) delete buffer_;}
-	void RemoveShader() {if(shader_) delete shader_;}
+  void InitBuffer() {
+    std::vector<float> v {0.0, 0.0, 0.0,  0.5, 0.5, 0.0,  -0.5, 0.5, 0.0,
+                          -0.5, -0.5, 0.0,  0.5, -0.5, 0.0 };
+    std::vector<int> f {1, 2, 3, 1, 4, 5};
 
-	void InitBuffer() {
-	  buffer_ = AllocateBufferMemory();
-	  std::vector<float> v {0.0, 0.0, 0.0,  0.5, 0.5, 0.5,  -0.5, 0.5, 0.0,
-                           -0.5, -0.5, 0.0,  0.5, -0.5, 0.0 };
-	  std::vector<int> f {1, 2, 3, 1, 4, 5};
-	  buffer_->CreateBuffer(v,f);   //TODO
-	}
+    glGenVertexArrays(1, &vao_);
+    glBindVertexArray(vao_);
 
-	void InitShader() {
-	  shader_ = AllocateShaderMemory();
-	  shader_->InitShader();
-	}
+    glGenBuffers(1, &vertex_buffer_);
+    glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float)*v.size(), v.data(), GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    glGenBuffers(1, &element_buffer_);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer_);
+  }
+
+  void InitShader() {
+    GLuint vertex, fragment;
+    int status; //??
+
+    const char* file_name = "glarea/vs.glsl";
+    vertex = CreateShader(GL_VERTEX_SHADER, LoadFile(file_name));
+
+    if (vertex) {
+      file_name = "glarea/fs.glsl";
+      fragment = CreateShader(GL_FRAGMENT_SHADER, LoadFile(file_name));
+    } else {
+      g_print("\nvertex shader failed\n");
+      return;
+    }
+
+    if (!fragment) {
+      glDeleteShader(vertex);
+      g_print("\nfragment shader failed\n");
+      return;
+    }
+
+    program_ = glCreateProgram();
+    glAttachShader(program_, vertex);
+    glAttachShader(program_, fragment);
+    glLinkProgram(program_);
+
+    glGetProgramiv(program_, GL_LINK_STATUS, &status);
+    if (status == GL_FALSE) {
+      g_print("\nprogram link failed\n");
+    } //TODO
+
+    mvp_ = glGetUniformLocation(program_, "mvp");
+
+    glDetachShader(program_, vertex);
+    glDetachShader(program_, fragment);
+
+    glDeleteShader(vertex);
+    glDeleteShader(fragment);
+  //g_print("\nprog = %i, <-> %i\n", program, *program_out);	
+  }
+
+  GLuint CreateShader(int type, const char* src) {
+    GLuint shader;
+    int status;
+
+    shader = glCreateShader(type);
+    glShaderSource(shader, 1, &src, NULL);
+    glCompileShader(shader);
+
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
+    if (status == GL_FALSE) {
+      g_print("\nCreate shader error\n");
+    } //TODO
+    return shader;
+  }
+
+  char* LoadFile(const char* file_name) {
+    int len = 1024; //TODO
+    char* text = new char[len]();
+    FILE* fp = fopen(file_name, "rb");
+    if (fp) {
+      fread(text, 1, len, fp);
+      fclose(fp);
+    } else {
+      g_print("\nError Opening File\n");
+    }
+    return text;
+  }
 
 };
 }

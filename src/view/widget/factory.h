@@ -29,7 +29,7 @@ class TranslationPannelFactory: public Factory {
     }
   private:
     GtkAdjustment* GetAdjustment() {
-      return gtk_adjustment_new(0.0, -10.0, 10.0, 0.01, 0, 0);
+      return gtk_adjustment_new(0.0, -5.0, 5.0, 0.01, 0, 0);
     }
 };
 
@@ -69,7 +69,7 @@ class ScalingPannelFactory: public Factory {
     }
   private:
     GtkAdjustment* GetAdjustment() {
-      return gtk_adjustment_new(0.0, -1.0, 1.0, 0.001, 0, 0);
+      return gtk_adjustment_new(0.0, -0.9999999999, 0.999999999999, 0.001, 0, 0);
     }
 };
 }

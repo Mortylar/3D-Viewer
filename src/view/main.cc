@@ -58,6 +58,9 @@ void PrintDouble(GtkWidget* button, s21::Widget* data) {
   s21::DrawingArea* area = new s21::DrawingArea();
   gtk_grid_attach(GTK_GRID(grid), area->GetRoot(), 2, 0, 4, 4);
 
+  pan->SetMother(area);
+  area->AttachAffineData(pan->GetData());
+
 
   gtk_widget_set_visible(window, true);
 }
