@@ -49,7 +49,7 @@ class RotationPannelFactory: public Factory {
     }
   private:
     GtkAdjustment* GetAdjustment() {
-      return gtk_adjustment_new(0.0, -2*G_PI, 2*G_PI, 0.01, 0, 0);
+      return gtk_adjustment_new(0.0, -1*G_PI, 1*G_PI, 0.05, 0, 0);
     }
 };
 

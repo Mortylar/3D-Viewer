@@ -4,7 +4,6 @@
 #include <gtk/gtk.h>
 
 #include "widget.h"
-#include "opengl_model.h"
 #include <epoxy/gl.h>
 
 namespace s21 {
@@ -96,6 +95,8 @@ class DrawingArea: public Widget {
 	  float mvp[16] = {1, 0, 0, 0,   0,1,0,0,  0,0,1,0, 0,0,0,1};
 
 	  ComputeMVP(mvp);
+	  glEnable(GL_CULL_FACE);
+	  glFrontFace(GL_CW);
 
 	  glUseProgram(program_);
 	  glUniformMatrix4fv(mvp_, 1, GL_FALSE, &mvp[0]);
@@ -106,8 +107,23 @@ class DrawingArea: public Widget {
 	  glVertexAttribPointer(0, 3, GL_FLOAT, GL_TRUE, 0, 0);
 
 	  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer_);
-      glDrawArrays(GL_TRIANGLES, 0, 3);
-      //glDrawArrays(GL_LINE_LOOP, 3, 3);
+
+
+      glEnable(GL_POINT_SMOOTH);
+	  glEnable(GL_LINE_SMOOTH);
+	  glEnable(GL_POINTS);
+	  glEnable(GL_BLEND);
+
+	  glPointSize(20);
+	  glLineWidth(100.0);
+	  glEnable(GL_LINE_WIDTH);
+	  glLineWidth(100.0);
+
+      glDrawArrays(GL_POINTS, 0, 9);
+      glDrawArrays(GL_LINE_LOOP, 0, 3);
+      glDrawArrays(GL_LINE_LOOP, 3, 3);
+      glDrawArrays(GL_LINE_LOOP, 6, 3);
+
 	  //TODO
 	  glDisableVertexAttribArray(0);
 	  glUseProgram(0);
@@ -142,8 +158,9 @@ class DrawingArea: public Widget {
 	}
 
   void InitBuffer() {
-    std::vector<float> v {0.0, 0.0, 0.0,  0.5, 0.5, 0.0,  -0.5, 0.5, 0.0,
-                          -0.5, -0.5, 0.0,  0.5, -0.5, 0.0 };
+    std::vector<float> v {-0.5, 0.0, 0.0,  0.0, 0.5, 0.0,  0.5, 0.0, 0.0,
+                          -0.5, 0.0, 0.0,  0.5, -0.0, 0.0, 0.0, 0.0, 0.5,
+                          -0.5, 0.0, 0.0,  0.0, 0.5, 0.0, 0.0, 0.0, 0.5};
     std::vector<int> f {1, 2, 3, 1, 4, 5};
 
     glGenVertexArrays(1, &vao_);

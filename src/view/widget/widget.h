@@ -191,6 +191,8 @@ class DSlider: public Widget {
     void InitSlider() {
       scale_button_ = gtk_scale_new(GTK_ORIENTATION_HORIZONTAL, adjustment_);
       gtk_frame_set_child(GTK_FRAME(GetFrame()), scale_button_);
+	  //gtk_widget_set_hexpand(scale_button_, true);
+	  //gtk_widget_set_vexpand(scale_button_, true);
       g_signal_connect(adjustment_, "value_changed", G_CALLBACK(ValueReboot), this);
     }
 };

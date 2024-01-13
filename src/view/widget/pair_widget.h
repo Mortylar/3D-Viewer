@@ -211,13 +211,13 @@ class LabelDSliderPair: public PairWidget {
 
     void InitSlider() {
       second_ = new DSlider();
-      gtk_grid_attach(GTK_GRID(GetGrid()), second_->GetRoot(), 1,0,1,1);
+      gtk_grid_attach(GTK_GRID(GetGrid()), second_->GetRoot(), 1,0,3,1);
       gtk_grid_set_column_homogeneous(GTK_GRID(GetGrid()), true);
     }
 
     void InitSlider(GtkAdjustment* adjustment) { 
       second_ = new DSlider(adjustment);
-      gtk_grid_attach(GTK_GRID(GetGrid()), second_->GetRoot(), 1,0,1,1);
+      gtk_grid_attach(GTK_GRID(GetGrid()), second_->GetRoot(), 1,0,3,1);
       gtk_grid_set_column_homogeneous(GTK_GRID(GetGrid()), true);
     }
 };

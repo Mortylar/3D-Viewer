@@ -105,6 +105,8 @@ class AffinePannel: public Widget {
       translation_pannel_ = static_cast<s21::DSliderPannel*>(factory.CreateWidget());
 	  translation_pannel_->SetMother(this);
       gtk_grid_attach(GTK_GRID(grid_), translation_pannel_->GetRoot(), 0,0,1,1);
+	  //gtk_widget_set_hexpand(translation_pannel_->GetRoot(), true);
+	  //gtk_widget_set_vexpand(translation_pannel_->GetRoot(), true);
     }
 
     void CreateRotationPannel() {
