@@ -72,6 +72,46 @@ class ScalingPannelFactory: public Factory {
       return gtk_adjustment_new(0.0, -0.9999999999, 0.999999999999, 0.001, 0, 0);
     }
 };
+
+class FileNamePannelFactory: public Factory {
+  public:
+    FileNamePannelFactory(){};
+    ~FileNamePannelFactory(){};
+
+	s21::Widget* CreateWidget() override {
+	  s21::LabelPair* file_name_pair = new s21::LabelPair();
+	  file_name_pair->SetName("Source_File");
+	  file_name_pair->SetValue("No_File");
+	  return file_name_pair;
+	}
+};
+
+class VertexInfoPannelFactory: public Factory {
+  public:
+    VertexInfoPannelFactory(){};
+    ~VertexInfoPannelFactory(){};
+
+	s21::Widget* CreateWidget() override {
+	  s21::LabelPair* vertex_info_pair = new s21::LabelPair();
+	  vertex_info_pair->SetName("Vertex_Count");
+	  vertex_info_pair->SetValue("0");
+	  return vertex_info_pair;
+	}
+};
+
+class EdgesInfoPannelFactory: public Factory {
+  public:
+    EdgesInfoPannelFactory(){};
+    ~EdgesInfoPannelFactory(){};
+
+	s21::Widget* CreateWidget() override {
+	  s21::LabelPair* edge_info_pair = new s21::LabelPair();
+	  edge_info_pair->SetName("Edges_Count");
+	  edge_info_pair->SetValue("0");
+	  return edge_info_pair;
+	}
+};
+
 }
 
 

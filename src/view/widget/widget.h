@@ -197,6 +197,77 @@ class DSlider: public Widget {
     }
 };
 
+class FileChooser: public Widget {
+  public:
+    FileChooser() {
+	  InitButton();
+	}
+
+	FileChooser(const char* name) {
+	  InitButton(name);
+	}
+
+	~FileChooser(){
+      ClearFile();
+	  g_print("\nDestr = %s\n", file_name_);
+	};
+
+	void SetMother(s21::Widget* mother) override {
+	  mother_ = mother;
+	}
+
+	void SendSignal() override {
+	  if(mother_) mother_->CatchSignal();
+	  g_print("\nName = %s\n", file_name_);
+	}
+
+	void CatchSignal() override {
+	};
+
+	void SetName(const char* name) override {
+	  gtk_button_set_label(GTK_BUTTON(button_), name);
+	}
+
+	const char* GetValue() {
+	  return file_name_;
+	}
+
+  private:
+    GtkWidget* button_ = nullptr;
+	char* file_name_ = nullptr;
+	s21::Widget* mother_ = nullptr;
+
+
+	void ClearFile() {
+	  if(file_name_) delete file_name_;
+	  g_print("\nDelete file\n");
+	}
+
+    void InitButton(const char* name = "File_Button") {
+	  button_ = gtk_button_new_with_label(name);
+	  gtk_frame_set_child(GTK_FRAME(GetFrame()), button_);
+	  g_signal_connect(button_, "clicked", G_CALLBACK(OpenFileDialog), this);
+	}
+
+	static void OpenFileDialog(GtkWidget* button, FileChooser* self) {
+	  GtkWindow* parent = GTK_WINDOW(gtk_widget_get_root(button));
+	  GtkFileDialog* dialog = gtk_file_dialog_new();
+
+	  gtk_file_dialog_open(dialog, parent, nullptr, GetFile, (void*)self);
+	  g_object_unref(dialog);
+	}
+
+	static void GetFile(GObject* source, GAsyncResult* result, void* self) {
+	  GFile* file = gtk_file_dialog_open_finish(GTK_FILE_DIALOG(source), result, nullptr);
+	  if (file) {
+        static_cast<s21::FileChooser*>(self)->ClearFile();
+	    static_cast<s21::FileChooser*>(self)->file_name_ = g_file_get_path(file);
+	    static_cast<s21::FileChooser*>(self)->SendSignal();
+	  }
+	}
+
+};
+
 }
 
 

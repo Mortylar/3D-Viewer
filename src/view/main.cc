@@ -8,6 +8,7 @@
 
 #include "widget/factory.h"
 #include "widget/affine_pannel.h"
+#include "widget/info_pannel.h"
 #include "widget/drawing_area.h"
 
 
@@ -16,6 +17,7 @@
 #else
 #define APPLICATION_NONE_FLAG G_APPLICATION_FLAGS_NONE
 #endif
+
 
 void PrintDouble(GtkWidget* button, s21::Widget* data) {
   std::vector<double*> x = static_cast<s21::DSliderPannel*>(data)->GetData();
@@ -61,6 +63,13 @@ void PrintDouble(GtkWidget* button, s21::Widget* data) {
   pan->SetMother(area);
   area->AttachAffineData(pan->GetData());
 
+  s21::FileChooser* file_chooser = new s21::FileChooser();
+  gtk_grid_attach(GTK_GRID(grid), file_chooser->GetRoot(), 6,4,1,1);
+
+
+  s21::InfoPannel* info = new s21::InfoPannel();
+  info->BuildWidget();
+  gtk_grid_attach(GTK_GRID(grid), info->GetRoot(), 6,5,1,1);
 
   gtk_widget_set_visible(window, true);
 }
@@ -71,6 +80,7 @@ int main (int argc, char **argv) {
 
   app = gtk_application_new ("org.gtk.example", APPLICATION_NONE_FLAG);
   g_signal_connect (app, "activate", G_CALLBACK(Activate), NULL);
+  //g_signal_connect
   status = g_application_run (G_APPLICATION(app), argc, argv);
   g_object_unref (app);
 

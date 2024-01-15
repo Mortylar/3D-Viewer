@@ -109,19 +109,25 @@ class DrawingArea: public Widget {
 	  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer_);
 
 
-      glEnable(GL_POINT_SMOOTH);
-	  glEnable(GL_LINE_SMOOTH);
-	  glEnable(GL_POINTS);
-	  glEnable(GL_BLEND);
+      //glEnable(GL_POINT_SMOOTH);
+	  //glEnable(GL_LINE_SMOOTH);
+	  //glEnable(GL_POINTS);
+	  //glEnable(GL_PROGRAM_POINT_SIZE);
 
 	  glPointSize(20);
-	  glLineWidth(100.0);
-	  glEnable(GL_LINE_WIDTH);
-	  glLineWidth(100.0);
+	  //glLineWidth(100.0);
+	  //glEnable(GL_LINE_WIDTH);
+	  glLineWidth(2);
+
+	  GLfloat arr[10]{};
+	  glGetFloatv(GL_ALIASED_LINE_WIDTH_RANGE, arr);
+	  g_print("\nglGet = %f, %f\n", arr[0], arr[1]);
 
       glDrawArrays(GL_POINTS, 0, 9);
       glDrawArrays(GL_LINE_LOOP, 0, 3);
+	  glLineWidth(0.0000000001);
       glDrawArrays(GL_LINE_LOOP, 3, 3);
+	  //glLineWidth(0.00001);
       glDrawArrays(GL_LINE_LOOP, 6, 3);
 
 	  //TODO
@@ -228,6 +234,7 @@ class DrawingArea: public Widget {
     if (status == GL_FALSE) {
       g_print("\nCreate shader error\n");
     } //TODO
+	delete src;
     return shader;
   }
 

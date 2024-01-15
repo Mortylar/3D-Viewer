@@ -25,6 +25,9 @@ class AffinePannel: public Widget {
 
     ~AffinePannel() {
       RemoveData();
+	  RemoveTranslationPannel();
+	  RemoveRotationPannel();
+	  RemoveScalingPannel();
 	};
 
 	void CollectData() {
@@ -123,6 +126,17 @@ class AffinePannel: public Widget {
 	  gtk_grid_attach(GTK_GRID(grid_), scaling_pannel_->GetRoot(), 0,2,1,1);
     }
 
+    void RemoveTranslationPannel() {
+	  delete translation_pannel_;
+	}
+
+    void RemoveRotationPannel() {
+	  delete rotation_pannel_;
+	}
+
+    void RemoveScalingPannel() {
+	  delete scaling_pannel_;
+	}
 
 };
 
