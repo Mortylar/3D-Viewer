@@ -114,21 +114,24 @@ class DrawingArea: public Widget {
 	  //glEnable(GL_POINTS);
 	  //glEnable(GL_PROGRAM_POINT_SIZE);
 
-	  glPointSize(20);
+	  //glPointSize(20);
 	  //glLineWidth(100.0);
 	  //glEnable(GL_LINE_WIDTH);
-	  glLineWidth(2);
+	  //glLineWidth(2);
 
+	  glEnable(GL_LINE_STIPPLE);
+	  glLineStipple(0, 0);
 	  GLfloat arr[10]{};
 	  glGetFloatv(GL_ALIASED_LINE_WIDTH_RANGE, arr);
 	  g_print("\nglGet = %f, %f\n", arr[0], arr[1]);
 
       glDrawArrays(GL_POINTS, 0, 9);
-      glDrawArrays(GL_LINE_LOOP, 0, 3);
-	  glLineWidth(0.0000000001);
-      glDrawArrays(GL_LINE_LOOP, 3, 3);
+      //glDrawArrays(GL_LINE_LOOP, 0, 3);
+	//  glLineWidth(0.0000000001);
+      //glDrawArrays(GL_LINE_LOOP, 3, 3);
 	  //glLineWidth(0.00001);
-      glDrawArrays(GL_LINE_LOOP, 6, 3);
+      //glDrawArrays(GL_LINE_LOOP, 6, 3);
+      glDrawElements(GL_LINE_LOOP, 6, GL_UNSIGNED_INT, 0);
 
 	  //TODO
 	  glDisableVertexAttribArray(0);
@@ -167,7 +170,7 @@ class DrawingArea: public Widget {
     std::vector<float> v {-0.5, 0.0, 0.0,  0.0, 0.5, 0.0,  0.5, 0.0, 0.0,
                           -0.5, 0.0, 0.0,  0.5, -0.0, 0.0, 0.0, 0.0, 0.5,
                           -0.5, 0.0, 0.0,  0.0, 0.5, 0.0, 0.0, 0.0, 0.5};
-    std::vector<int> f {1, 2, 3, 1, 4, 5};
+    std::vector<unsigned int> f {1, 2, 3, 1, 4, 5};
 
     glGenVertexArrays(1, &vao_);
     glBindVertexArray(vao_);
@@ -179,6 +182,8 @@ class DrawingArea: public Widget {
 
     glGenBuffers(1, &element_buffer_);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer_);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int)*f.size(), f.data(), GL_STATIC_DRAW);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
   }
 
   void InitShader() {

@@ -63,13 +63,16 @@ void PrintDouble(GtkWidget* button, s21::Widget* data) {
   pan->SetMother(area);
   area->AttachAffineData(pan->GetData());
 
-  s21::FileChooser* file_chooser = new s21::FileChooser();
-  gtk_grid_attach(GTK_GRID(grid), file_chooser->GetRoot(), 6,4,1,1);
+//  s21::FileChooser* file_chooser = new s21::FileChooser();
+//  gtk_grid_attach(GTK_GRID(grid), file_chooser->GetRoot(), 6,4,1,1);
 
 
-  s21::InfoPannel* info = new s21::InfoPannel();
-  info->BuildWidget();
-  gtk_grid_attach(GTK_GRID(grid), info->GetRoot(), 6,5,1,1);
+//  s21::InfoPannel* info = new s21::InfoPannel();
+//  info->BuildWidget();
+//  gtk_grid_attach(GTK_GRID(grid), info->GetRoot(), 6,5,1,1);
+
+  s21::ColorButton* color_button = new s21::ColorButton("AAAAAA");
+  gtk_grid_attach(GTK_GRID(grid), color_button->GetRoot(), 6,0, 2,1);
 
   gtk_widget_set_visible(window, true);
 }
