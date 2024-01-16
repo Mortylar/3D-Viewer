@@ -242,42 +242,34 @@ class ColorButton: public Widget {
     InitColorButton();
   }
 
-  ColorButton(const char* name) {
-    InitColorButton(name);
-  }
-
   ~ColorButton(){};
 
-  void SetName(const char* name) {
-    gtk_label_set_text(GTK_LABEL(label_), name);
+  void SetName(const char* name) override {
+    gtk_color_button_set_title(GTK_COLOR_BUTTON(color_button_), name);
   }
 
-  void SetMother(s21::Widget* mother) {
+  void SetMother(s21::Widget* mother) override {
     mother_ = mother;
   }
 
-  void SendSignal() {
-    if(mother_) mother_->CatchSignal()
+  void SendSignal() override {
+    if(mother_) mother_->CatchSignal();
   }
-  void CatchSignal() {} //TODO
-  
+
+  void CatchSignal() override {} //TODO
+ 
+  GdkRGBA GetColor() {
+    return color_;
+  }
+
  private:
-  GtkWidget* grid_ = nullptr;
-  GtkWidget* label_ = nullptr;
   GtkWidget* color_button_ = nullptr;
   s21::Widget* mother_ = nullptr;
   GdkRGBA color_;
 
-  void InitColorButton(const char* name = "Color") {
-    grid_ = gtk_grid_new();
-    gtk_frame_set_child(GTK_FRAME(GetRoot()), grid_);
-    label_ = gtk_label_new(name);
-    //gtk_label_set_text(GTK_LABEL(label_), name);
+  void InitColorButton() {
     color_button_ = gtk_color_button_new();
-
-    gtk_grid_attach(GTK_GRID(grid_), label_, 0,0,1,1);
-    gtk_grid_attach(GTK_GRID(grid_), color_button_, 1,0,1,1);
-
+    gtk_frame_set_child(GTK_FRAME(GetRoot()), color_button_);
     g_signal_connect(color_button_, "color-set", G_CALLBACK(SetColor), this);
   }
 

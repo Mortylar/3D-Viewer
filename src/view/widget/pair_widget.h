@@ -222,6 +222,57 @@ class LabelDSliderPair: public PairWidget {
     }
 };
 
+class LabelColorButtonPair: public PairWidget {
+ public:
+  LabelColorButtonPair() {
+    InitLabel();
+    InitColorButton();
+  };
+
+
+  LabelColorButtonPair(const char* name) {
+    InitLabel(name);
+    InitColorButton();
+  };
+
+  ~LabelColorButtonPair() {};
+
+  void SetName(const char* name) override {
+    first_->SetName(name);
+  }
+
+  void SetValue(const char* value) {
+    second_->SetName(value);
+  }
+
+  void SetMother(s21::Widget* mother) override {
+    first_->SetMother(mother);
+    second_->SetMother(mother);
+  }
+
+  void SendSignal() override {} //TODO
+  void CatchSignal() override {} //TODO
+ 
+  GdkRGBA GetColor() {
+    return second_->GetColor();
+  }
+
+ private:
+  Label* first_ = nullptr;
+  ColorButton* second_ = nullptr;
+
+  void InitLabel(const char* name = "") {
+    first_ = new Label(name);
+    gtk_grid_attach(GTK_GRID(GetGrid()), first_->GetRoot(), 0,0,1,1);
+  }
+
+  void InitColorButton() {
+    second_ = new ColorButton();
+    gtk_grid_attach(GTK_GRID(GetGrid()), second_->GetRoot(), 1,0,1,1);
+  }
+
+};
+
 }
 
 

@@ -71,7 +71,7 @@ void PrintDouble(GtkWidget* button, s21::Widget* data) {
 //  info->BuildWidget();
 //  gtk_grid_attach(GTK_GRID(grid), info->GetRoot(), 6,5,1,1);
 
-  s21::ColorButton* color_button = new s21::ColorButton("AAAAAA");
+  s21::LabelColorButtonPair* color_button = new s21::LabelColorButtonPair("AAAAAA");
   gtk_grid_attach(GTK_GRID(grid), color_button->GetRoot(), 6,0, 2,1);
 
   gtk_widget_set_visible(window, true);
