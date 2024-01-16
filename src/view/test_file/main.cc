@@ -15,21 +15,23 @@ void Response(GtkWidget* file_chooser_widget, gpointer* data) {
  // g_print("\nFile is %s\n", file);
 }
 
-void FileOpened(GObject* source, GAsyncResult* result, void* data) {
+void FileOpened(GtkNativeDialog* dialog, int response, void* data) {
   GFile* file;
 
-  file = gtk_file_dialog_open_finish(GTK_FILE_DIALOG(source), result, NULL);
+  file = gtk_file_chooser_get_file(GTK_FILE_CHOOSER(dialog));//TODO
   g_print("\nPATH IS %s\n", g_file_get_path(file));
+  g_object_unref(file);
+  gtk_native_dialog_destroy(dialog);
 
 }
 
 void Clicked(GtkWidget* button, GtkWidget* demo) {
   GtkWindow *parent = GTK_WINDOW (gtk_widget_get_root (button));
-  GtkFileDialog *dialog;
-  GtkFileFilter *filter;
-  GListStore *filters;
-
-  dialog = gtk_file_dialog_new ();
+  GtkFileChooserNative *dialog; //TODO
+  //GtkFileFilter *filter;
+  //GListStore *filters;
+  GtkFileChooserAction action = GTK_FILE_CHOOSER_ACTION_OPEN;
+  dialog = gtk_file_chooser_native_new("Open file", parent, action, "Load", "Cancel");//TODO
 
   //filter = gtk_file_filter_new ();
   //gtk_file_filter_set_name (filter, "Images"); 
@@ -41,9 +43,10 @@ void Clicked(GtkWidget* button, GtkWidget* demo) {
   //gtk_file_dialog_set_filters (dialog, G_LIST_MODEL (filters));
   //g_object_unref (filters);
 
-  gtk_file_dialog_open (dialog, parent, NULL, FileOpened, demo);
-
-  g_object_unref (dialog);
+  g_signal_connect(dialog, "response", G_CALLBACK(FileOpened), NULL);
+  //gtk_file_dialog_open (dialog, parent, NULL, FileOpened, demo);//TODO
+  gtk_native_dialog_show(GTK_NATIVE_DIALOG(dialog));
+  //g_object_unref (dialog);
 }
 
  void Activate(GtkApplication *app, gpointer user_data) {

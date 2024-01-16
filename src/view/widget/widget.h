@@ -251,14 +251,16 @@ class FileChooser: public Widget {
 
 	static void OpenFileDialog(GtkWidget* button, FileChooser* self) {
 	  GtkWindow* parent = GTK_WINDOW(gtk_widget_get_root(button));
-	  GtkFileDialog* dialog = gtk_file_dialog_new();
+	  GtkFileChooserNative* dialog;
+	  GtkFileChooserAction action = GTK_FILE_CHOOSER_ACTION_OPEN;
+	  dialog = gtk_file_chooser_native_new("Open file", parent, action, "Load", "Cancel");
 
-	  gtk_file_dialog_open(dialog, parent, nullptr, GetFile, (void*)self);
-	  g_object_unref(dialog);
+	  g_signal_connect(dialog, "response", G_CALLBACK(GetFile), self);
+	  gtk_native_dialog_show(GTK_NATIVE_DIALOG(dialog));
 	}
 
-	static void GetFile(GObject* source, GAsyncResult* result, void* self) {
-	  GFile* file = gtk_file_dialog_open_finish(GTK_FILE_DIALOG(source), result, nullptr);
+	static void GetFile(GtkNativeDialog* dialog, int response, void* self) {
+	  GFile* file = gtk_file_chooser_get_file(GTK_FILE_CHOOSER(dialog));
 	  if (file) {
         static_cast<s21::FileChooser*>(self)->ClearFile();
 	    static_cast<s21::FileChooser*>(self)->file_name_ = g_file_get_path(file);

@@ -43,7 +43,7 @@ class AffinePannel: public Widget {
 	void CatchSignal() override { //TODO
       CollectData();
 	  for(size_t i = 0; i < 3; ++i) {
-	    g_print("\n%i = (%lf, %lf, %lf)\n", i, data_->GetData()[3*i], data_->GetData()[3*i+1], data_->GetData()[3*i+2]);
+	    //g_print("\n%i = (%lf, %lf, %lf)\n", i, data_->GetData()[3*i], data_->GetData()[3*i+1], data_->GetData()[3*i+2]);
 	  }
 	  g_print("\n--------------------------------\n");
 	  SendSignal();
