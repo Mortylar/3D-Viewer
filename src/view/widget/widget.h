@@ -236,6 +236,8 @@ class FileChooser : public Widget {
   }
 };
 
+#if !defined GTK_TYPE_COLOR_DIALOG_BUTTON
+
 class ColorButton: public Widget {
  public:
   ColorButton() {
@@ -276,6 +278,101 @@ class ColorButton: public Widget {
   static void SetColor(GtkColorButton* button, s21::ColorButton* self) {
     gtk_color_chooser_get_rgba(GTK_COLOR_CHOOSER(button), &(self->color_));
     self->SendSignal();
+  }
+
+};
+
+#else
+
+class ColorButton: public Widget {
+ public:
+  ColorButton() {
+    InitColorButton();
+  }
+
+  ~ColorButton(){};
+
+  void SetName(const char* name) override {
+    gtk_color_button_set_title(GTK_COLOR_BUTTON(color_button_), name);
+  }
+
+  void SetMother(s21::Widget* mother) override {
+    mother_ = mother;
+  }
+
+  void SendSignal() override {
+    if(mother_) mother_->CatchSignal();
+  }
+
+  void CatchSignal() override {} //TODO
+ 
+  GdkRGBA GetColor() {
+    return color_;
+  }
+
+ private:
+  GtkWidget* color_button_ = nullptr;
+  s21::Widget* mother_ = nullptr;
+  GdkRGBA color_;
+
+  void InitColorButton() {
+    color_button_ = gtk_color_dialog_button_new(gtk_color_dialog_new());
+    gtk_frame_set_child(GTK_FRAME(GetRoot()), color_button_);
+    g_signal_connect(color_button_, "notify::rgba", G_CALLBACK(SetColor), this);
+  }
+
+  static void SetColor(GtkColorDialogButton* button, GParamSpec* param, s21::ColorButton* self) {
+    const GdkRGBA* color = (gtk_color_dialog_button_get_rgba(button));
+	self->color_ = *color;
+    self->SendSignal();
+  }
+
+};
+#endif
+
+class DropDownButton: public Widget {
+ public:
+  DropDownButton(const char* const* strings) {
+    InitDropDownButton(strings);
+  }
+
+  DropDownButton(GListModel* model, GtkExpression* expression) {
+    InitDropDownButton(model, expression);
+  }
+
+  ~DropDownButton() {};
+  
+  void SetName(const char* name) override {
+	  s21::Widget::SetName(name);
+  }
+
+  void SetMother(s21::Widget* mother) override {
+    mother_ = mother;
+  }
+
+  void SendSignal() override {
+    if(mother_) mother_->CatchSignal();
+  }
+
+  void CatchSignal() override {}
+
+  int GetValue() {
+    guint value = gtk_drop_down_get_selected(GTK_DROP_DOWN(drop_down_button_));
+    return (value == GTK_INVALID_LIST_POSITION) ? (-1) : static_cast<int>(value);
+  }
+
+ private:
+  s21::Widget* mother_ = nullptr;
+  GtkWidget* drop_down_button_ = nullptr;
+
+  void InitDropDownButton(const char* const* strings) {
+    drop_down_button_ = gtk_drop_down_new_from_strings(strings);
+	gtk_frame_set_child(GTK_FRAME(GetFrame()), drop_down_button_);
+  }
+
+  void InitDropDownButton(GListModel* model, GtkExpression* expression) {
+    drop_down_button_ = gtk_drop_down_new(model, expression);
+	gtk_frame_set_child(GTK_FRAME(GetFrame()), drop_down_button_);
   }
 
 };
