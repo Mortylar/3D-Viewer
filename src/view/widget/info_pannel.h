@@ -22,15 +22,15 @@ class InfoPannel: public Widget {
 	  CreateEdgesInfoPannel();
 	}
 
-	void SetMother(s21::Widget* mother) {
+	void SetMother(s21::Widget* mother) override {
 	  mother_ = mother;
 	}
 
-	void CatchSignal() {
+	void CatchSignal() override {
 	  SendSignal();
 	}
 
-	void SendSignal() {
+	void SendSignal() override {
 	  if (mother_) mother_->CatchSignal();
 	}
 

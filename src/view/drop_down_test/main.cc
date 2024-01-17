@@ -9,6 +9,9 @@
 #define APPLICATION_NONE_FLAG G_APPLICATION_FLAGS_NONE
 #endif
 
+ void AAA(GtkDropDown* self, gpointer data) {
+   g_print("\nACTIVATE\n");
+ }
  void Activate(GtkApplication *app, gpointer user_data) {
   GtkWidget *window;
   GtkWidget* grid;
@@ -30,11 +33,18 @@
   arr[1] = "BBB";
   arr[2] = "CCC";
   arr[3] = nullptr;
+
+  //const char* strings[6] = {"ddd", "eee","fff", NULL};
   GtkWidget* button = gtk_drop_down_new_from_strings(arr);
+  g_signal_connect(button, "activate", G_CALLBACK(AAA), NULL);
 
 
   gtk_grid_attach(GTK_GRID(grid), button, 0,0,1,1);
 
+  //GtkWidget* button2 = gtk_drop_down_new_from_strings(strings);
+
+  //gtk_grid_attach(GTK_GRID(grid), button2, 1,0,1,1);
+  delete[] arr;
   gtk_widget_set_visible(window, true);
 }
 
@@ -45,6 +55,7 @@ int main (int argc, char **argv) {
   app = gtk_application_new ("org.gtk.example", APPLICATION_NONE_FLAG);
   g_signal_connect (app, "activate", G_CALLBACK(Activate), NULL);
   status = g_application_run (G_APPLICATION(app), argc, argv);
+
   g_object_unref (app);
 
   return status;

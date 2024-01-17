@@ -23,6 +23,10 @@ class Widget {
     gtk_frame_set_label_align(GTK_FRAME(frame_), 0.5);
   }
 
+  virtual const char* GetName() {
+    return gtk_frame_get_label(GTK_FRAME(frame_));
+  }
+
   virtual void SetMother(s21::Widget* mother) = 0;
   virtual void CatchSignal() = 0;
   virtual void SendSignal() = 0;
@@ -343,7 +347,11 @@ class DropDownButton: public Widget {
   ~DropDownButton() {};
   
   void SetName(const char* name) override {
-	  s21::Widget::SetName(name);
+    s21::Widget::SetName(name);
+  }
+
+  const char* GetName() override {
+    return s21::Widget::GetName();
   }
 
   void SetMother(s21::Widget* mother) override {
@@ -359,6 +367,10 @@ class DropDownButton: public Widget {
   int GetValue() {
     guint value = gtk_drop_down_get_selected(GTK_DROP_DOWN(drop_down_button_));
     return (value == GTK_INVALID_LIST_POSITION) ? (-1) : static_cast<int>(value);
+  }
+
+  void SetValue(int value) {
+    gtk_drop_down_set_selected(GTK_DROP_DOWN(drop_down_button_), static_cast<guint>(value));
   }
 
  private:

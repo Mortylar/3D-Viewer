@@ -87,7 +87,7 @@ class DSpinButtonPannel: public PairWidget {
       size_ = items.size();
       auto it = items.begin();
       for(size_t i = 0; i < size_; ++i) { 
-        pair_.push_back(new LabelDSpinButtonPair(*it++));
+        pair_.push_back(new LabelDSpinButtonPair("",*it++));
 	data_.push_back(pair_[i]->GetData());
 	gtk_grid_attach(GTK_GRID(GetGrid()), pair_[i]->GetRoot(), 0, i, 1, 1);
       }

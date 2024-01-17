@@ -9,6 +9,7 @@
 #include "widget/factory.h"
 #include "widget/affine_pannel.h"
 #include "widget/info_pannel.h"
+#include "widget/line_pannel.h"
 #include "widget/drawing_area.h"
 
 
@@ -19,17 +20,10 @@
 #endif
 
 
-void PrintDouble(GtkWidget* button, s21::Widget* data) {
-  std::vector<double*> x = static_cast<s21::DSliderPannel*>(data)->GetData();
-  for (size_t i = 0; i < 3; ++i) {
-    if (*x[i] > 0) {
-      *x[i] = 1/(1 - *x[i]);
-    }
-    if (*x[i] < 0) {
-      *x[i] = (1 + *x[i]);
-    }
-  }
-  g_print("\nvalue = %lf, %lf, %lf\n", *x[0], *x[1], *x[2]);
+void PrintDouble(GtkWidget* button, s21::DropDownButton* data) {
+
+
+  g_print("\nSelected = %i\n", data->GetValue());
 }
 
  void Activate(GtkApplication *app, gpointer user_data) {
@@ -53,15 +47,20 @@ void PrintDouble(GtkWidget* button, s21::Widget* data) {
   //g_signal_connect(button, "clicked", G_CALLBACK(PrintDouble), pannel);
 
 
-  s21::AffinePannel* pan = new s21::AffinePannel();
-  pan->BuildWidget();
-  gtk_grid_attach(GTK_GRID(grid), pan->GetRoot(), 0,0,2,1);
+//  s21::AffinePannel* pan = new s21::AffinePannel();
+//  pan->BuildWidget();
+//  gtk_grid_attach(GTK_GRID(grid), pan->GetRoot(), 0,0,2,1);
 
-  s21::DrawingArea* area = new s21::DrawingArea();
-  gtk_grid_attach(GTK_GRID(grid), area->GetRoot(), 2, 0, 4, 4);
+  s21::LinePannel* lpan = new s21::LinePannel();
+  lpan->BuildWidget();
+  gtk_grid_attach(GTK_GRID(grid), lpan->GetRoot(), 0,0,2,1);
 
-  pan->SetMother(area);
-  area->AttachAffineData(pan->GetData());
+
+ // s21::DrawingArea* area = new s21::DrawingArea();
+ // gtk_grid_attach(GTK_GRID(grid), area->GetRoot(), 2, 0, 4, 4);
+
+  //pan->SetMother(area);
+  //area->AttachAffineData(pan->GetData());
 
 //  s21::FileChooser* file_chooser = new s21::FileChooser();
 //  gtk_grid_attach(GTK_GRID(grid), file_chooser->GetRoot(), 6,4,1,1);
@@ -71,8 +70,16 @@ void PrintDouble(GtkWidget* button, s21::Widget* data) {
 //  info->BuildWidget();
 //  gtk_grid_attach(GTK_GRID(grid), info->GetRoot(), 6,5,1,1);
 
-  s21::LabelColorButtonPair* color_button = new s21::LabelColorButtonPair("AAAAAA");
-  gtk_grid_attach(GTK_GRID(grid), color_button->GetRoot(), 6,0, 2,1);
+//  s21::LabelColorButtonPair* color_button = new s21::LabelColorButtonPair("AAAAAA");
+//  gtk_grid_attach(GTK_GRID(grid), color_button->GetRoot(), 6,0, 2,1);
+
+//  const char* arr[10] = {"AAA", "BBB", "CCC", "DDD", nullptr};
+//  s21::LabelDropDownButtonPair* lddb = new s21::LabelDropDownButtonPair("_LABEL_", arr);
+//  gtk_grid_attach(GTK_GRID(grid), lddb->GetRoot(), 6,0,1,1);
+
+  //g_print("\nSelected = %i\n", drop_down_button->GetValue());
+
+ // g_signal_connect(button, "clicked", G_CALLBACK(PrintDouble), drop_down_button);
 
   gtk_widget_set_visible(window, true);
 }

@@ -112,6 +112,43 @@ class EdgesInfoPannelFactory: public Factory {
 	}
 };
 
+class LineTypeFactory: public Factory {
+  public:
+    LineTypeFactory(){};
+	~LineTypeFactory(){};
+
+	s21::Widget* CreateWidget() override {
+      const char* types[4] = {"NO_LINE", "SOLID_LINE", "DOTTED_LINE", nullptr};
+	  s21::LabelDropDownButtonPair* line_type = new s21::LabelDropDownButtonPair("_Line_Type_", types);
+	  return line_type;
+	}
+};
+
+class LineColorFactory: public Factory {
+ public:
+   LineColorFactory(){};
+   ~LineColorFactory(){};
+
+   s21::Widget* CreateWidget() override {
+     const char* name = "_Line_Color_";
+     s21::LabelColorButtonPair* color_button = new s21::LabelColorButtonPair(name);
+	 return color_button;
+   }
+};
+
+class LineSizeFactory: public Factory {
+ public:
+   LineSizeFactory(){};
+   ~LineSizeFactory(){};
+
+   s21::Widget* CreateWidget() {
+     const char* name = "_Line_Width_";
+	 GtkAdjustment* adjustment = gtk_adjustment_new(0.0, 0.0, 2048.0, 0.1, 0.0, 0.0); 
+	 s21::LabelDSpinButtonPair* line_size = new s21::LabelDSpinButtonPair(name, adjustment);
+	 return line_size;
+   }
+};
+
 }
 
 

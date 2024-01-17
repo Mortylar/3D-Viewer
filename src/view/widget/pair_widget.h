@@ -81,13 +81,13 @@ class LabelPair: public PairWidget {
 
 class LabelDSpinButtonPair: public PairWidget {
   public:
-    LabelDSpinButtonPair() {
-      InitLabel();
+    LabelDSpinButtonPair(const char* name = "") {
+      InitLabel(name);
       InitDSpinButton();
     };
 
-    LabelDSpinButtonPair(GtkAdjustment* adjustment) {
-      InitLabel();
+    LabelDSpinButtonPair(const char* name, GtkAdjustment* adjustment) {
+      InitLabel(name);
       InitDSpinButton(adjustment);
     }
 
@@ -133,8 +133,8 @@ class LabelDSpinButtonPair: public PairWidget {
     Label* first_ = nullptr;
     DSpinButton* second_ = nullptr;
 
-    void InitLabel() {
-      first_ = new Label();
+    void InitLabel(const char* name = "") {
+      first_ = new Label(name);
       gtk_grid_attach(GTK_GRID(GetGrid()), first_->GetRoot(), 0, 0, 1, 1);
     }
 
@@ -241,6 +241,10 @@ class LabelColorButtonPair: public PairWidget {
     first_->SetName(name);
   }
 
+  const char* GetName() override {
+    return first_->GetName();
+  }
+
   void SetValue(const char* value) {
     second_->SetName(value);
   }
@@ -269,6 +273,69 @@ class LabelColorButtonPair: public PairWidget {
   void InitColorButton() {
     second_ = new ColorButton();
     gtk_grid_attach(GTK_GRID(GetGrid()), second_->GetRoot(), 1,0,1,1);
+  }
+
+};
+
+class LabelDropDownButtonPair: public PairWidget {
+ public:
+  LabelDropDownButtonPair(const char* name = "", const char* const* strings = nullptr) {
+    InitLabel(name);
+	InitDropDownButton(strings);
+  }
+
+  LabelDropDownButtonPair(const char* name = "", GListModel* model = nullptr,
+                                                 GtkExpression* expression = nullptr) {
+    InitLabel(name);
+	InitDropDownButton(model, expression);
+  }
+
+  ~LabelDropDownButtonPair() {
+    delete first_;
+	delete second_;
+  }
+
+  void SetName(const char* name) override {
+    first_->SetName(name);
+  }
+
+  const char* GetName() override {
+    return first_->GetName();
+  }
+
+  void SetValue(int value) {
+    second_->SetValue(value);
+  }
+
+  int GetValue() {
+    return second_->GetValue();
+  }
+
+  void SetMother(s21::Widget* mother) override {
+    first_->SetMother(mother);
+	second_->SetMother(mother);
+  }
+
+  void CatchSignal() override {};
+  void SendSignal() override {};
+
+ private:
+  Label* first_ = nullptr;
+  DropDownButton* second_ = nullptr;
+
+  void InitLabel(const char* name = "") {
+    first_ = new Label(name);
+	gtk_grid_attach(GTK_GRID(GetGrid()), first_->GetRoot(), 0,0,1,1);
+  }
+
+  void InitDropDownButton(const char* const* strings) {
+    second_ = new DropDownButton(strings);
+	gtk_grid_attach(GTK_GRID(GetGrid()), second_->GetRoot(), 1,0,1,1);
+  }
+
+  void InitDropDownButton(GListModel* model, GtkExpression* expression) {
+    second_ = new DropDownButton(model, expression);
+	gtk_grid_attach(GTK_GRID(GetGrid()), second_->GetRoot(), 1,0,1,1);
   }
 
 };
