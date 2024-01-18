@@ -117,9 +117,10 @@ class LineTypeFactory: public Factory {
     LineTypeFactory(){};
 	~LineTypeFactory(){};
 
-	s21::Widget* CreateWidget() override {
+    s21::Widget* CreateWidget() override {
+      const char* name = "Line Type";
       const char* types[4] = {"NO_LINE", "SOLID_LINE", "DOTTED_LINE", nullptr};
-	  s21::LabelDropDownButtonPair* line_type = new s21::LabelDropDownButtonPair("_Line_Type_", types);
+	  s21::LabelDropDownButtonPair* line_type = new s21::LabelDropDownButtonPair(name, types);
 	  return line_type;
 	}
 };
@@ -130,7 +131,7 @@ class LineColorFactory: public Factory {
    ~LineColorFactory(){};
 
    s21::Widget* CreateWidget() override {
-     const char* name = "_Line_Color_";
+     const char* name = "Line Color";
      s21::LabelColorButtonPair* color_button = new s21::LabelColorButtonPair(name);
 	 return color_button;
    }
@@ -142,10 +143,48 @@ class LineSizeFactory: public Factory {
    ~LineSizeFactory(){};
 
    s21::Widget* CreateWidget() {
-     const char* name = "_Line_Width_";
+     const char* name = "Line Width";
 	 GtkAdjustment* adjustment = gtk_adjustment_new(0.0, 0.0, 2048.0, 0.1, 0.0, 0.0); 
 	 s21::LabelDSpinButtonPair* line_size = new s21::LabelDSpinButtonPair(name, adjustment);
 	 return line_size;
+   }
+};
+
+class PointTypeFactory: public Factory {
+  public:
+    PointTypeFactory(){};
+	~PointTypeFactory(){};
+
+	s21::Widget* CreateWidget() override {
+      const char* name = "Point Type";
+      const char* types[4] = {"NO_POINT", "ROUND_POINT", "SQUARE_POINT", nullptr};
+	  s21::LabelDropDownButtonPair* point_type = new s21::LabelDropDownButtonPair(name, types);
+	  return point_type;
+	}
+};
+
+class PointColorFactory: public Factory {
+ public:
+   PointColorFactory(){};
+   ~PointColorFactory(){};
+
+   s21::Widget* CreateWidget() override {
+     const char* name = "Point Color";
+     s21::LabelColorButtonPair* color_button = new s21::LabelColorButtonPair(name);
+	 return color_button;
+   }
+};
+
+class PointSizeFactory: public Factory {
+ public:
+   PointSizeFactory(){};
+   ~PointSizeFactory(){};
+
+   s21::Widget* CreateWidget() {
+     const char* name = "Point Size";
+	 GtkAdjustment* adjustment = gtk_adjustment_new(0.0, 0.0, 2048.0, 0.1, 0.0, 0.0); 
+	 s21::LabelDSpinButtonPair* point_size = new s21::LabelDSpinButtonPair(name, adjustment);
+	 return point_size;
    }
 };
 

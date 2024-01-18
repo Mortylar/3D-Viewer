@@ -24,6 +24,8 @@ class PairWidget: public Widget {
     void InitGrid() {
       grid_ = gtk_grid_new();
       gtk_frame_set_child(GTK_FRAME(GetFrame()), grid_);
+	  gtk_grid_set_row_homogeneous(GTK_GRID(grid_), true);
+	  gtk_grid_set_column_homogeneous(GTK_GRID(grid_), true);
     }
 };
 
@@ -267,12 +269,14 @@ class LabelColorButtonPair: public PairWidget {
 
   void InitLabel(const char* name = "") {
     first_ = new Label(name);
-    gtk_grid_attach(GTK_GRID(GetGrid()), first_->GetRoot(), 0,0,1,1);
+    gtk_grid_attach(GTK_GRID(GetGrid()), first_->GetRoot(), 0,0,1,1); 
+	//gtk_widget_set_hexpand(first_->GetRoot(), true);
   }
 
   void InitColorButton() {
     second_ = new ColorButton();
     gtk_grid_attach(GTK_GRID(GetGrid()), second_->GetRoot(), 1,0,1,1);
+	//gtk_widget_set_hexpand(second_->GetRoot(), true);
   }
 
 };
@@ -326,16 +330,20 @@ class LabelDropDownButtonPair: public PairWidget {
   void InitLabel(const char* name = "") {
     first_ = new Label(name);
 	gtk_grid_attach(GTK_GRID(GetGrid()), first_->GetRoot(), 0,0,1,1);
+	//gtk_widget_set_hexpand(first_->GetRoot(), true);
   }
 
   void InitDropDownButton(const char* const* strings) {
     second_ = new DropDownButton(strings);
-	gtk_grid_attach(GTK_GRID(GetGrid()), second_->GetRoot(), 1,0,1,1);
+	gtk_grid_attach(GTK_GRID(GetGrid()), second_->GetRoot(), 1,0,1,1); 
+	//gtk_widget_set_hexpand(second_->GetRoot(), true);
+	//gtk_widget_set_halign(second_->GetRoot(), )
   }
 
   void InitDropDownButton(GListModel* model, GtkExpression* expression) {
     second_ = new DropDownButton(model, expression);
-	gtk_grid_attach(GTK_GRID(GetGrid()), second_->GetRoot(), 1,0,1,1);
+	gtk_grid_attach(GTK_GRID(GetGrid()), second_->GetRoot(), 1,0,1,1); 
+	//gtk_widget_set_hexpand(second_->GetRoot(), true);
   }
 
 };

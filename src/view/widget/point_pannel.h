@@ -1,5 +1,5 @@
-#ifndef SRC_VIEW_WIDGET_LINE_PANNEL_H_
-#define SRC_VIEW_WIDGET_LINE_PANNEL_H_
+#ifndef SRC_VIEW_WIDGET_POINT_PANNEL_H_
+#define SRC_VIEW_WIDGET_POINT_PANNEL_H_
 
 #include <gtk/gtk.h>
 
@@ -7,21 +7,21 @@
 #include "factory.h"
 
 namespace s21 {
-enum class LineType {
+enum class PointType {
   k_ErrorType = -1,
-  k_NoLineType = 0,
-  k_SolidLineType,
-  k_DottedLineType
+  k_NoPontType = 0,
+  k_RoundPointType,
+  k_SquarePointType
 };
 
-class LinePannel: public Widget {
+class PointPannel: public Widget {
  public:
-   LinePannel() {
+   PointPannel() {
      InitGrid();
-	 s21::Widget::SetName("_LINE_PANNEL_");
+	 s21::Widget::SetName("_POINT_PANNEL_");
    }
 
-   ~LinePannel() {
+   ~PointPannel() {
      delete type_;
 	 delete color_;
 	 delete size_;
@@ -59,21 +59,21 @@ class LinePannel: public Widget {
    }
 
    void CreateSizePannel() {
-     s21::LineSizeFactory factory;
+     s21::PointSizeFactory factory;
 	 size_ = static_cast<s21::LabelDSpinButtonPair*>(factory.CreateWidget());
 	 size_->SetMother(this);
 	 gtk_grid_attach(GTK_GRID(grid_), size_->GetRoot(), 0,0,1,1);
    }
 
    void CreateColorPannel() {
-     s21::LineColorFactory factory;
+     s21::PointColorFactory factory;
 	 color_ = static_cast<s21::LabelColorButtonPair*>(factory.CreateWidget());
 	 color_->SetMother(this);
 	 gtk_grid_attach(GTK_GRID(grid_), color_->GetRoot(), 0,1,1,1);
    }
 
    void CreateTypePannel() {
-     s21::LineTypeFactory factory;
+     s21::PointTypeFactory factory;
 	 type_ = static_cast<s21::LabelDropDownButtonPair*>(factory.CreateWidget());
 	 type_->SetMother(this);
 	 gtk_grid_attach(GTK_GRID(grid_), type_->GetRoot(), 0,2,1,1);

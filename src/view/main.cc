@@ -10,6 +10,7 @@
 #include "widget/affine_pannel.h"
 #include "widget/info_pannel.h"
 #include "widget/line_pannel.h"
+#include "widget/point_pannel.h"
 #include "widget/drawing_area.h"
 
 
@@ -55,6 +56,10 @@ void PrintDouble(GtkWidget* button, s21::DropDownButton* data) {
   lpan->BuildWidget();
   gtk_grid_attach(GTK_GRID(grid), lpan->GetRoot(), 0,0,2,1);
 
+
+  s21::PointPannel* ppan = new s21::PointPannel();
+  ppan->BuildWidget();
+  gtk_grid_attach(GTK_GRID(grid), ppan->GetRoot(), 2,0,2,1);
 
  // s21::DrawingArea* area = new s21::DrawingArea();
  // gtk_grid_attach(GTK_GRID(grid), area->GetRoot(), 2, 0, 4, 4);
