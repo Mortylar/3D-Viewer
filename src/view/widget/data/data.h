@@ -65,6 +65,8 @@ class VectorData {
 
   float* GetData() {return data_;}
 
+
+  //TODO overload []
   void SetValue(size_t pos, float value) {
     if(pos >= size_) throw std::out_of_range("s21::VectorData::SetValue - out of range");
     data_[pos] = value;
@@ -219,6 +221,38 @@ class AffineData {
     delete rotation_;
     delete scaling_;
   }
+};
+
+
+class Data {
+ public:
+   Data() {
+     InitData();
+   }
+
+   ~Data() {
+     ClearData();
+   }
+
+ private:
+   AffineData* affine_data_ = nullptr;
+   FormatData* line_data_ = nullptr;
+   FormatData* point_data_ = nullptr;
+   GdkRGBA area_color_data_;
+   int projection_data_;
+
+   void InitData() {
+     affine_data_ = new AffineData();
+     line_data_ = new FormatData(1.0, {1,0,0,0}, 0);
+     point_data_ = new FormatData(1.0, {0,1,0,0}, 0);
+   }
+
+   void ClearData() {
+     delete affine_data_;
+     delete line_data_;
+     delete point_data_;
+   }
+
 };
 
 }  // namespace s21
