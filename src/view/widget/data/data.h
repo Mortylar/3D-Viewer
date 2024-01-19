@@ -151,12 +151,49 @@ class FormatData {
 class AffineData {
  public:
    AffineData() {
+     Init();
    }
 
    AffineData(const AffineData& other) {
+     TemplateInit(other);
    }
 
    ~AffineData() {
+     Clear();
+   }
+
+   size_t GetSize() { return kDim_; }
+
+   VectorData* GetTranslation() { return translation_; }
+   VectorData* GetRotation() { return rotation_; }
+   VectorData* GetScaling() { return scaling_; }
+
+   float* GetTranslationData() { return translation_->GetData(); }
+   float* GetRotationData() { return rotation_->GetData(); }
+   float* GetScalingData() { return scaling_->GetData(); }
+
+   void SetTranslation(const VectorData& translation) {
+     *translation_ = translation;
+   }
+
+   void SetRotation(const VectorData& rotation) {
+     *rotation_ = rotation;
+   }
+
+   void SetScaling(const VectorData& scaling) {
+     *scaling_ = scaling;
+   }
+
+   void SetTranslation(float x, float y, float z) {
+     translation_->SetValue({x,y,z});
+   }
+
+   void SetRotation(float x, float y, float z) {
+     rotation_->SetValue({x,y,z});
+   }
+
+   void SetScaling(float x, float y, float z) {
+     scaling_->SetValue({x,y,z});
    }
 
  private:
@@ -170,6 +207,18 @@ class AffineData {
      rotation_ = new VectorData(kDim_);
      scaling_ = new VectorData{1,1,1};
    }
+
+  void TemplateInit(const AffineData& other) { 
+    translation_ = new VectorData(*(other.translation_));
+    rotation_ = new VectorData(*(other.rotation_));
+    scaling_ = new VectorData(*(other.scaling_));
+  }
+
+  void Clear() {
+    delete translation_;
+    delete rotation_;
+    delete scaling_;
+  }
 };
 
 }  // namespace s21
