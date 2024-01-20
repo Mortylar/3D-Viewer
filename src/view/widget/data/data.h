@@ -2,7 +2,8 @@
 #define SRC_VIEW_WIDGET_DATA_DATA_H_
 
 #include <cstring>
-#include <algorithm>
+//#include <algorithm>
+#include <stdexcept>
 #include <initializer_list>
 #include <gtk/gtk.h>
 
@@ -166,13 +167,13 @@ class AffineData {
 
    size_t GetSize() { return kDim_; }
 
-   VectorData* GetTranslation() { return translation_; }
-   VectorData* GetRotation() { return rotation_; }
-   VectorData* GetScaling() { return scaling_; }
+   VectorData* GetTranslationData() { return translation_; }
+   VectorData* GetRotationData() { return rotation_; }
+   VectorData* GetScalingData() { return scaling_; }
 
-   float* GetTranslationData() { return translation_->GetData(); }
-   float* GetRotationData() { return rotation_->GetData(); }
-   float* GetScalingData() { return scaling_->GetData(); }
+   float* GetTranslation() { return translation_->GetData(); }
+   float* GetRotation() { return rotation_->GetData(); }
+   float* GetScaling() { return scaling_->GetData(); }
 
    void SetTranslation(const VectorData& translation) {
      *translation_ = translation;
@@ -233,6 +234,121 @@ class Data {
    ~Data() {
      ClearData();
    }
+
+   int GetProjection() {
+     return projection_data_;
+   }
+
+   void SetProjection(int type) {
+     projection_data_ = type;
+   }
+
+   GdkRGBA GetAreaColor() {
+     return area_color_data_;
+   }
+
+   void SetAreaColor(GdkRGBA color) {
+     area_color_data_ = color;
+   }
+
+   float GetLineWidth() {
+     return line_data_->GetSize();
+   }
+
+   void SetLineWidth(float width) {
+     line_data_->SetSize(width);
+   }
+
+   float GetPointSize() {
+     return point_data_->GetSize();
+   }
+
+   void SetPointSize(float size) {
+     point_data_->SetSize(size);
+   }
+
+   int GetLineType() {
+     return line_data_->GetType();
+   }
+
+   void SetLineType(int type) {
+     line_data_->SetType(type);
+   }
+
+   int GetPointType() {
+     return point_data_->GetType();
+   }
+
+   void SetPointType(int type) {
+     point_data_->SetType(type);
+   }
+
+  GdkRGBA GetLineColor() {
+    return line_data_->GetColor();
+  }
+
+  void SetLineColor(GdkRGBA color) {
+    line_data_->SetColor(color);
+  }
+
+  GdkRGBA GetPointColor() {
+    return point_data_->GetColor();
+  }
+
+  void SetPointColor(GdkRGBA color) {
+    point_data_->SetColor(color);
+  }
+
+  VectorData* GetTranslationData() {
+    return affine_data_->GetTranslationData();
+  }
+
+  float* GetTranslation() {
+    return affine_data_->GetTranslation();
+  }
+
+  void SetTranslationData(VectorData* data) {
+    affine_data_->SetTranslation(*data);
+  }
+
+  void SetTranslation(float x, float y, float z) {
+    affine_data_->SetTranslation(x,y,z);
+  }
+
+  VectorData* GetRotationData() {
+    return affine_data_->GetRotationData();
+  }
+
+  float* GetRotation() {
+    return affine_data_->GetRotation();
+  }
+
+  void SetRotationData(VectorData* data) {
+    affine_data_->SetRotation(*data);
+  }
+
+  void SetRotation(float x, float y, float z) {
+    affine_data_->SetRotation(x,y,z);
+  }
+
+  VectorData* GetScalingData() {
+    return affine_data_->GetScalingData();
+  }
+
+  float* GetScaling() {
+    return affine_data_->GetScaling();
+  }
+
+  void SetScalingData(VectorData* data) {
+    affine_data_->SetScaling(*data);
+  }
+
+  void SetScaling(float x, float y, float z) {
+    affine_data_->SetScaling(x,y,z);
+  }
+
+
+
 
  private:
    AffineData* affine_data_ = nullptr;
