@@ -7,10 +7,7 @@
 #include "widget/pannel.h"
 
 #include "widget/factory.h"
-#include "widget/affine_pannel.h"
-#include "widget/info_pannel.h"
-#include "widget/line_pannel.h"
-#include "widget/point_pannel.h"
+#include "widget/combo_widget.h"
 #include "widget/drawing_area.h"
 
 
@@ -21,10 +18,12 @@
 #endif
 
 
-void PrintDouble(GtkWidget* button, s21::DropDownButton* data) {
-
-
-  g_print("\nSelected = %i\n", data->GetValue());
+static void PrintDouble(GtkButton* button, gpointer u_data) {
+  s21::FormatData* data = static_cast<s21::FormatData*>(u_data);
+  g_print("\nType = %i", data->GetType());
+  g_print("\nSize = %f", data->GetSize());
+  //g_print("\nType = %i", data->GetType());
+  //g_print("\nSelected = %i\n", data->GetValue());
 }
 
  void Activate(GtkApplication *app, gpointer user_data) {
@@ -43,21 +42,25 @@ void PrintDouble(GtkWidget* button, s21::DropDownButton* data) {
 
 
 
+  s21::FormatData* f_data = new s21::FormatData();
+  //f_data.Print();
+  //g_print("\nInit size = %f\n", f_data.GetSize());
   GtkWidget* button = gtk_button_new_with_label("button");
   gtk_grid_attach(GTK_GRID(grid), button, 0,2,1,1);
-  //g_signal_connect(button, "clicked", G_CALLBACK(PrintDouble), pannel);
+  g_signal_connect(GTK_BUTTON(button), "clicked", G_CALLBACK(PrintDouble), f_data);
 
 
 //  s21::AffinePannel* pan = new s21::AffinePannel();
 //  pan->BuildWidget();
 //  gtk_grid_attach(GTK_GRID(grid), pan->GetRoot(), 0,0,2,1);
 
-  s21::LinePannel* lpan = new s21::LinePannel();
+  //s21::FormatData f_data;
+  s21::LinePannel* lpan = new s21::LinePannel(f_data);
   lpan->BuildWidget();
   gtk_grid_attach(GTK_GRID(grid), lpan->GetRoot(), 0,0,2,1);
 
 
-  s21::PointPannel* ppan = new s21::PointPannel();
+  s21::PointPannel* ppan = new s21::PointPannel(f_data);
   ppan->BuildWidget();
   gtk_grid_attach(GTK_GRID(grid), ppan->GetRoot(), 2,0,2,1);
 

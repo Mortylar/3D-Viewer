@@ -47,6 +47,7 @@ class DrawingArea: public Widget {
 
   void ComputeMVP(float* mvp) {
     float tmp[9] = {1,0,0,  0,1,0, 0,0,1};
+	/*
     float* array = affine_data_->GetData();
  
     Rotate(tmp, array[0], array[1], array[2]);
@@ -68,7 +69,7 @@ class DrawingArea: public Widget {
 	mvp[14] = array[5];
 
 	
-/*    Rotate(tmp, array[0], array[1], array[2]);
+    Rotate(tmp, array[0], array[1], array[2]);
 	for (size_t i = 0; i < 3; ++i) {
 	  mvp[i] = tmp[i];
 	  mvp[4+i] = tmp[3 + i];

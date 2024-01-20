@@ -314,6 +314,10 @@ class ColorButton: public Widget {
     return color_;
   }
 
+  void SetValue(GdkRGBA color) {
+    gtk_color_dialog_button_set_rgba(GTK_COLOR_DIALOG_BUTTON(color_button_), &color);
+  }
+
  private:
   GtkWidget* color_button_ = nullptr;
   s21::Widget* mother_ = nullptr;

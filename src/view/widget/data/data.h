@@ -109,17 +109,87 @@ class VectorData {
   }
 };
 
+class InfoData {
+ public:
+   InfoData() {}
+
+   InfoData(const char* file_name, size_t vertex_count = 0, size_t edges_count = 0) {
+     file_name_ = file_name;
+	 vertex_count_ = vertex_count;
+	 edges_count_ = edges_count;
+   }
+
+   InfoData(const InfoData& other) {
+     if (this != &other) {
+       Copy(other);
+	 } else {
+	   SetDefault();
+	 }
+   }
+   
+   InfoData& operator=(const InfoData& other) {
+     if(this != &other) {
+	   Copy(other);
+	 }
+	 return *this;
+   }
+
+   ~InfoData(){}
+
+   void SetFileName(const char* file_name) {
+     file_name_ = file_name;
+   }
+
+   const char* GetFileName() {
+     return file_name_.data();
+   }
+
+   void SetVertexCount(size_t count) {
+     vertex_count_ = count;
+   }
+
+   size_t GetVertexCount() {
+     return vertex_count_;
+   }
+
+   void SetEdgesCount(size_t count) {
+     edges_count_ = count;
+   }
+
+   size_t GetEdgesCount() {
+     return edges_count_;
+   }
+
+ private:
+   std::string file_name_ = "";
+   size_t vertex_count_ = 0;
+   size_t edges_count_ = 0;
+
+   void Copy(const InfoData& other) { 
+     file_name_ = other.file_name_;
+     vertex_count_ = other.vertex_count_;
+     edges_count_ = other.edges_count_;
+   }
+
+   void SetDefault() {
+     file_name_ = "";
+	 vertex_count_ = 0;
+	 edges_count_ = 0;
+   }
+};
 
 class FormatData {
  public:
    FormatData(){}
-
+   
    FormatData(float size, GdkRGBA color, int type): size_(size), color_(color), type_(type){}
 
    FormatData(const FormatData& other) {
      if(this != &other) {
        Copy(other);
-     }
+     } else {
+	   SetDefault();
+	 }
    }
 
    FormatData& operator=(const FormatData& other) {
@@ -148,6 +218,12 @@ class FormatData {
      size_ = other.size_;
      color_ = other.color_;
      type_= other.type_;
+   }
+
+   void SetDefault() {
+     size_ = 0;
+	 color_ = {0,0,0,0};
+	 type_ = 0;
    }
 };
 
@@ -347,26 +423,50 @@ class Data {
     affine_data_->SetScaling(x,y,z);
   }
 
+  const char* GetFileName() {
+    return info_data_->GetFileName();
+  }
 
+  void SetFileName(const char* file_name) {
+    info_data_->SetFileName(file_name);
+  }
 
+  size_t GetVertexCount() {
+    return info_data_->GetVertexCount();
+  }
+
+  void SetVertexCount(size_t count) {
+    info_data_->SetVertexCount(count);
+  }
+
+  size_t GetEdgesCount() {
+    return info_data_->GetEdgesCount();
+  }
+
+  void SetEdgesCount(size_t count) {
+    info_data_->SetEdgesCount(count);
+  }
 
  private:
    AffineData* affine_data_ = nullptr;
    FormatData* line_data_ = nullptr;
    FormatData* point_data_ = nullptr;
+   InfoData* info_data_ = nullptr;
    GdkRGBA area_color_data_;
    int projection_data_;
 
    void InitData() {
      affine_data_ = new AffineData();
-     line_data_ = new FormatData(1.0, {1,0,0,0}, 0);
-     point_data_ = new FormatData(1.0, {0,1,0,0}, 0);
+     line_data_ = new FormatData(1.0, {1,0,0,0}, 1);
+     point_data_ = new FormatData(1.0, {0,1,0,0}, 1);
+	 info_data_ = new InfoData();
    }
 
    void ClearData() {
      delete affine_data_;
      delete line_data_;
      delete point_data_;
+	 delete info_data_;
    }
 
 };

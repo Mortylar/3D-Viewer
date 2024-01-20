@@ -5,7 +5,8 @@
 
 #include "widget.h"
 #include "factory.h"
-#include "affine_data.h"
+//#include "affine_data.h"
+#include "data/data.h"
 
 namespace s21 {
 class AffinePannel: public Widget {
@@ -42,11 +43,7 @@ class AffinePannel: public Widget {
 
 	void CatchSignal() override { //TODO
       CollectData();
-	  for(size_t i = 0; i < 3; ++i) {
-	    //g_print("\n%i = (%lf, %lf, %lf)\n", i, data_->GetData()[3*i], data_->GetData()[3*i+1], data_->GetData()[3*i+2]);
-	  }
-	  g_print("\n--------------------------------\n");
-	  SendSignal();
+	  if (mother_) SendSignal();
 	}
 
 	void SendSignal() override {
@@ -82,6 +79,7 @@ class AffinePannel: public Widget {
 
 	void CollectTranslation() {
 	  std::vector<double*> translation_data = translation_pannel_->GetData();
+
 	  data_->SetTranslation(*translation_data[0], *translation_data[1], *translation_data[2]);
 	}
 

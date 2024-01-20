@@ -251,6 +251,10 @@ class LabelColorButtonPair: public PairWidget {
     second_->SetName(value);
   }
 
+  void SetValue(GdkRGBA color) {
+    second_->SetValue(color);
+  }
+
   void SetMother(s21::Widget* mother) override {
     first_->SetMother(mother);
     second_->SetMother(mother);
