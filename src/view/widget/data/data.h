@@ -375,6 +375,14 @@ class Data {
     point_data_->SetColor(color);
   }
 
+  FormatData* GetLineData() {
+    return line_data_;
+  }
+
+  FormatData* GetPointData() {
+    return point_data_;
+  }
+
   VectorData* GetTranslationData() {
     return affine_data_->GetTranslationData();
   }

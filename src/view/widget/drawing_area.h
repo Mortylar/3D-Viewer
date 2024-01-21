@@ -4,80 +4,57 @@
 #include <gtk/gtk.h>
 
 #include "widget.h"
+#include "data/data.h"
 #include <epoxy/gl.h>
 
 namespace s21 {
 class DrawingArea: public Widget {
   public:
-    DrawingArea() {
+    DrawingArea(s21::Data* data):data_(data) {
       InitArea(); 
 	}
 
 	~DrawingArea(){};
 
-	void SetMother(s21::Widget* mother) {} //TODO
-	void CatchSignal() {
+	void SetMother(s21::Widget* mother) override {
+      mother_ = mother;
+	}
+
+	void CatchSignal() override {
      g_print("\ngo\n");
 	 gtk_widget_queue_draw(area_);
 
 	} //TODO
-	void SendSignal() {} //TODO
+
+	void SendSignal() override {
+      if(mother_) mother_->CatchSignal();
+	} //TODO
 
 
-	static void Realize(GtkWidget* area, s21::DrawingArea* self) {
+	static void Realize(GtkWidget* area, s21::DrawingArea* self) { //TODO private
 	  gtk_gl_area_make_current(GTK_GL_AREA(self->area_));
 	  self->context_ = gtk_gl_area_get_context(GTK_GL_AREA(self->area_));  
 	  self->InitBuffer();
 	  self->InitShader();
 	}
 
-	static void Render(GtkWidget* area, GdkGLContext* context, s21::DrawingArea* self) {
+	static void Render(GtkWidget* area, GdkGLContext* context, s21::DrawingArea* self) { //TODO private
       gtk_gl_area_make_current(GTK_GL_AREA(self->area_));
-	  glClearColor(0.0, 0.0, 0.5, 1.0); //TODO
-	  glEnable(GL_DEPTH_TEST);
-	  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+      self->SetAreaColor();
 	  self->DrawFigure();
 	  glFlush();
 	}
 
-	static void Unrealize(GtkWidget* area, s21::DrawingArea* self) {
+	static void Unrealize(GtkWidget* area, s21::DrawingArea* self) { //TODO private
 	  //self->RemoveBuffer();
 	  //self->RemoveShader();
 	}
 
-  void ComputeMVP(float* mvp) {
+  void ComputeMVP(float* mvp) { //TODO private
     float tmp[9] = {1,0,0,  0,1,0, 0,0,1};
-	/*
-    float* array = affine_data_->GetData();
- 
-    Rotate(tmp, array[0], array[1], array[2]);
-	for (size_t i = 0; i < 3; ++i) {
-	  mvp[i] = tmp[i];
-	  mvp[4+i] = tmp[3 + i];
-	  mvp[8+i] = tmp[6 + i];
-	}
-
-
-	mvp[0] *=  array[6];
-    mvp[5] *= array[7];
-    mvp[10] *= array[8];
-
-//	Rotate(mvp, array[0], array[1], array[2]);
-
-	mvp[12] = array[3];
-	mvp[13] = array[4];
-	mvp[14] = array[5];
-
-	
-    Rotate(tmp, array[0], array[1], array[2]);
-	for (size_t i = 0; i < 3; ++i) {
-	  mvp[i] = tmp[i];
-	  mvp[4+i] = tmp[3 + i];
-	  mvp[8+i] = tmp[6 + i];
-	}*/
   }
 
-  void Rotate(float* mvp, float x_rad, float y_rad, float z_rad) {
+  void Rotate(float* mvp, float x_rad, float y_rad, float z_rad) { //TODO remove after include controller
     for (size_t i = 0; i < 9; i += 3) {
       float x_tmp = mvp[i + 0];
       float x_rot_1 = sin(x_rad) * mvp[i + 1] - cos(x_rad) * mvp[i + 2];
@@ -92,7 +69,7 @@ class DrawingArea: public Widget {
     }
   }
 
-	void DrawFigure() {
+	void DrawFigure() { //TODO private
 	  float mvp[16] = {1, 0, 0, 0,   0,1,0,0,  0,0,1,0, 0,0,0,1};
 
 	  ComputeMVP(mvp);
@@ -140,13 +117,10 @@ class DrawingArea: public Widget {
 
 	}
 
-	void AttachAffineData(s21::AffineData* data) {
-	  affine_data_ = data;
-	}
-
   private:
     GtkWidget* area_ = nullptr;
 	GdkGLContext* context_ = nullptr;
+	s21::Widget* mother_ = nullptr;
     
 	GLuint vao_ = 0;
     GLuint vertex_buffer_ = 0;
@@ -154,7 +128,7 @@ class DrawingArea: public Widget {
     GLuint program_ = 0;
     GLuint mvp_ = 0;
 
-	s21::AffineData* affine_data_ = nullptr;
+	s21::Data* data_ = nullptr;
 
 
 	void InitArea() {
@@ -165,6 +139,13 @@ class DrawingArea: public Widget {
 	  g_signal_connect(area_, "realize", G_CALLBACK(Realize), this);
 	  g_signal_connect(area_, "render", G_CALLBACK(Render), this);
 	  g_signal_connect(area_, "unrealize", G_CALLBACK(Unrealize), this);
+	}
+
+	void SetAreaColor() {
+	  GdkRGBA color = data_->GetAreaColor();
+	  glClearColor(color.red, color.green, color.blue, color.alpha + 1);
+	  glEnable(GL_DEPTH_TEST);
+	  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
   void InitBuffer() {

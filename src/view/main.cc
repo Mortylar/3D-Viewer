@@ -42,12 +42,11 @@ static void PrintDouble(GtkButton* button, gpointer u_data) {
 
 
 
-  s21::FormatData* f_data = new s21::FormatData();
-  //f_data.Print();
-  //g_print("\nInit size = %f\n", f_data.GetSize());
-  GtkWidget* button = gtk_button_new_with_label("button");
-  gtk_grid_attach(GTK_GRID(grid), button, 0,2,1,1);
-  g_signal_connect(GTK_BUTTON(button), "clicked", G_CALLBACK(PrintDouble), f_data);
+  s21::Data* data = new s21::Data();
+  
+  //GtkWidget* button = gtk_button_new_with_label("button");
+  //gtk_grid_attach(GTK_GRID(grid), button, 0,2,1,1);
+ // g_signal_connect(GTK_BUTTON(button), "clicked", G_CALLBACK(PrintDouble), f_data);
 
 
 //  s21::AffinePannel* pan = new s21::AffinePannel();
@@ -55,17 +54,17 @@ static void PrintDouble(GtkButton* button, gpointer u_data) {
 //  gtk_grid_attach(GTK_GRID(grid), pan->GetRoot(), 0,0,2,1);
 
   //s21::FormatData f_data;
-  s21::LinePannel* lpan = new s21::LinePannel(f_data);
+  s21::LinePannel* lpan = new s21::LinePannel(data->GetLineData());
   lpan->BuildWidget();
   gtk_grid_attach(GTK_GRID(grid), lpan->GetRoot(), 0,0,2,1);
 
 
-  s21::PointPannel* ppan = new s21::PointPannel(f_data);
+  s21::PointPannel* ppan = new s21::PointPannel(data->GetPointData());
   ppan->BuildWidget();
   gtk_grid_attach(GTK_GRID(grid), ppan->GetRoot(), 2,0,2,1);
 
- // s21::DrawingArea* area = new s21::DrawingArea();
- // gtk_grid_attach(GTK_GRID(grid), area->GetRoot(), 2, 0, 4, 4);
+  s21::DrawingArea* area = new s21::DrawingArea(data);
+  gtk_grid_attach(GTK_GRID(grid), area->GetRoot(), 0, 1, 4, 4);
 
   //pan->SetMother(area);
   //area->AttachAffineData(pan->GetData());
