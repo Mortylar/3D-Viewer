@@ -80,8 +80,8 @@ class FileNamePannelFactory: public Factory {
 
 	s21::Widget* CreateWidget() override {
 	  s21::LabelPair* file_name_pair = new s21::LabelPair();
-	  file_name_pair->SetName("Source_File");
-	  file_name_pair->SetValue("No_File");
+	  file_name_pair->SetName("   Source_File   ");
+	  file_name_pair->SetValue("   No_File   ");
 	  return file_name_pair;
 	}
 };
@@ -93,8 +93,8 @@ class VertexInfoPannelFactory: public Factory {
 
 	s21::Widget* CreateWidget() override {
 	  s21::LabelPair* vertex_info_pair = new s21::LabelPair();
-	  vertex_info_pair->SetName("Vertex_Count");
-	  vertex_info_pair->SetValue("0");
+	  vertex_info_pair->SetName("   Vertex_Count   ");
+	  vertex_info_pair->SetValue("   0   ");
 	  return vertex_info_pair;
 	}
 };
@@ -106,8 +106,8 @@ class EdgesInfoPannelFactory: public Factory {
 
 	s21::Widget* CreateWidget() override {
 	  s21::LabelPair* edge_info_pair = new s21::LabelPair();
-	  edge_info_pair->SetName("Edges_Count");
-	  edge_info_pair->SetValue("0");
+	  edge_info_pair->SetName("   Edges_Count   ");
+	  edge_info_pair->SetValue("   0   ");
 	  return edge_info_pair;
 	}
 };
@@ -171,7 +171,7 @@ class PointColorFactory: public Factory {
    s21::Widget* CreateWidget() override {
      const char* name = "Point Color";
      s21::LabelColorButtonPair* color_button = new s21::LabelColorButtonPair(name);
-	 return color_button;
+     return color_button;
    }
 };
 

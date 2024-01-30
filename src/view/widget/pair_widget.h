@@ -264,7 +264,7 @@ class LabelColorButtonPair: public PairWidget {
   void CatchSignal() override {} //TODO
  
   GdkRGBA GetColor() {
-    return second_->GetColor();
+    return *(second_->GetColor());
   }
 
  private:

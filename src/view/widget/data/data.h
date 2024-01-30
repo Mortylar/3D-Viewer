@@ -202,7 +202,7 @@ class FormatData {
    ~FormatData(){}
 
    float GetSize() { return size_; }
-   GdkRGBA GetColor() { return color_; }
+   GdkRGBA* GetColor() { return &color_; }
    int GetType() { return type_; }
 
    void SetColor(GdkRGBA color) { color_ = color; }
@@ -319,8 +319,8 @@ class Data {
      projection_data_ = type;
    }
 
-   GdkRGBA GetAreaColor() {
-     return area_color_data_;
+   GdkRGBA* GetAreaColor() {
+     return &area_color_data_;
    }
 
    void SetAreaColor(GdkRGBA color) {
@@ -359,7 +359,7 @@ class Data {
      point_data_->SetType(type);
    }
 
-  GdkRGBA GetLineColor() {
+  GdkRGBA* GetLineColor() {
     return line_data_->GetColor();
   }
 
@@ -367,7 +367,7 @@ class Data {
     line_data_->SetColor(color);
   }
 
-  GdkRGBA GetPointColor() {
+  GdkRGBA* GetPointColor() {
     return point_data_->GetColor();
   }
 
@@ -431,6 +431,10 @@ class Data {
     affine_data_->SetScaling(x,y,z);
   }
 
+  AffineData* GetAffineData() {
+    return affine_data_;
+  }
+
   const char* GetFileName() {
     return info_data_->GetFileName();
   }
@@ -460,7 +464,7 @@ class Data {
    FormatData* line_data_ = nullptr;
    FormatData* point_data_ = nullptr;
    InfoData* info_data_ = nullptr;
-   GdkRGBA area_color_data_;
+   GdkRGBA area_color_data_ = {0,0,0,0};
    int projection_data_;
 
    void InitData() {

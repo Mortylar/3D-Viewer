@@ -142,7 +142,8 @@ class DrawingArea: public Widget {
 	}
 
 	void SetAreaColor() {
-	  GdkRGBA color = data_->GetAreaColor();
+	  GdkRGBA color = *(data_->GetAreaColor());
+	  g_print("\nColor = %f, %f, %f\n", color.red, color.blue, color.green);
 	  glClearColor(color.red, color.green, color.blue, color.alpha + 1);
 	  glEnable(GL_DEPTH_TEST);
 	  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

@@ -258,14 +258,19 @@ class ColorButton: public Widget {
     mother_ = mother;
   }
 
+  void SetValue(GdkRGBA color) {
+    color_ = color;
+    gtk_color_chooser_set_rgba(GTK_COLOR_CHOOSER(color_button_), &color_);
+  }
+
   void SendSignal() override {
     if(mother_) mother_->CatchSignal();
   }
 
   void CatchSignal() override {} //TODO
  
-  GdkRGBA GetColor() {
-    return color_;
+  GdkRGBA* GetColor() {
+    return &color_;
   }
 
  private:
@@ -311,11 +316,12 @@ class ColorButton: public Widget {
   void CatchSignal() override {} //TODO
  
   GdkRGBA GetColor() {
-    return color_;
+    return &color_;
   }
 
   void SetValue(GdkRGBA color) {
-    gtk_color_dialog_button_set_rgba(GTK_COLOR_DIALOG_BUTTON(color_button_), &color);
+    color_ = color;
+    gtk_color_dialog_button_set_rgba(GTK_COLOR_DIALOG_BUTTON(color_button_), &color_);
   }
 
  private:
@@ -330,8 +336,7 @@ class ColorButton: public Widget {
   }
 
   static void SetColor(GtkColorDialogButton* button, GParamSpec* param, s21::ColorButton* self) {
-    const GdkRGBA* color = (gtk_color_dialog_button_get_rgba(button));
-	self->color_ = *color;
+    self->color_ = gtkColor_dialog_button_get_rgba(button);
     self->SendSignal();
   }
 

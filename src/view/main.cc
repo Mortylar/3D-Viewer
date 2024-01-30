@@ -49,24 +49,28 @@ static void PrintDouble(GtkButton* button, gpointer u_data) {
  // g_signal_connect(GTK_BUTTON(button), "clicked", G_CALLBACK(PrintDouble), f_data);
 
 
-//  s21::AffinePannel* pan = new s21::AffinePannel();
-//  pan->BuildWidget();
-//  gtk_grid_attach(GTK_GRID(grid), pan->GetRoot(), 0,0,2,1);
-
-  //s21::FormatData f_data;
-  s21::LinePannel* lpan = new s21::LinePannel(data->GetLineData());
-  lpan->BuildWidget();
-  gtk_grid_attach(GTK_GRID(grid), lpan->GetRoot(), 0,0,2,1);
+  s21::AffinePannel* pan = new s21::AffinePannel(data->GetAffineData());
+  pan->BuildWidget();
+  gtk_grid_attach(GTK_GRID(grid), pan->GetRoot(), 0,1,1,4);
 
 
-  s21::PointPannel* ppan = new s21::PointPannel(data->GetPointData());
-  ppan->BuildWidget();
-  gtk_grid_attach(GTK_GRID(grid), ppan->GetRoot(), 2,0,2,1);
+  s21::InfoPannel* info_pannel = new s21::InfoPannel();
+  info_pannel->BuildWidget();
+  gtk_grid_attach(GTK_GRID(grid), info_pannel->GetRoot(), 0,0,1,1);
+
+  s21::LinePannel* line_pannel = new s21::LinePannel(data->GetLineData());
+  line_pannel->BuildWidget();
+  gtk_grid_attach(GTK_GRID(grid), line_pannel->GetRoot(), 5,0,1,1);
+
+
+  s21::PointPannel* point_pannel = new s21::PointPannel(data->GetPointData());
+  point_pannel->BuildWidget();
+  gtk_grid_attach(GTK_GRID(grid), point_pannel->GetRoot(), 5,1,1,1);
 
   s21::DrawingArea* area = new s21::DrawingArea(data);
-  gtk_grid_attach(GTK_GRID(grid), area->GetRoot(), 0, 1, 4, 4);
+  gtk_grid_attach(GTK_GRID(grid), area->GetRoot(), 1, 0, 4, 5);
 
-  //pan->SetMother(area);
+  pan->SetMother(area);
   //area->AttachAffineData(pan->GetData());
 
 //  s21::FileChooser* file_chooser = new s21::FileChooser();
@@ -87,6 +91,11 @@ static void PrintDouble(GtkButton* button, gpointer u_data) {
   //g_print("\nSelected = %i\n", drop_down_button->GetValue());
 
  // g_signal_connect(button, "clicked", G_CALLBACK(PrintDouble), drop_down_button);
+
+
+
+  float* arr = data->GetTranslation();
+  g_print("Data is = %f, %f, %f", arr[0], arr[1], arr[2]);
 
   gtk_widget_set_visible(window, true);
 }
