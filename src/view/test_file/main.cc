@@ -9,44 +9,33 @@
 #define APPLICATION_NONE_FLAG G_APPLICATION_FLAGS_NONE
 #endif
 
+
 void Response(GtkWidget* file_chooser_widget, gpointer* data) {
   GtkFileChooser* chooser = GTK_FILE_CHOOSER(file_chooser_widget);
  // GFile* file = gtk_file_chooser_get_file(chooser);
  // g_print("\nFile is %s\n", file);
 }
 
-void FileOpened(GtkNativeDialog* dialog, int response, void* data) {
+void FileOpened(GObject* source, GAsyncResult* result, void* data) {
   GFile* file;
 
-  file = gtk_file_chooser_get_file(GTK_FILE_CHOOSER(dialog));//TODO
+  file = gtk_file_dialog_open_finish(GTK_FILE_DIALOG(source), result, NULL);
   g_print("\nPATH IS %s\n", g_file_get_path(file));
-  g_object_unref(file);
-  gtk_native_dialog_destroy(dialog);
 
 }
 
 void Clicked(GtkWidget* button, GtkWidget* demo) {
   GtkWindow *parent = GTK_WINDOW (gtk_widget_get_root (button));
-  GtkFileChooserNative *dialog; //TODO
-  //GtkFileFilter *filter;
-  //GListStore *filters;
-  GtkFileChooserAction action = GTK_FILE_CHOOSER_ACTION_OPEN;
-  dialog = gtk_file_chooser_native_new("Open file", parent, action, "Load", "Cancel");//TODO
+  GtkFileDialog *dialog;
+  GtkFileFilter *filter;
+  GListStore *filters;
 
-  //filter = gtk_file_filter_new ();
-  //gtk_file_filter_set_name (filter, "Images"); 
-  //gtk_file_filter_add_pixbuf_formats (filter);
-  //filters = g_list_store_new (GTK_TYPE_FILE_FILTER);
-  //g_list_store_append (filters, filter);
-  //g_object_unref (filter);
+  dialog = gtk_file_dialog_new ();
 
-  //gtk_file_dialog_set_filters (dialog, G_LIST_MODEL (filters));
-  //g_object_unref (filters);
 
-  g_signal_connect(dialog, "response", G_CALLBACK(FileOpened), NULL);
-  //gtk_file_dialog_open (dialog, parent, NULL, FileOpened, demo);//TODO
-  gtk_native_dialog_show(GTK_NATIVE_DIALOG(dialog));
-  //g_object_unref (dialog);
+  gtk_file_dialog_open (dialog, parent, NULL, FileOpened, demo);
+
+  g_object_unref (dialog);
 }
 
  void Activate(GtkApplication *app, gpointer user_data) {
@@ -60,7 +49,13 @@ void Clicked(GtkWidget* button, GtkWidget* demo) {
   grid = gtk_grid_new();
   gtk_window_set_child(GTK_WINDOW(window), grid);
 
+#ifndef GTK_TYPE_FILE_DIALOG
+#define AAA 123
+#else
+#define AAA 456
+#endif
 
+  g_print("\n%i\n", AAA);
 
   GtkWidget* button = gtk_button_new_with_label("FILE");
   g_signal_connect(button, "clicked", G_CALLBACK(Clicked), NULL);

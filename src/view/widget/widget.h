@@ -177,6 +177,9 @@ class DSlider : public Widget {
   }
 };
 
+
+#ifndef GTK_TYPE_FILE_DIALOG
+
 class FileChooser : public Widget {
  public:
   FileChooser() { InitButton(); }
@@ -185,14 +188,12 @@ class FileChooser : public Widget {
 
   ~FileChooser() {
     ClearFile();
-    g_print("\nDestr = %s\n", file_name_);
   };
 
   void SetMother(s21::Widget* mother) override { mother_ = mother; }
 
   void SendSignal() override {
     if (mother_) mother_->CatchSignal();
-    g_print("\nName = %s\n", file_name_);
   }
 
   void CatchSignal() override{};
@@ -210,7 +211,6 @@ class FileChooser : public Widget {
 
   void ClearFile() {
     if (file_name_) delete file_name_;
-    g_print("\nDelete file\n");
   }
 
   void InitButton(const char* name = "File_Button") {
@@ -239,6 +239,71 @@ class FileChooser : public Widget {
     }
   }
 };
+
+#else
+
+class FileChooser : public Widget {
+ public:
+  FileChooser() { InitButton(); }
+
+  FileChooser(const char* name) { InitButton(name); }
+
+  ~FileChooser() {
+    ClearFile();
+  };
+
+  void SetMother(s21::Widget* mother) override { mother_ = mother; }
+
+  void SendSignal() override {
+    if (mother_) mother_->CatchSignal();
+  }
+
+  void CatchSignal() override{};
+
+  void SetName(const char* name) override {
+    gtk_button_set_label(GTK_BUTTON(button_), name);
+  }
+
+  const char* GetValue() { return file_name_; }
+
+ private:
+  GtkWidget* button_ = nullptr;
+  char* file_name_ = nullptr;
+  s21::Widget* mother_ = nullptr;
+
+  void ClearFile() {
+    if (file_name_) delete file_name_;
+  }
+
+  void InitButton(const char* name = "File_Button") {
+    button_ = gtk_button_new_with_label(name);
+    gtk_frame_set_child(GTK_FRAME(GetFrame()), button_);
+    g_signal_connect(button_, "clicked", G_CALLBACK(OpenFileDialog), this);
+  }
+
+  static void OpenFileDialog(GtkWidget* button, FileChooser* self) {
+    GtkWindow* parent = GTK_WINDOW(gtk_widget_get_root(button));
+    GtkFileDialog* dialog;
+    //GtkFileChooserAction action = GTK_FILE_CHOOSER_ACTION_OPEN;
+    dialog = gtk_file_dialog_new();//"Open file", parent, action, "Load",
+                                     //    "Cancel");
+
+    gtk_file_dialog_open(dialog, parent, NULL, GetFile, self);
+	g_object_unref(dialog);
+  }
+
+  static void GetFile(GObject* dialog, GAsyncResult* result, void* self) {
+    GFile* file = gtk_file_dialog_open_finish(GTK_FILE_DIALOG(dialog), result, NULL);
+    if (file) {
+      static_cast<s21::FileChooser*>(self)->ClearFile();
+      static_cast<s21::FileChooser*>(self)->file_name_ = g_file_get_path(file);
+      static_cast<s21::FileChooser*>(self)->SendSignal();
+    }
+  }
+};
+
+
+#endif
 
 #if !defined GTK_TYPE_COLOR_DIALOG_BUTTON
 
@@ -302,7 +367,8 @@ class ColorButton: public Widget {
   ~ColorButton(){};
 
   void SetName(const char* name) override {
-    gtk_color_button_set_title(GTK_COLOR_BUTTON(color_button_), name);
+    //gtk_color_button_set_title(GTK_COLOR_BUTTON(color_button_), name);
+	gtk_button_set_label(GTK_BUTTON(color_button_), name);
   }
 
   void SetMother(s21::Widget* mother) override {
@@ -315,7 +381,7 @@ class ColorButton: public Widget {
 
   void CatchSignal() override {} //TODO
  
-  GdkRGBA GetColor() {
+  GdkRGBA* GetColor() {
     return &color_;
   }
 
@@ -336,7 +402,7 @@ class ColorButton: public Widget {
   }
 
   static void SetColor(GtkColorDialogButton* button, GParamSpec* param, s21::ColorButton* self) {
-    self->color_ = gtkColor_dialog_button_get_rgba(button);
+    self->color_ = *(gtk_color_dialog_button_get_rgba(button));
     self->SendSignal();
   }
 
