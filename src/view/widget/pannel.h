@@ -105,7 +105,7 @@ class DSpinButtonPannel: public PairWidget {
       return pair_.at(pos)->GetValue();
     };
 
-    std::vector<double*> GetData() {
+    std::vector<float*> GetData() {
       return data_;
     }
 
@@ -145,7 +145,7 @@ class DSpinButtonPannel: public PairWidget {
 
   private:
     std::vector<LabelDSpinButtonPair*> pair_;
-    std::vector<double*> data_;
+    std::vector<float*> data_;
     size_t size_;
 
     void InitPannel() {
@@ -185,25 +185,25 @@ class DSliderPannel: public PairWidget {
       }
     }
 
-    double GetValue(size_t pos) { 
+    float GetValue(size_t pos) { 
       if (pos >= size_)
         throw std::out_of_range("s21::DSliderPannel::GetValue Out of range");
       return pair_.at(pos)->GetValue();
     }
 
-    void SetValue(size_t pos, double value) { 
+    void SetValue(size_t pos, float value) { 
       if (pos >= size_)
         throw std::out_of_range("s21::DSliderPannel::SetValue Out of range");
-      return pair_.at(pos)->SetValue(pos);
+      pair_.at(pos)->SetValue(value);
     }
 
-    void SetValue(double value) {
+    void SetValue(float value) {
       for(size_t i = 0; i < size_; ++i) {
         pair_[i]->SetValue(value);
       }
     }
 
-    std::vector<double*> GetData() {
+    std::vector<float*> GetData() {
       return data_;
     }
 
@@ -233,7 +233,7 @@ class DSliderPannel: public PairWidget {
 
   private:
     std::vector<LabelDSliderPair*> pair_;
-    std::vector<double*> data_;
+    std::vector<float*> data_;
     size_t size_;
 
     void InitPannel() {

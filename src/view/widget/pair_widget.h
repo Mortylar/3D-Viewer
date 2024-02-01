@@ -106,15 +106,16 @@ class LabelDSpinButtonPair: public PairWidget {
       return first_->GetValue();
     }
 
-    void SetValue(const double value) {
+    void SetValue(const float value) {
+      g_print("\nSet = %f\n", value);
       second_->SetValue(value);
     }
 
-    double GetValue() {
+    float GetValue() {
       return second_->GetValue();
     }
 
-    double* GetData() {
+    float* GetData() {
       return second_->GetData();
     }
 
@@ -177,15 +178,15 @@ class LabelDSliderPair: public PairWidget {
       return first_->GetValue();
     }
 
-    void SetValue(const double value) {
+    void SetValue(const float value) {
       second_->SetValue(value);
     }
 
-    double GetValue() {
+    float GetValue() {
       return second_->GetValue();
     }
 
-    double* GetData() {
+    float* GetData() {
       return second_->GetData();
     }
 

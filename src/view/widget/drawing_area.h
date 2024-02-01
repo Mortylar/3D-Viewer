@@ -51,7 +51,12 @@ class DrawingArea: public Widget {
 	}
 
   void ComputeMVP(float* mvp) { //TODO private
+    //scaling, rotation, translation, projection
     float tmp[9] = {1,0,0,  0,1,0, 0,0,1};
+	float* scaling_array = data_->GetScaling();
+    mvp[0] *= scaling_array[0];
+	mvp[5] *= scaling_array[1];
+	mvp[10] *= scaling_array[2];
   }
 
   void Rotate(float* mvp, float x_rad, float y_rad, float z_rad) { //TODO remove after include controller

@@ -13,14 +13,13 @@ class AffinePannel : public Widget {
   AffinePannel(s21::AffineData* data) : data_(data) {
     InitGrid();
     s21::Widget::SetName("_AFFINE_PANNEL_");
-    float* arr = data->GetScaling();
-    g_print("affineData is %f, %f, %f", arr[0], arr[1], arr[2]);
   }
 
   void BuildWidget() {
     CreateTranslationPannel();
     CreateRotationPannel();
     CreateScalingPannel();
+	InitCommonScalingButton();
     SetMother(this);
   }
 
@@ -45,18 +44,21 @@ class AffinePannel : public Widget {
 
   void SendSignal() override {
     mother_->CatchSignal();
-    g_print(
-        "\nWarning: s21::AffinePannel::SendSignal() has no implementation!\n");
   }
 
   s21::AffineData* GetData() { return data_; }
 
  private:
   GtkWidget* grid_ = nullptr;
-  s21::Widget* mother_;
+  s21::Widget* mother_ = nullptr;
   s21::DSliderPannel* translation_pannel_ = nullptr;
   s21::DSliderPannel* rotation_pannel_ = nullptr;
   s21::DSliderPannel* scaling_pannel_ = nullptr;
+  s21::Label* label_ = nullptr;
+  GtkWidget* scale_button_ = nullptr;
+  GtkAdjustment* adjustment_ = nullptr;
+  GtkWidget* common_button_grid_ = nullptr;
+  GtkWidget* common_button_frame_ = nullptr;
 
   s21::AffineData* data_ = nullptr;
 
@@ -65,25 +67,50 @@ class AffinePannel : public Widget {
     gtk_frame_set_child(GTK_FRAME(GetFrame()), grid_);
   }
 
+  void InitCommonScalingButton() {
+    label_ = new s21::Label("ALL_AXIS");
+
+	adjustment_ = gtk_adjustment_new(0.0, -1.0, 1.0, 0.01, 12, 0);
+	scale_button_ = gtk_scale_new(GTK_ORIENTATION_HORIZONTAL, adjustment_);
+	g_signal_connect(adjustment_, "value_changed", G_CALLBACK(CommonScalingChanged), this);
+    common_button_grid_ = gtk_grid_new();
+	common_button_frame_ = gtk_frame_new(nullptr);
+	gtk_frame_set_child(GTK_FRAME(common_button_frame_), common_button_grid_);
+
+	gtk_grid_attach(GTK_GRID(common_button_grid_), label_->GetRoot(), 0,0,1,1); 
+	gtk_grid_attach(GTK_GRID(common_button_grid_), scale_button_, 1,0,3,1);
+	gtk_grid_attach(GTK_GRID(grid_), common_button_frame_, 0,3,1,1);
+	gtk_grid_set_column_homogeneous(GTK_GRID(common_button_grid_), true);
+  }
+
+  static void CommonScalingChanged(GtkAdjustment* adjustment, s21::AffinePannel* self) {
+    float value = gtk_adjustment_get_value(GTK_ADJUSTMENT(self->adjustment_));
+    self->scaling_pannel_->SetValue(value);
+    
+  }
+
   void CollectTranslation() {
-    std::vector<double*> translation_data = translation_pannel_->GetData();
+    std::vector<float*> translation_data = translation_pannel_->GetData();
     data_->SetTranslation(*translation_data[0], *translation_data[1],
                           *translation_data[2]);
   }
 
   void CollectRotation() {
-    std::vector<double*> rotation_data = rotation_pannel_->GetData();
+    std::vector<float*> rotation_data = rotation_pannel_->GetData();
     data_->SetRotation(*rotation_data[0], *rotation_data[1], *rotation_data[2]);
   }
 
   void CollectScaling() {
-    std::vector<double*> scaling_data = scaling_pannel_->GetData();
+    std::vector<float*> scaling_data = scaling_pannel_->GetData();
     double scaling_vector[scaling_data.size()] = {0.0, 0.0, 0.0};
-    for (size_t i = 0; i < scaling_data.size(); ++i) {
+    const int k_scaling_factor = 5;
+	for (size_t i = 0; i < scaling_data.size(); ++i) {
       if (*scaling_data[i] >= 0.0) {
-        scaling_vector[i] = 1.0 / (1.0 - *scaling_data[i]);
+       // scaling_vector[i] = 1.0 / (1.0 - *scaling_data[i]);
+	   scaling_vector[i] = 1.0 + *scaling_data[i] * k_scaling_factor;
       } else {
-        scaling_vector[i] = 1.0 + *scaling_data[i];
+       // scaling_vector[i] = 1.0 + *scaling_data[i];
+	   scaling_vector[i] = 1.0 / (1.0 + -*scaling_data[i] * k_scaling_factor);
       }
     }
     data_->SetScaling(scaling_vector[0], scaling_vector[1], scaling_vector[2]);
@@ -116,6 +143,7 @@ class AffinePannel : public Widget {
   void CreateScalingPannel() {
     s21::ScalingPannelFactory factory;
     scaling_pannel_ = static_cast<s21::DSliderPannel*>(factory.CreateWidget());
+	//TODO anti Scaling function
     scaling_pannel_->SetValue(0, data_->GetScaling()[0]);
     scaling_pannel_->SetValue(1, data_->GetScaling()[1]);
     scaling_pannel_->SetValue(2, data_->GetScaling()[2]);

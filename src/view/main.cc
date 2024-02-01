@@ -20,8 +20,8 @@
 
 static void PrintDouble(GtkButton* button, gpointer u_data) {
   s21::FormatData* data = static_cast<s21::FormatData*>(u_data);
-  g_print("\nType = %i", data->GetType());
-  g_print("\nSize = %f", data->GetSize());
+ // g_print("\nType = %i", data->GetType());
+  //g_print("\nSize = %f", data->GetSize());
   //g_print("\nType = %i", data->GetType());
   //g_print("\nSelected = %i\n", data->GetValue());
 }

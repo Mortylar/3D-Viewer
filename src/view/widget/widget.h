@@ -88,11 +88,11 @@ class DSpinButton : public Widget {
 
   ~DSpinButton(){};
 
-  double GetValue() { return value_; }
+  float GetValue() { return value_; }
 
-  double* GetData() { return &value_; }
+  float* GetData() { return &value_; }
 
-  void SetValue(const double value) {
+  void SetValue(const float value) {
     gtk_spin_button_set_value(GTK_SPIN_BUTTON(spin_button_), value);
   };
 
@@ -111,7 +111,7 @@ class DSpinButton : public Widget {
   GtkWidget* spin_button_ = nullptr;
   GtkAdjustment* adjustment_ = nullptr;
   s21::Widget* mother_ = nullptr;
-  double value_ = 0.0;
+  float value_ = 0.0;
 
   DSpinButton(DSpinButton&);
   DSpinButton(DSpinButton&&);
@@ -140,11 +140,11 @@ class DSlider : public Widget {
 
   ~DSlider(){};
 
-  double GetValue() { return value_; }
+  float GetValue() { return value_; }
 
-  double* GetData() { return &value_; }
+  float* GetData() { return &value_; }
 
-  void SetValue(double x) { gtk_adjustment_set_value(adjustment_, x); }
+  void SetValue(float x) { gtk_adjustment_set_value(adjustment_, x); }
 
   void SetMother(s21::Widget* mother) override { mother_ = mother; }
 
@@ -160,7 +160,7 @@ class DSlider : public Widget {
   GtkWidget* scale_button_ = nullptr;
   GtkAdjustment* adjustment_ = nullptr;
   s21::Widget* mother_ = nullptr;
-  double value_ = 0.0;
+  float value_ = 0.0;
 
   static void ValueReboot(GtkAdjustment* adjustment, DSlider* self) {
     self->value_ = gtk_adjustment_get_value(self->adjustment_);
