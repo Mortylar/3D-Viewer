@@ -9,7 +9,7 @@
 #include "widget/factory.h"
 #include "widget/combo_widget.h"
 #include "widget/drawing_area.h"
-
+#include "widget/main_widget.h"
 
 #ifdef __APPLE__
 #define APPLICATION_NONE_FLAG G_APPLICATION_DEFAULT_FLAGS
@@ -18,13 +18,6 @@
 #endif
 
 
-static void PrintDouble(GtkButton* button, gpointer u_data) {
-  s21::FormatData* data = static_cast<s21::FormatData*>(u_data);
- // g_print("\nType = %i", data->GetType());
-  //g_print("\nSize = %f", data->GetSize());
-  //g_print("\nType = %i", data->GetType());
-  //g_print("\nSelected = %i\n", data->GetValue());
-}
 
  void Activate(GtkApplication *app, gpointer user_data) {
   GtkWidget *window;
@@ -32,7 +25,7 @@ static void PrintDouble(GtkButton* button, gpointer u_data) {
 
   window = gtk_application_window_new (app);
   gtk_window_set_title (GTK_WINDOW (window), "Window");
-  gtk_window_set_default_size (GTK_WINDOW (window), 600, 600);
+  gtk_window_set_default_size (GTK_WINDOW (window), 900, 100);
 
   grid = gtk_grid_new();
   gtk_window_set_child(GTK_WINDOW(window), grid);
@@ -40,10 +33,13 @@ static void PrintDouble(GtkButton* button, gpointer u_data) {
  // gtk_grid_set_column_homogeneous(GTK_GRID(grid), true);
 
 
-
-
   s21::Data* data = new s21::Data();
-  
+
+  s21::MainWidget* mv = new s21::MainWidget(data);
+  mv->BuildWidget();
+  gtk_grid_attach(GTK_GRID(grid), mv->GetRoot(), 0,0,1,1);
+
+  /*
   //GtkWidget* button = gtk_button_new_with_label("button");
   //gtk_grid_attach(GTK_GRID(grid), button, 0,2,1,1);
  // g_signal_connect(GTK_BUTTON(button), "clicked", G_CALLBACK(PrintDouble), f_data);
@@ -96,7 +92,7 @@ static void PrintDouble(GtkButton* button, gpointer u_data) {
 
   float* arr = data->GetTranslation();
   g_print("Data is = %f, %f, %f", arr[0], arr[1], arr[2]);
-
+*/
   gtk_widget_set_visible(window, true);
 }
 

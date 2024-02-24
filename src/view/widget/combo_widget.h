@@ -65,6 +65,8 @@ class AffinePannel : public Widget {
   void InitGrid() {
     grid_ = gtk_grid_new();
     gtk_frame_set_child(GTK_FRAME(GetFrame()), grid_);
+	gtk_grid_set_row_homogeneous(GTK_GRID(grid_), true);
+	gtk_grid_set_column_homogeneous(GTK_GRID(grid_), true);
   }
 
   void InitCommonScalingButton() {
@@ -79,7 +81,7 @@ class AffinePannel : public Widget {
 
 	gtk_grid_attach(GTK_GRID(common_button_grid_), label_->GetRoot(), 0,0,1,1); 
 	gtk_grid_attach(GTK_GRID(common_button_grid_), scale_button_, 1,0,3,1);
-	gtk_grid_attach(GTK_GRID(grid_), common_button_frame_, 0,3,1,1);
+	gtk_grid_attach(GTK_GRID(grid_), common_button_frame_, 0,10,1,1);
 	gtk_grid_set_column_homogeneous(GTK_GRID(common_button_grid_), true);
   }
 
@@ -125,7 +127,7 @@ class AffinePannel : public Widget {
     translation_pannel_->SetValue(2, data_->GetTranslation()[2]);
     translation_pannel_->SetMother(this);
     gtk_grid_attach(GTK_GRID(grid_), translation_pannel_->GetRoot(), 0, 0, 1,
-                    1);
+                    3);
     // gtk_widget_set_hexpand(translation_pannel_->GetRoot(), true);
     // gtk_widget_set_vexpand(translation_pannel_->GetRoot(), true);
   }
@@ -137,7 +139,7 @@ class AffinePannel : public Widget {
     rotation_pannel_->SetValue(1, data_->GetRotation()[1]);
     rotation_pannel_->SetValue(2, data_->GetRotation()[2]);
     rotation_pannel_->SetMother(this);
-    gtk_grid_attach(GTK_GRID(grid_), rotation_pannel_->GetRoot(), 0, 1, 1, 1);
+    gtk_grid_attach(GTK_GRID(grid_), rotation_pannel_->GetRoot(), 0, 4, 1, 3);
   }
 
   void CreateScalingPannel() {
@@ -148,7 +150,7 @@ class AffinePannel : public Widget {
     scaling_pannel_->SetValue(1, data_->GetScaling()[1]);
     scaling_pannel_->SetValue(2, data_->GetScaling()[2]);
     scaling_pannel_->SetMother(this);
-    gtk_grid_attach(GTK_GRID(grid_), scaling_pannel_->GetRoot(), 0, 2, 1, 1);
+    gtk_grid_attach(GTK_GRID(grid_), scaling_pannel_->GetRoot(), 0, 7, 1, 3);
   }
 
   void RemoveTranslationPannel() { delete translation_pannel_; }
@@ -207,6 +209,8 @@ class LinePannel : public Widget {
   void InitGrid() {
     grid_ = gtk_grid_new();
     gtk_frame_set_child(GTK_FRAME(GetFrame()), grid_);
+	gtk_grid_set_row_homogeneous(GTK_GRID(grid_), true);
+	gtk_grid_set_column_homogeneous(GTK_GRID(grid_), true);
   }
 
   void CreateSizePannel() {
@@ -288,6 +292,8 @@ class PointPannel : public Widget {
   void InitGrid() {
     grid_ = gtk_grid_new();
     gtk_frame_set_child(GTK_FRAME(GetFrame()), grid_);
+	gtk_grid_set_row_homogeneous(GTK_GRID(grid_), true);
+	gtk_grid_set_column_homogeneous(GTK_GRID(grid_), true);
   }
 
   void CreateSizePannel() {
@@ -354,6 +360,8 @@ class InfoPannel : public Widget {
   void InitGrid() {
     grid_ = gtk_grid_new();
     gtk_frame_set_child(GTK_FRAME(GetFrame()), grid_);
+	gtk_grid_set_row_homogeneous(GTK_GRID(grid_), true);
+	gtk_grid_set_column_homogeneous(GTK_GRID(grid_), true);
   }
 
   void CreateFileNamePannel() {
