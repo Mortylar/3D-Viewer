@@ -1,15 +1,16 @@
-#include <gtk/gtk.h>
+//#include <gtk/gtk.h>
 
 #include <iostream>
 
-#include "widget/widget.h"
-#include "widget/pair_widget.h"
-#include "widget/pannel.h"
+//#include "widget/widget.h"
+//#include "widget/pair_widget.h"
+//#include "widget/pannel.h"
 
-#include "widget/factory.h"
-#include "widget/combo_widget.h"
-#include "widget/drawing_area.h"
-#include "widget/main_widget.h"
+//#include "widget/factory.h"
+//#include "widget/combo_widget.h"
+//#include "widget/drawing_area.h"
+//#include "widget/main_widget.h"
+#include "view.h"
 
 #ifdef __APPLE__
 #define APPLICATION_NONE_FLAG G_APPLICATION_DEFAULT_FLAGS
@@ -18,8 +19,8 @@
 #endif
 
 
-
- void Activate(GtkApplication *app, gpointer user_data) {
+/*
+ void Bctivate(GtkApplication *app, gpointer user_data) {
   GtkWidget *window;
   GtkWidget* grid;
 
@@ -39,7 +40,7 @@
   mv->BuildWidget();
   gtk_grid_attach(GTK_GRID(grid), mv->GetRoot(), 0,0,1,1);
 
-  /*
+  
   //GtkWidget* button = gtk_button_new_with_label("button");
   //gtk_grid_attach(GTK_GRID(grid), button, 0,2,1,1);
  // g_signal_connect(GTK_BUTTON(button), "clicked", G_CALLBACK(PrintDouble), f_data);
@@ -92,11 +93,12 @@
 
   float* arr = data->GetTranslation();
   g_print("Data is = %f, %f, %f", arr[0], arr[1], arr[2]);
-*/
-  gtk_widget_set_visible(window, true);
-}
 
-int main (int argc, char **argv) {
+  gtk_widget_set_visible(window, true);
+}*/
+
+int main (void) {
+	/*
   GtkApplication *app;
   int status;
 
@@ -105,6 +107,10 @@ int main (int argc, char **argv) {
   //g_signal_connect
   status = g_application_run (G_APPLICATION(app), argc, argv);
   g_object_unref (app);
+*/
 
-  return status;
+  s21::View v;
+  //g_print("\nv = %p\n", v);
+  v.RunWindow();
+  return 0;
 }

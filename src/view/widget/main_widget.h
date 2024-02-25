@@ -5,6 +5,7 @@
 #include "pair_widget.h"
 #include "pannel.h"
 #include "combo_widget.h"
+#include "drawing_area.h"
 
 #include "data/data.h"
 
@@ -48,7 +49,6 @@ class MainWidget: public Widget {
 
  private:
   s21::Data* data_ = nullptr;
-  s21::Widget* mother_ = nullptr;
   GtkWidget* grid_ = nullptr;
 
   s21::FileChooser* file_ = nullptr;
@@ -100,21 +100,25 @@ class MainWidget: public Widget {
   void CreateAffinePannel() { 
     affine_pannel_ = new s21::AffinePannel(data_->GetAffineData());
 	affine_pannel_->BuildWidget();
+	affine_pannel_->SetMother(this);
   }
 
   void CreateInfoPannel() { 
     info_pannel_ = new s21::InfoPannel();
 	info_pannel_->BuildWidget();
+	info_pannel_->SetMother(this);
   }
 
   void CreateLinePannel() { 
     line_pannel_ = new s21::LinePannel(data_->GetLineData());
 	line_pannel_->BuildWidget();
+	line_pannel_->SetMother(this);
   }
 
   void CreatePointPannel() { 
     point_pannel_ = new s21::PointPannel(data_->GetPointData());
 	point_pannel_->BuildWidget();
+	point_pannel_->SetMother(this);
   }
 
   void CreateFileChooser() {
@@ -123,6 +127,7 @@ class MainWidget: public Widget {
 
   void CreateDrawingArea() {
     area_ = new s21::DrawingArea(data_);
+	area_->SetMother(this);
   }
 
 };

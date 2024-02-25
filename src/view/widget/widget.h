@@ -6,7 +6,9 @@
 namespace s21 {
 class Widget {
  public:
-  Widget() { frame_ = gtk_frame_new(nullptr); }
+  Widget() {
+    frame_ = gtk_frame_new(nullptr);
+  }
 
   virtual ~Widget(){};
 
