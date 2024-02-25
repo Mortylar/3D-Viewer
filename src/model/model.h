@@ -38,7 +38,7 @@ class Model {
     Parser* parser_;
 
     Model(const Model&);
-    Model(const Model&&);
+    Model(Model&&);
     Model& operator=(const Model&);
 };
 }
