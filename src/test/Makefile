@@ -38,5 +38,5 @@ leaks: test
 valgrind: test
 	valgrind test
 clean:
-	-rm -rf report/ *.info *.gcda *.gcno *.o $(EXECUTION)
+	-rm -rf *.dSYM/ report/ *.info *.gcda *.gcno *.o $(EXECUTION)
 
