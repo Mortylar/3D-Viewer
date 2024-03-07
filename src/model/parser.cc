@@ -62,7 +62,7 @@ void s21::Parser::ReadSurface(std::ifstream& fin) {
     fin >> buffer;
   }
   s21::Figure::GetInstance()->AddSurface(static_cast<const std::vector<int>>(surface));
-  fin.seekg(fin.tellg() - static_cast<long int>(strlen(buffer) + 1));
+  fin.seekg(fin.tellg() - static_cast<std::streamoff>(strlen(buffer) + 1));
 }
 
 bool s21::Parser::IsNumber(char ch) {

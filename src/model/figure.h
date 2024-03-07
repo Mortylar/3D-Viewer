@@ -3,7 +3,7 @@
 
 #include<vector>
 #include<cstddef>
-
+#include<iostream>
 
 //singleton
 namespace s21 {
@@ -57,6 +57,7 @@ class Figure {
     ~Figure() {
       delete vertex_;
       delete surfaces_;
+      std::cout << "\n~Figure()\n" << std::endl;
     }
 
     Figure(const Figure&) = delete;
