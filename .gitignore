@@ -54,3 +54,8 @@ dkms.conf
 
 *.swp
 *.DS_Store
+
+
+*.info
+*.gcda
+*.gcno
