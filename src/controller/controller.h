@@ -11,16 +11,16 @@ class Controller {
 
 	void ReadFile(const char* file_name) {
 	  model_->ReadFile(file_name);
-	  model_->Centring();
-	  model_->Normalize();
+	  //model_->Centring(model_->GetVertex());
+	  //model_->Normalize(model_->GetVertex());
 	}
 
 	const std::vector<double>& GetVertex() {
 	  return model_->GetVertex();
 	}
 
-	const std::vector<int>& GetSurfaces() {
-	  return model_->GetSurfaces();
+	const std::vector<int>& GetSurfaces(size_t n) {
+	  return model_->GetSurface(n);
 	}
 
 	void Translation(std::vector<double>& v, double x, double y, double z) {

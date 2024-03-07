@@ -3,6 +3,8 @@
 
 #include <gtk/gtk.h>
 
+#include "../controller/controller.h"
+
 #include "widget/data/data.h"
 #include "widget/main_widget.h"
 #include "widget/widget.h"
@@ -16,19 +18,10 @@
 namespace s21 {
 class View {
  public:
-  explicit View(){};  // TODO s21::Controller
+  explicit View( s21::Controller* controller):controller_(controller){}
 
   ~View(){};
 
- // void SetName(const char* name) override { s21::Widget::SetName(name); }
-
-  //const char* GetName() override { return s21::Widget::GetName(); }
-
-  //void SetMother(s21::Widget* mother) override {}
-
-  //void CatchSignal() override {}
-
-  //void SendSignal() override {}
 
   void RunWindow() {
     application_ = gtk_application_new("org.gtk.example",APPLICATION_NONE_FLAG);
@@ -43,6 +36,7 @@ class View {
    GtkWidget* grid_ = nullptr;
    s21::Data* data_ = nullptr;
    s21::MainWidget* main_widget_ = nullptr;
+   s21::Controller* controller_ = nullptr;
 
    static void Activate(GtkApplication* app, s21::View* self) {
      self->InitWindow();
