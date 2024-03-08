@@ -32,11 +32,15 @@ class DrawingArea: public Widget {
 	} //TODO
 
 
+  void SetBuffer() {
+    InitBuffer();//TODO
+  }
+
 	static void Realize(GtkWidget* area, s21::DrawingArea* self) { //TODO private
 	  gtk_gl_area_make_current(GTK_GL_AREA(self->area_));
 	  self->context_ = gtk_gl_area_get_context(GTK_GL_AREA(self->area_));  
-	  self->InitBuffer();
-	  self->InitShader();
+	  //self->InitBuffer();
+	  self->InitShader(); //TODO
 	}
 
 	static void Render(GtkWidget* area, GdkGLContext* context, s21::DrawingArea* self) { //TODO private

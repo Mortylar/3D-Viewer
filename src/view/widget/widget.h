@@ -30,7 +30,8 @@ class Widget {
   }
 
   virtual void SetMother(s21::Widget* mother) = 0;
-  virtual void CatchSignal() = 0;
+  virtual void CatchSignal() = 0; 
+  //void CatchSignal(void* message);
   virtual void SendSignal() = 0;
 
  private:
@@ -257,7 +258,7 @@ class FileChooser : public Widget {
   void SetMother(s21::Widget* mother) override { mother_ = mother; }
 
   void SendSignal() override {
-    if (mother_) mother_->CatchSignal();
+    if (mother_) mother_->CatchSignal(); //TODO
   }
 
   void CatchSignal() override{};

@@ -36,10 +36,9 @@ class MainWidget: public Widget {
    area_->CatchSignal();
  }
 
+
  void SendSignal() override {
  }
-
-
 
   void BuildWidget() {
     CreatePannel();
@@ -55,6 +54,8 @@ class MainWidget: public Widget {
   GtkWidget* grid_ = nullptr;
   s21::Controller* controller_ = nullptr;
 
+  GtkWidget* start_button_ = nullptr;
+  GtkWidget* start_button_frame_ = nullptr;
   s21::FileChooser* file_ = nullptr;
   s21::AffinePannel* affine_pannel_ = nullptr;
   s21::InfoPannel* info_pannel_ = nullptr;
@@ -81,7 +82,8 @@ class MainWidget: public Widget {
   }
 
   void GridPlacement() {
-    gtk_grid_attach(GTK_GRID(grid_), file_->GetRoot(), 0,0,10,1);
+    gtk_grid_attach(GTK_GRID(grid_), file_->GetRoot(), 0,0,9,1);
+    gtk_grid_attach(GTK_GRID(grid_), start_button_frame_, 9,0,1,1);
     gtk_grid_attach(GTK_GRID(grid_), affine_pannel_->GetRoot(), 0,1,5,9);
 
     gtk_grid_attach(GTK_GRID(grid_), info_pannel_->GetRoot(), 5,1,5,3);
@@ -126,6 +128,9 @@ class MainWidget: public Widget {
 
   void CreateFileChooser() {
     file_ = new s21::FileChooser();
+    start_button_ = gtk_button_new_with_label("Load File");
+    start_button_frame_ = gtk_frame_new(nullptr);
+    gtk_frame_set_child(GTK_FRAME(start_button_frame_), start_button_); 
   }
 
   void CreateDrawingArea() {
