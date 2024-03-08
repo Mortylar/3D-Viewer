@@ -63,9 +63,8 @@ class View {
     }
 
     void InitMainWidget() {
-      main_widget_ = new s21::MainWidget(data_);
+      main_widget_ = new s21::MainWidget(data_, controller_);
       main_widget_->BuildWidget();
-      //main_widget_->SetMother(this);
       gtk_grid_attach(GTK_GRID(grid_), main_widget_->GetRoot(), 0,0,1,1);
     }
 

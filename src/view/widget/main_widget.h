@@ -6,14 +6,16 @@
 #include "pannel.h"
 #include "combo_widget.h"
 #include "drawing_area.h"
+#include "../../controller/controller.h"
 
 #include "data/data.h"
 
+#include <iostream> //TODO remove
 
 namespace s21 {
 class MainWidget: public Widget {
  public:
-  MainWidget(Data* data):data_(data) {
+  MainWidget(Data* data, s21::Controller* controller):data_(data), controller_(controller) {
     InitGrid();
   };
 
@@ -31,6 +33,7 @@ class MainWidget: public Widget {
  }
 
  void CatchSignal() override {
+   area_->CatchSignal();
  }
 
  void SendSignal() override {
@@ -40,7 +43,7 @@ class MainWidget: public Widget {
 
   void BuildWidget() {
     CreatePannel();
-	GridPlacement();
+    GridPlacement();
   }
 
   void RemoveWidget() {
@@ -50,6 +53,7 @@ class MainWidget: public Widget {
  private:
   s21::Data* data_ = nullptr;
   GtkWidget* grid_ = nullptr;
+  s21::Controller* controller_ = nullptr;
 
   s21::FileChooser* file_ = nullptr;
   s21::AffinePannel* affine_pannel_ = nullptr;
@@ -62,19 +66,18 @@ class MainWidget: public Widget {
 
   void CreatePannel() {
     CreateAffinePannel();
-	CreateInfoPannel();
-	CreateLinePannel();
-	CreatePointPannel();
-	CreateDrawingArea();
-	CreateFileChooser();
+    CreateInfoPannel();
+    CreateLinePannel();
+    CreatePointPannel();
+    CreateDrawingArea();
+    CreateFileChooser();
   }
 
   void InitGrid() {
     grid_ = gtk_grid_new();
-	gtk_frame_set_child(GTK_FRAME(GetFrame()), grid_);
+    gtk_frame_set_child(GTK_FRAME(GetFrame()), grid_);
 	//gtk_grid_set_row_homogeneous(GTK_GRID(grid_), true);
 	//gtk_grid_set_column_homogeneous(GTK_GRID(grid_), true);
-
   }
 
   void GridPlacement() {
@@ -94,13 +97,13 @@ class MainWidget: public Widget {
     delete point_pannel_;
     delete line_pannel_;
     delete area_;
-	delete file_;
+    delete file_;
   }
 
   void CreateAffinePannel() { 
     affine_pannel_ = new s21::AffinePannel(data_->GetAffineData());
-	affine_pannel_->BuildWidget();
-	affine_pannel_->SetMother(this);
+    affine_pannel_->BuildWidget();
+    affine_pannel_->SetMother(this);
   }
 
   void CreateInfoPannel() { 
@@ -126,9 +129,11 @@ class MainWidget: public Widget {
   }
 
   void CreateDrawingArea() {
-    area_ = new s21::DrawingArea(data_);
-	area_->SetMother(this);
+    area_ = new s21::DrawingArea(data_, controller_);
+    area_->SetMother(this);
   }
+
+
 
 };
 }

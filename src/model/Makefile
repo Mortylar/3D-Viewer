@@ -5,8 +5,8 @@ TEST_DIR=../test/
 
 s21_model.a:
 	$(CC) -c $(SOURCE)
-	ar rcs s21_model.a *.o
-	ranlib s21_model.a
+	ar rcs libs21_model.a *.o
+	ranlib libs21_model.a
 
 test:
 	cd $(TEST_DIR) && make test

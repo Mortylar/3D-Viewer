@@ -5,12 +5,13 @@
 
 #include "widget.h"
 #include "data/data.h"
+#include "../../controller/controller.h"
 #include <epoxy/gl.h>
 
 namespace s21 {
 class DrawingArea: public Widget {
   public:
-    DrawingArea(s21::Data* data):data_(data) {
+    DrawingArea(s21::Data* data, s21::Controller* controller):data_(data), controller_(controller) {
       InitArea(); 
 	}
 
@@ -50,39 +51,17 @@ class DrawingArea: public Widget {
 	  //self->RemoveShader();
 	}
 
-  void ComputeMVP(float* mvp) { //TODO private
-    //scaling, rotation, translation, projection
-    float tmp[9] = {1,0,0,  0,1,0, 0,0,1};
-	float* scaling_array = data_->GetScaling();
-    mvp[0] *= scaling_array[0];
-	mvp[5] *= scaling_array[1];
-	mvp[10] *= scaling_array[2];
-  }
-
-  void Rotate(float* mvp, float x_rad, float y_rad, float z_rad) { //TODO remove after include controller
-    for (size_t i = 0; i < 9; i += 3) {
-      float x_tmp = mvp[i + 0];
-      float x_rot_1 = sin(x_rad) * mvp[i + 1] - cos(x_rad) * mvp[i + 2];
-      float x_rot_2 = cos(x_rad) * mvp[i + 1] + sin(x_rad) * mvp[i + 2];
-      float y_z_rot = cos(y_rad) * x_tmp;
-
-      mvp[i + 0] = cos(z_rad) * (y_z_rot + sin(y_rad) * x_rot_1) + sin(z_rad) * x_rot_2;
-      mvp[i + 1] = sin(z_rad) * (-y_z_rot - sin(y_rad) * x_rot_1)  + cos(z_rad) * x_rot_2;
-      mvp[i + 2] = x_tmp * sin(y_rad) - x_rot_1 * cos(y_rad);
-	  //g_print("\ni = %i\n", i);
-	  //g_print("\nmvp is %f %f %f %f\n", mvp[i], mvp[i+1], mvp[i+2], mvp[i+3]);
-    }
-  }
-
 	void DrawFigure() { //TODO private
 	  float mvp[16] = {1, 0, 0, 0,   0,1,0,0,  0,0,1,0, 0,0,0,1};
 
 	  ComputeMVP(mvp);
+
+    //g_print("\nmvp[0] = %f\n", mvp_[0]);
 	  glEnable(GL_CULL_FACE);
 	  glFrontFace(GL_CW);
 
 	  glUseProgram(program_);
-	  glUniformMatrix4fv(mvp_, 1, GL_FALSE, &mvp[0]);
+	  glUniformMatrix4fv(mvp_location_, 1, GL_FALSE, &mvp[0]);
 	  
 
 	  glEnableVertexAttribArray(0);
@@ -124,16 +103,17 @@ class DrawingArea: public Widget {
 
   private:
     GtkWidget* area_ = nullptr;
-	GdkGLContext* context_ = nullptr;
-	s21::Widget* mother_ = nullptr;
+    GdkGLContext* context_ = nullptr;
+    s21::Widget* mother_ = nullptr;
+    s21::Controller* controller_ = nullptr;
     
-	GLuint vao_ = 0;
+    GLuint vao_ = 0;
     GLuint vertex_buffer_ = 0;
     GLuint element_buffer_ = 0;
     GLuint program_ = 0;
-    GLuint mvp_ = 0;
+    GLuint mvp_location_ = 0;
 
-	s21::Data* data_ = nullptr;
+    s21::Data* data_ = nullptr;
 
 
 	void InitArea() {
@@ -148,7 +128,7 @@ class DrawingArea: public Widget {
 
 	void SetAreaColor() {
 	  GdkRGBA color = *(data_->GetAreaColor());
-	  g_print("\nColor = %f, %f, %f\n", color.red, color.blue, color.green);
+	  //g_print("\nColor = %f, %f, %f\n", color.red, color.blue, color.green);
 	  glClearColor(color.red, color.green, color.blue, color.alpha + 1);
 	  glEnable(GL_DEPTH_TEST);
 	  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -205,7 +185,7 @@ class DrawingArea: public Widget {
       g_print("\nprogram link failed\n");
     } //TODO
 
-    mvp_ = glGetUniformLocation(program_, "mvp");
+    mvp_location_ = glGetUniformLocation(program_, "mvp");
 
     glDetachShader(program_, vertex);
     glDetachShader(program_, fragment);
@@ -242,6 +222,65 @@ class DrawingArea: public Widget {
       g_print("\nError Opening File\n");
     }
     return text;
+  }
+
+  void ComputeMVP(float* mvp) {
+    size_t matrix_size = 9;
+    std::vector<double> matrix(matrix_size);
+    InitIdentity(matrix);
+    Scaling(matrix);
+    Rotation(matrix);
+    Translation(matrix);
+    InitializeMVP(mvp, matrix);
+  }
+
+  void InitIdentity(std::vector<double>& matrix) {
+    size_t size = 9;
+    if (matrix.size() == size) {
+      matrix[0] = 1;
+      matrix[1] = 0;
+      matrix[2] = 0;
+      matrix[3] = 0;
+      matrix[4] = 1;
+      matrix[5] = 0;
+      matrix[6] = 0;
+      matrix[7] = 0;
+      matrix[8] = 1;
+    }
+  }
+
+  void Scaling(std::vector<double>& matrix) {
+    float* scaling_vector = data_->GetScaling();
+    controller_->Scaling(matrix, scaling_vector[0], scaling_vector[1], scaling_vector[2]);
+  }
+
+  void Rotation(std::vector<double>& matrix) {
+    float* rotation_vector = data_->GetRotation();
+    controller_->Rotation(matrix, rotation_vector[0], rotation_vector[1], rotation_vector[2]);
+  }
+
+  void Translation(std::vector<double>& matrix) {
+   // float* translation_vector = data_->GetTranslation();
+   // controller_->Translation(matrix, translation_vector[0], translation_vector[1], translation_vector[2]);
+  }
+
+  void InitializeMVP(float* mvp, std::vector<double>& matrix) {
+    mvp[0] = matrix[0];
+    mvp[1] = matrix[1];
+    mvp[2] = matrix[2];
+    mvp[3] = 0;
+    mvp[4] = matrix[3];
+    mvp[5] = matrix[4];
+    mvp[6] = matrix[5];
+    mvp[7] = 0;
+    mvp[8] = matrix[6];
+    mvp[9] = matrix[7];
+    mvp[10] = matrix[8];
+    mvp[11] = 0;
+    mvp[12] = data_->GetTranslation()[0];//
+    mvp[13] = data_->GetTranslation()[1];//
+    mvp[14] = data_->GetTranslation()[2];//
+    mvp[15] = 1;
   }
 
 };
