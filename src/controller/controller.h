@@ -15,7 +15,7 @@ class Controller {
 	  //model_->Normalize(model_->GetVertex());
 	}
 
-	const std::vector<double>& GetVertex() {
+	const std::vector<float>& GetVertex() {
 	  return model_->GetVertex();
 	}
 
@@ -23,15 +23,15 @@ class Controller {
 	  return model_->GetSurface(n);
 	}
 
-	void Translation(std::vector<double>& v, double x, double y, double z) {
+	void Translation(std::vector<float>& v, float x, float y, float z) {
 	  model_->Translation(v,x,y,z);
 	}
 
-	void Rotation(std::vector<double>& v, double x, double y, double z) {
+	void Rotation(std::vector<float>& v, float x, float y, float z) {
 	  model_->Rotation(v,x,y,z);
 	}
 
-	void Scaling(std::vector<double>& v, double x, double y, double z) {
+	void Scaling(std::vector<float>& v, float x, float y, float z) {
 	  model_->Scaling(v,x,y,z);
 	}
 

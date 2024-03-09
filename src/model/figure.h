@@ -34,8 +34,8 @@ class Figure {
     }
 
     size_t GetVertexCount();
-    const std::vector<double>& GetVertex();
-    void AddVertex(double x, double y, double z);
+    const std::vector<float>& GetVertex();
+    void AddVertex(float x, float y, float z);
 
     size_t GetSurfacesCount();
     const std::vector<int>& GetSurface(size_t n);
@@ -46,11 +46,11 @@ class Figure {
   private:
     static Figure* self_;
     static FigureKiller killer_;
-    std::vector<double>* vertex_;
+    std::vector<float>* vertex_;
     std::vector<std::vector<int>>* surfaces_;
 
     Figure() {
-      vertex_ = new std::vector<double>();
+      vertex_ = new std::vector<float>();
       surfaces_ = new std::vector<std::vector<int>>();
     }
 

@@ -230,7 +230,7 @@ class DrawingArea: public Widget {
 
   void ComputeMVP(float* mvp) {
     size_t matrix_size = 9;
-    std::vector<double> matrix(matrix_size);
+    std::vector<float> matrix(matrix_size);
     InitIdentity(matrix);
     Scaling(matrix);
     Rotation(matrix);
@@ -238,7 +238,7 @@ class DrawingArea: public Widget {
     InitializeMVP(mvp, matrix);
   }
 
-  void InitIdentity(std::vector<double>& matrix) {
+  void InitIdentity(std::vector<float>& matrix) {
     size_t size = 9;
     if (matrix.size() == size) {
       matrix[0] = 1;
@@ -253,22 +253,22 @@ class DrawingArea: public Widget {
     }
   }
 
-  void Scaling(std::vector<double>& matrix) {
+  void Scaling(std::vector<float>& matrix) {
     float* scaling_vector = data_->GetScaling();
     controller_->Scaling(matrix, scaling_vector[0], scaling_vector[1], scaling_vector[2]);
   }
 
-  void Rotation(std::vector<double>& matrix) {
+  void Rotation(std::vector<float>& matrix) {
     float* rotation_vector = data_->GetRotation();
     controller_->Rotation(matrix, rotation_vector[0], rotation_vector[1], rotation_vector[2]);
   }
 
-  void Translation(std::vector<double>& matrix) {
+  void Translation(std::vector<float>& matrix) {
    // float* translation_vector = data_->GetTranslation();
    // controller_->Translation(matrix, translation_vector[0], translation_vector[1], translation_vector[2]);
   }
 
-  void InitializeMVP(float* mvp, std::vector<double>& matrix) {
+  void InitializeMVP(float* mvp, std::vector<float>& matrix) {
     mvp[0] = matrix[0];
     mvp[1] = matrix[1];
     mvp[2] = matrix[2];

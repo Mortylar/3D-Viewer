@@ -22,15 +22,15 @@ size_t s21::Figure::GetVertexCount() {
   return vertex_->size() / 3;
 }
 
-const std::vector<double>& s21::Figure::GetVertex() {
+const std::vector<float>& s21::Figure::GetVertex() {
   return *vertex_;
 }
 
-//const double* s21::Figure::GetVertexData() {
+//const float* s21::Figure::GetVertexData() {
 //  return vertex_->data();
 //}
 
-void s21::Figure::AddVertex(double x, double y, double z) {
+void s21::Figure::AddVertex(float x, float y, float z) {
   vertex_->push_back(x);
   vertex_->push_back(y);
   vertex_->push_back(z);

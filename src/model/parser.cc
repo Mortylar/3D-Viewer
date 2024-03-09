@@ -34,7 +34,7 @@ void s21::Parser::ParserMethod(const char* file_name) {
 
 void s21::Parser::ReadVertexes(std::ifstream& fin) {
   char buffer[buffer_length_]{0};
-  double vertex[3]{0};
+  float vertex[3]{0};
   for (int i = 0; i < 3; ++i) {
     fin >> buffer;
     if ((!IsNumber(buffer[0])) || (fin.eof()))
