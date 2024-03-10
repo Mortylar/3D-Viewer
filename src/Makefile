@@ -10,4 +10,5 @@ MODEL_FLAGS=-ls21_model -L model
 lib:
 	cd model/ && make s21_model.a
 	$(CC) main.cc $(GTK_FLAGS) $(EPOXY_FLAGS) $(MODEL_FLAGS)
+	./a.out
   

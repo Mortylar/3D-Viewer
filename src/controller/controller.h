@@ -19,8 +19,16 @@ class Controller {
 	  return model_->GetVertex();
 	}
 
+	size_t GetVertexCount() {
+	  return model_->GetVertexCount();
+	}
+
 	const std::vector<int>& GetSurfaces(size_t n) {
 	  return model_->GetSurface(n);
+	}
+
+  size_t GetSurfacesCount() {
+	  return model_->GetSurfacesCount();
 	}
 
 	void Translation(std::vector<float>& v, float x, float y, float z) {

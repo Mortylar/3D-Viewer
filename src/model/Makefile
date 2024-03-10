@@ -22,4 +22,4 @@ valgrind:
 
 clean:
 	cd $(TEST_DIR) && make clean
-	-rm *.o s21_model.a
+	-rm *.o libs21_model.a

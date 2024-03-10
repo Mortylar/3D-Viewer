@@ -22,7 +22,6 @@ class DrawingArea: public Widget {
 	}
 
 	void CatchSignal() override {
-     g_print("\ngo\n");
 	 gtk_widget_queue_draw(area_);
 
 	} //TODO
@@ -33,14 +32,17 @@ class DrawingArea: public Widget {
 
 
   void SetBuffer() {
+	  gtk_gl_area_make_current(GTK_GL_AREA(area_));
+	  context_ = gtk_gl_area_get_context(GTK_GL_AREA(area_));  
     InitBuffer();//TODO
+    InitShader();
   }
 
 	static void Realize(GtkWidget* area, s21::DrawingArea* self) { //TODO private
 	  gtk_gl_area_make_current(GTK_GL_AREA(self->area_));
 	  self->context_ = gtk_gl_area_get_context(GTK_GL_AREA(self->area_));  
 	  //self->InitBuffer();
-	  self->InitShader(); //TODO
+	 // self->InitShader(); //TODO
 	}
 
 	static void Render(GtkWidget* area, GdkGLContext* context, s21::DrawingArea* self) { //TODO private
@@ -72,7 +74,9 @@ class DrawingArea: public Widget {
 	  glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_);
 	  glVertexAttribPointer(0, 3, GL_FLOAT, GL_TRUE, 0, 0);
 
-	  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer_);
+   // for(size_t i = 0; i < element_buffer_.size(); ++i) {
+	 //   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer_[i]);
+   // }
 
 
       //glEnable(GL_POINT_SMOOTH);
@@ -87,17 +91,20 @@ class DrawingArea: public Widget {
 
 	  glEnable(GL_LINE_STIPPLE);
 	  glLineStipple(0, 0);
-	  GLfloat arr[10]{};
-	  glGetFloatv(GL_ALIASED_LINE_WIDTH_RANGE, arr);
-	  g_print("\nglGet = %f, %f\n", arr[0], arr[1]);
+	  //GLfloat arr[10]{};
+	  //glGetFloatv(GL_ALIASED_LINE_WIDTH_RANGE, arr);
+	  //g_print("\nglGet = %f, %f\n", arr[0], arr[1]);
 
-      glDrawArrays(GL_POINTS, 0, 9);
+    for(size_t i = 0; i < element_buffer_.size(); ++i) {
+      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer_[i]);
+     // glDrawArrays(GL_POINTS, 0, controller_->GetVertexCount());
       //glDrawArrays(GL_LINE_LOOP, 0, 3);
 	//  glLineWidth(0.0000000001);
       //glDrawArrays(GL_LINE_LOOP, 3, 3);
 	  //glLineWidth(0.00001);
       //glDrawArrays(GL_LINE_LOOP, 6, 3);
-      glDrawElements(GL_LINE_LOOP, 6, GL_UNSIGNED_INT, 0);
+      glDrawElements(GL_LINE_LOOP, 2 /*controller_->GetSurfaces(i).size()*/, GL_UNSIGNED_INT, 0);
+    }
 
 	  //TODO
 	  glDisableVertexAttribArray(0);
@@ -113,7 +120,7 @@ class DrawingArea: public Widget {
     
     GLuint vao_ = 0;
     GLuint vertex_buffer_ = 0;
-    GLuint element_buffer_ = 0;
+    std::vector<GLuint> element_buffer_;
     GLuint program_ = 0;
     GLuint mvp_location_ = 0;
 
@@ -139,10 +146,13 @@ class DrawingArea: public Widget {
 	}
 
   void InitBuffer() {
+   /* 
     std::vector<float> v {-0.5, 0.0, 0.0,  0.0, 0.5, 0.0,  0.5, 0.0, 0.0,
                           -0.5, 0.0, 0.0,  0.5, -0.0, 0.0, 0.0, 0.0, 0.5,
                           -0.5, 0.0, 0.0,  0.0, 0.5, 0.0, 0.0, 0.0, 0.5};
-    std::vector<unsigned int> f {1, 2, 3, 1, 4, 5};
+    */
+    std::vector<float> v  = controller_->GetVertex();
+    //std::vector<int> f = controller_->GetSurfaces(1);
 
     glGenVertexArrays(1, &vao_);
     glBindVertexArray(vao_);
@@ -152,10 +162,17 @@ class DrawingArea: public Widget {
     glBufferData(GL_ARRAY_BUFFER, sizeof(float)*v.size(), v.data(), GL_STATIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-    glGenBuffers(1, &element_buffer_);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer_);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int)*f.size(), f.data(), GL_STATIC_DRAW);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    size_t element_count = controller_->GetSurfacesCount();
+    element_buffer_.reserve(element_count);
+    for (size_t i = 0; i < element_count; ++i) {
+			GLuint this_element = 0;
+      glGenBuffers(1, &this_element);
+      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this_element);
+      std::vector<int> f = controller_->GetSurfaces(i);
+      glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int)*f.size(), f.data(), GL_STATIC_DRAW);
+      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+			element_buffer_.push_back(this_element);
+    }
   }
 
   void InitShader() {

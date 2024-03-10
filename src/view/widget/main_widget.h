@@ -130,12 +130,23 @@ class MainWidget: public Widget {
     file_ = new s21::FileChooser();
     start_button_ = gtk_button_new_with_label("Load File");
     start_button_frame_ = gtk_frame_new(nullptr);
-    gtk_frame_set_child(GTK_FRAME(start_button_frame_), start_button_); 
+    gtk_frame_set_child(GTK_FRAME(start_button_frame_), start_button_);
+    g_signal_connect(start_button_, "clicked", G_CALLBACK(LoadFile), this); 
   }
 
   void CreateDrawingArea() {
     area_ = new s21::DrawingArea(data_, controller_);
     area_->SetMother(this);
+  }
+
+  static void LoadFile(GtkWidget* button, s21::MainWidget* self) {
+		const char* file_name = self->file_->GetValue();
+		if (file_name) {
+		  self->data_->SetFileName(file_name);
+		  self->controller_->ReadFile(file_name);
+      self->area_->SetBuffer();
+		  self->area_->CatchSignal();
+		}
   }
 
 
