@@ -84,7 +84,7 @@ class DrawingArea: public Widget {
 	  //glEnable(GL_POINTS);
 	  //glEnable(GL_PROGRAM_POINT_SIZE);
 
-	  //glPointSize(20);
+	  glPointSize(20);
 	  //glLineWidth(100.0);
 	  //glEnable(GL_LINE_WIDTH);
 	  //glLineWidth(2);
@@ -97,13 +97,16 @@ class DrawingArea: public Widget {
 
     for(size_t i = 0; i < element_buffer_.size(); ++i) {
       glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer_[i]);
-     // glDrawArrays(GL_POINTS, 0, controller_->GetVertexCount());
+
+	  glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_);
+	  glVertexAttribPointer(0, 3, GL_FLOAT, GL_TRUE, 0, 0);
+      //glDrawArrays(GL_POINTS, 0, controller_->GetVertexCount());
       //glDrawArrays(GL_LINE_LOOP, 0, 3);
 	//  glLineWidth(0.0000000001);
-      //glDrawArrays(GL_LINE_LOOP, 3, 3);
+     // glDrawArrays(GL_LINE_LOOP, 3, 3);
 	  //glLineWidth(0.00001);
       //glDrawArrays(GL_LINE_LOOP, 6, 3);
-      glDrawElements(GL_LINE_LOOP, 2 /*controller_->GetSurfaces(i).size()*/, GL_UNSIGNED_INT, 0);
+      glDrawElements(GL_LINE_LOOP, 4, GL_UNSIGNED_INT, 0);//controller_->GetSurfaces(i).size(), GL_UNSIGNED_INT, 0);
     }
 
 	  //TODO
@@ -152,6 +155,10 @@ class DrawingArea: public Widget {
                           -0.5, 0.0, 0.0,  0.0, 0.5, 0.0, 0.0, 0.0, 0.5};
     */
     std::vector<float> v  = controller_->GetVertex();
+    g_print("\nvertexes:\n");
+    for(size_t i = 0; i < v.size(); ++i) {
+      g_print("%f\n", v[i]);
+    }
     //std::vector<int> f = controller_->GetSurfaces(1);
 
     glGenVertexArrays(1, &vao_);
@@ -165,13 +172,17 @@ class DrawingArea: public Widget {
     size_t element_count = controller_->GetSurfacesCount();
     element_buffer_.reserve(element_count);
     for (size_t i = 0; i < element_count; ++i) {
-			GLuint this_element = 0;
+      GLuint this_element = 0;
       glGenBuffers(1, &this_element);
       glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this_element);
-      std::vector<int> f = controller_->GetSurfaces(i);
+      std::vector<unsigned int> f = controller_->GetSurfaces(i);
       glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int)*f.size(), f.data(), GL_STATIC_DRAW);
       glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-			element_buffer_.push_back(this_element);
+      element_buffer_.push_back(this_element);
+      g_print("\narr %i\n", i);
+      for(size_t j = 0; j < f.size(); j++) {
+        g_print("==%i==", f[j]);
+      }
     }
   }
 

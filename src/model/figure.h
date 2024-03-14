@@ -38,8 +38,8 @@ class Figure {
     void AddVertex(float x, float y, float z);
 
     size_t GetSurfacesCount();
-    const std::vector<int>& GetSurface(size_t n);
-    void AddSurface(const std::vector<int>& x);
+    const std::vector<unsigned int>& GetSurface(size_t n);
+    void AddSurface(const std::vector<unsigned int>& x);
 
     void Clear();
 
@@ -47,11 +47,11 @@ class Figure {
     static Figure* self_;
     static FigureKiller killer_;
     std::vector<float>* vertex_;
-    std::vector<std::vector<int>>* surfaces_;
+    std::vector<std::vector<unsigned int>>* surfaces_;
 
     Figure() {
       vertex_ = new std::vector<float>();
-      surfaces_ = new std::vector<std::vector<int>>();
+      surfaces_ = new std::vector<std::vector<unsigned int>>();
     }
 
     ~Figure() {

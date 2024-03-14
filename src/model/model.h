@@ -31,7 +31,7 @@ class Model {
     const std::vector<float>& GetVertex();
 
     size_t GetSurfacesCount();
-    const std::vector<int>& GetSurface(size_t n);
+    const std::vector<unsigned int>& GetSurface(size_t n);
 
   private:
     Affine3D* affine_;

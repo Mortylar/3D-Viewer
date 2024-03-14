@@ -43,11 +43,11 @@ size_t s21::Figure::GetSurfacesCount() {
   return surfaces_->size();
 }
 
-const std::vector<int>& s21::Figure::GetSurface(size_t i) {
+const std::vector<unsigned int>& s21::Figure::GetSurface(size_t i) {
   return surfaces_->at(i);
 }
 
-void s21::Figure::AddSurface(const std::vector<int>& surface) {
+void s21::Figure::AddSurface(const std::vector<unsigned int>& surface) {
   surfaces_->push_back(surface);
 }
 
