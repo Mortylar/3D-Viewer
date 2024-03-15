@@ -31,6 +31,7 @@ void s21::Parser::ParserMethod(const char* file_name) {
   fin.close();
   if (!s21::Figure::GetInstance()->GetVertexCount())
     throw std::invalid_argument("Empty figure");
+
 }
 
 void s21::Parser::ReadVertexes(std::ifstream& fin) {
@@ -51,6 +52,7 @@ void s21::Parser::ReadSurface(std::ifstream& fin) {
   std::vector<unsigned int> surface;
   int v_count = static_cast<int>(s21::Figure::GetInstance()->GetVertexCount());
   fin >> buffer;
+	std::cout << buffer << std::endl;
   while(IsNumber(buffer[0])) {
     int vertex_id = std::atoi(buffer);
     if (vertex_id < 0) {
@@ -60,7 +62,7 @@ void s21::Parser::ReadSurface(std::ifstream& fin) {
       throw std::invalid_argument("s21::Parser - invalid number of vertex");
 
     surface.push_back(static_cast<unsigned int>(vertex_id));
-    surface[vertex_id] = surface[vertex_id]; //+ 1; //TODO
+    //surface[vertex_id] = surface[vertex_id]; //+ 1; //TODO
     fin >> buffer;
   }
   s21::Figure::GetInstance()->AddSurface(static_cast<const std::vector<unsigned int>>(surface));

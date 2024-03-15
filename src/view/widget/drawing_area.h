@@ -84,7 +84,7 @@ class DrawingArea: public Widget {
 	  //glEnable(GL_POINTS);
 	  //glEnable(GL_PROGRAM_POINT_SIZE);
 
-	  glPointSize(20);
+	  glPointSize(3);
 	  //glLineWidth(100.0);
 	  //glEnable(GL_LINE_WIDTH);
 	  //glLineWidth(2);
@@ -95,18 +95,29 @@ class DrawingArea: public Widget {
 	  //glGetFloatv(GL_ALIASED_LINE_WIDTH_RANGE, arr);
 	  //g_print("\nglGet = %f, %f\n", arr[0], arr[1]);
 
-    for(size_t i = 0; i < element_buffer_.size(); ++i) {
-      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer_[i]);
+    size_t element_length = controller_->GetSurfacesCount();
+		//g_print("\nsdgstghftyf %li\n", element_length);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer_);
+		int offset = 0;
+    for(size_t i = 0; i < element_length; ++i) {
+      //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer_);
 
 	  glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_);
 	  glVertexAttribPointer(0, 3, GL_FLOAT, GL_TRUE, 0, 0);
-      //glDrawArrays(GL_POINTS, 0, controller_->GetVertexCount());
+    glDrawArrays(GL_POINTS, 0, controller_->GetVertexCount());
       //glDrawArrays(GL_LINE_LOOP, 0, 3);
 	//  glLineWidth(0.0000000001);
      // glDrawArrays(GL_LINE_LOOP, 3, 3);
 	  //glLineWidth(0.00001);
       //glDrawArrays(GL_LINE_LOOP, 6, 3);
-      glDrawElements(GL_LINE_LOOP, 4, GL_UNSIGNED_INT, 0);//controller_->GetSurfaces(i).size(), GL_UNSIGNED_INT, 0);
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer_);
+			//int offset = 0;
+			offset += (i)?(controller_->GetSurfaces(i).size()):(0);
+			g_print("\noffset = %li\n", offset);
+			//g_print("\noffset = %li\n", offset);
+			//g_print("\nsize = %li\n", sizeof(GLuint));
+			//GLuint* ptr = &element_buffer_ + sizeof(GLuint)*offset;
+      glDrawElements(GL_LINE_LOOP, offset, GL_UNSIGNED_INT, nullptr);
     }
 
 	  //TODO
@@ -123,7 +134,7 @@ class DrawingArea: public Widget {
     
     GLuint vao_ = 0;
     GLuint vertex_buffer_ = 0;
-    std::vector<GLuint> element_buffer_;
+    GLuint element_buffer_;
     GLuint program_ = 0;
     GLuint mvp_location_ = 0;
 
@@ -155,11 +166,11 @@ class DrawingArea: public Widget {
                           -0.5, 0.0, 0.0,  0.0, 0.5, 0.0, 0.0, 0.0, 0.5};
     */
     std::vector<float> v  = controller_->GetVertex();
+		v.shrink_to_fit();
     g_print("\nvertexes:\n");
     for(size_t i = 0; i < v.size(); ++i) {
       g_print("%f\n", v[i]);
     }
-    //std::vector<int> f = controller_->GetSurfaces(1);
 
     glGenVertexArrays(1, &vao_);
     glBindVertexArray(vao_);
@@ -169,21 +180,21 @@ class DrawingArea: public Widget {
     glBufferData(GL_ARRAY_BUFFER, sizeof(float)*v.size(), v.data(), GL_STATIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-    size_t element_count = controller_->GetSurfacesCount();
-    element_buffer_.reserve(element_count);
-    for (size_t i = 0; i < element_count; ++i) {
-      GLuint this_element = 0;
-      glGenBuffers(1, &this_element);
-      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this_element);
+    size_t element_length = 0;
+		for (size_t i = 0; i < controller_->GetSurfacesCount(); ++i) {
+		  element_length += controller_->GetSurfaces(i).size();
+		}
+    glGenBuffers(1, &element_buffer_);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer_);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int)*element_length, 0, GL_STATIC_DRAW);
+		size_t offset = 0;
+    for (size_t i = 0; i < controller_->GetSurfacesCount(); ++i) {
       std::vector<unsigned int> f = controller_->GetSurfaces(i);
-      glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int)*f.size(), f.data(), GL_STATIC_DRAW);
-      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-      element_buffer_.push_back(this_element);
-      g_print("\narr %i\n", i);
-      for(size_t j = 0; j < f.size(); j++) {
-        g_print("==%i==", f[j]);
-      }
+			//size_t offset = 0;
+			offset += (i)?(controller_->GetSurfaces(i-1).size()):(0);
+      glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int)*offset, sizeof(unsigned int)*f.size(), f.data());
     }
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
   }
 
   void InitShader() {
