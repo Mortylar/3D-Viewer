@@ -6,6 +6,7 @@
 
 void s21::Model::ReadFile(const char* file_name) {
   parser_->ParserMethod(file_name);
+	affine_->Normalize(s21::Figure::GetInstance()->GetVertex());
 }
 
 void s21::Model::Translation(std::vector<float>& v, float dx, float dy, float dz) {

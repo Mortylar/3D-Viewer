@@ -33,6 +33,7 @@ class MainWidget: public Widget {
  }
 
  void CatchSignal() override {
+//	 point_pannel
    area_->CatchSignal();
  }
 

@@ -34,7 +34,7 @@ class Figure {
     }
 
     size_t GetVertexCount();
-    const std::vector<float>& GetVertex();
+    std::vector<float>& GetVertex();
     void AddVertex(float x, float y, float z);
 
     size_t GetSurfacesCount();

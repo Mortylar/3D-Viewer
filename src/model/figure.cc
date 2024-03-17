@@ -22,7 +22,7 @@ size_t s21::Figure::GetVertexCount() {
   return vertex_->size() / 3;
 }
 
-const std::vector<float>& s21::Figure::GetVertex() {
+std::vector<float>& s21::Figure::GetVertex() {
   return *vertex_;
 }
 

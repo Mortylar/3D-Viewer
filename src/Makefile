@@ -1,4 +1,4 @@
-CC=g++ -std=c++17
+CC=g++ -std=c++17 -Wall -Wextra
 MODEL_SOURCE=$(wildcard model/*.cc)
 CONTROLLER_SOURCE=$(wildcard controller/*.cc)
 VIEW_SOURCE=$(wildcard view/*.cc view/*/*.cc)

@@ -246,7 +246,7 @@ class LinePannel : public Widget {
 
 enum class PointType {
   k_ErrorType = -1,
-  k_NoPontType = 0,
+  k_NoPointType = 0,
   k_RoundPointType,
   k_SquarePointType
 };
