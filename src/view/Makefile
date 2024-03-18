@@ -1,9 +1,12 @@
 CC=g++ -std=c++17
 GTK_FLAGS=`pkg-config --cflags --libs gtk4`
+EPOXY_FLAGS=`pkg-config --cflags --libs epoxy`
+SOURCE=$(wildcard *.cc *.)
 
-base:
-	$(CC) base.cc pannel.cc $(GTK_FLAGS)
+s21_view.a:
+	$(CC) -g main.cc $(GTK_FLAGS) $(EPOXY_FLAGS)
 	./a.out
-a:
-	$(CC) button.cc $(GTK_FLAGS)
+
+b:
+	$(CC) -g asd.cc $(GTK_FLAGS) $(EPOXY_FLAGS)
 	./a.out

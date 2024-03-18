@@ -38,11 +38,16 @@ else
 
 endif	
 	lcov -a affine.info -a figure.info -a parser.info -a model.info -o test.info
-	lcov --remove test.info "/usr/include/*" "/Library/*" "/usr/local/*" -o mini_test.info
+	lcov --remove test.info "/usr/include/*" "/Library/*" "/usr/local/*" "/opt/goinfree/*" --ignore-errors unused -o mini_test.info
 	genhtml -o report mini_test.info
 	$(OPEN) report/index.html
 
+leaks: test
+	leaks -atExit -- ./test
 
+valgrind: test
+	valgrind test
 clean:
 	-rm -rf report/ test.dSYM/ *.info *.gcda *.gcno *.o $(EXECUTION)
+	-rm -rf *.dSYM/ report/ *.info *.gcda *.gcno *.o $(EXECUTION)
 

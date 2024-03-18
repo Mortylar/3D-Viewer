@@ -22,15 +22,15 @@ size_t s21::Figure::GetVertexCount() {
   return vertex_->size() / 3;
 }
 
-const std::vector<double>& s21::Figure::GetVertex() {
+std::vector<float>& s21::Figure::GetVertex() {
   return *vertex_;
 }
 
-//const double* s21::Figure::GetVertexData() {
+//const float* s21::Figure::GetVertexData() {
 //  return vertex_->data();
 //}
 
-void s21::Figure::AddVertex(double x, double y, double z) {
+void s21::Figure::AddVertex(float x, float y, float z) {
   vertex_->push_back(x);
   vertex_->push_back(y);
   vertex_->push_back(z);
@@ -43,11 +43,11 @@ size_t s21::Figure::GetSurfacesCount() {
   return surfaces_->size();
 }
 
-const std::vector<int>& s21::Figure::GetSurface(size_t i) {
+const std::vector<unsigned int>& s21::Figure::GetSurface(size_t i) {
   return surfaces_->at(i);
 }
 
-void s21::Figure::AddSurface(const std::vector<int>& surface) {
+void s21::Figure::AddSurface(const std::vector<unsigned int>& surface) {
   surfaces_->push_back(surface);
 }
 

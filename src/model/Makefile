@@ -1,11 +1,25 @@
 CC = g++ -std=c++17
 CFLAGS = -Wall -Werror -Wextra
-GTK_FLAGS=`pkg-config --cflags --libs gtk4`
 SOURCE=$(wildcard *.cc)
+TEST_DIR=../test/
 
-a:
-	$(CC) $(GTK_FLAGS) $(SOURCE)
-	./a.out
+s21_model.a:
+	$(CC) -c $(SOURCE)
+	ar rcs libs21_model.a *.o
+	ranlib libs21_model.a
 
-leaks: a
-	leaks -atExit -- ./a.out
+test:
+	cd $(TEST_DIR) && make test
+
+coverage:
+	cd $(TEST_DIR) && make coverage
+
+leaks: 
+	cd $(TEST_DIR) && make leaks
+
+valgrind:
+	cd $(TEST_DIR) && make valgrind
+
+clean:
+	cd $(TEST_DIR) && make clean
+	-rm *.o libs21_model.a

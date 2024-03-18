@@ -167,10 +167,6 @@ TEST(AffineTest, Test7) {
 
 int main(int argc, char** argv) {
   ::testing::InitGoogleTest(&argc, argv);
-  int result = RUN_ALL_TESTS();
-#if defined __APPLE__ && defined __MACH__
-  free(__cxxabiv1::__cxa_get_globals());
-#endif
-  return result;
+  return RUN_ALL_TESTS();
 }
 

@@ -3,7 +3,7 @@
 
 #include<vector>
 #include<cstddef>
-
+#include<iostream>
 
 //singleton
 namespace s21 {
@@ -34,29 +34,30 @@ class Figure {
     }
 
     size_t GetVertexCount();
-    const std::vector<double>& GetVertex();
-    void AddVertex(double x, double y, double z);
+    std::vector<float>& GetVertex();
+    void AddVertex(float x, float y, float z);
 
     size_t GetSurfacesCount();
-    const std::vector<int>& GetSurface(size_t n);
-    void AddSurface(const std::vector<int>& x);
+    const std::vector<unsigned int>& GetSurface(size_t n);
+    void AddSurface(const std::vector<unsigned int>& x);
 
     void Clear();
 
   private:
     static Figure* self_;
     static FigureKiller killer_;
-    std::vector<double>* vertex_;
-    std::vector<std::vector<int>>* surfaces_;
+    std::vector<float>* vertex_;
+    std::vector<std::vector<unsigned int>>* surfaces_;
 
     Figure() {
-      vertex_ = new std::vector<double>();
-      surfaces_ = new std::vector<std::vector<int>>();
+      vertex_ = new std::vector<float>();
+      surfaces_ = new std::vector<std::vector<unsigned int>>();
     }
 
     ~Figure() {
       delete vertex_;
       delete surfaces_;
+      std::cout << "\n~Figure()\n" << std::endl;
     }
 
     Figure(const Figure&) = delete;
