@@ -3,248 +3,230 @@
 
 #include <gtk/gtk.h>
 
-#include "widget.h"
 #include "pair_widget.h"
+#include "widget.h"
 #include <vector>
 
 namespace s21 {
-class LabelPannel: public PairWidget {
-  public:
-    LabelPannel(): size_(1) {
-      InitPannel();
+class LabelPannel : public PairWidget {
+public:
+  LabelPannel() : size_(1) { InitPannel(); }
+
+  LabelPannel(size_t size) : size_(size) { InitPannel(); }
+
+  ~LabelPannel() {
+    for (size_t i = 0; i < size_; ++i) {
+      delete pair_[i];
     }
+  };
 
-    LabelPannel(size_t size): size_(size) {
-      InitPannel();
+  const char *GetValue(size_t pos = 0) {
+    if (pos >= size_)
+      throw std::out_of_range("s21::LabelPannel::GetValue Out of range");
+    return pair_.at(pos)->GetValue();
+  };
+
+  void SetValue(const char *value) {
+    for (size_t i = 0; i < size_; ++i) {
+      pair_[i]->SetValue(value);
     }
+  };
 
-    ~LabelPannel() {
-     for (size_t i = 0; i < size_; ++i) {
-       delete pair_[i];
-     } 
-    };
+  void SetName(size_t pos, const char *name) {
+    if (pos >= size_)
+      throw std::out_of_range("s21::LabelPannel::SetNames Out of range");
+    pair_[pos]->SetName(name);
+  }
 
-    const char* GetValue(size_t pos = 0) {
-      if (pos >= size_)
-        throw std::out_of_range("s21::LabelPannel::GetValue Out of range");
-      return pair_.at(pos)->GetValue();
-    };
+  void SetName(const char *name) override { // TODO override
+    s21::Widget::SetName(name);
+  }
 
-    void SetValue(const char* value) {
-      for (size_t i = 0; i < size_; ++i) {
-        pair_[i]->SetValue(value);
-      }
-    };
-
-    void SetName(size_t pos, const char* name){
-      if (pos >= size_)
-        throw std::out_of_range("s21::LabelPannel::SetNames Out of range");
-      pair_[pos]->SetName(name);
+  void SetMother(s21::Widget *mother) {
+    for (size_t i = 0; i < size_; ++i) {
+      pair_[i]->SetMother(mother);
     }
+  }
 
-    void SetName(const char* name) override { //TODO override
-      s21::Widget::SetName(name);
+  void CatchSignal() override {
+    g_print(
+        "\nWarning: s21::LabelPannel::CatchSignal() has no implementation!\n");
+  }
+
+  void SendSignal() override {
+    g_print(
+        "\nWarning: s21::LabelPannel::SendSignal() has no implementation!\n");
+  }
+
+private:
+  std::vector<LabelPair *> pair_;
+  size_t size_;
+
+  void InitPannel() {
+    for (size_t i = 0; i < size_; ++i) {
+      pair_.push_back(new LabelPair());
+      gtk_grid_attach(GTK_GRID(GetGrid()), pair_[i]->GetRoot(), 0, i, 1, 1);
     }
-
-	void SetMother(s21::Widget* mother) {
-	  for(size_t i = 0; i < size_; ++i) {
-	    pair_[i]->SetMother(mother);
-	  }
-	}
-
-	void CatchSignal() override {
-	  g_print("\nWarning: s21::LabelPannel::CatchSignal() has no implementation!\n");
-	}
-
-	void SendSignal() override {	
-	  g_print("\nWarning: s21::LabelPannel::SendSignal() has no implementation!\n");
-	}
-
-  private:
-    std::vector<LabelPair*> pair_;
-    size_t size_;
-
-    void InitPannel() {
-      for (size_t i = 0; i < size_; ++i) {
-        pair_.push_back(new LabelPair());
-	gtk_grid_attach(GTK_GRID(GetGrid()), pair_[i]->GetRoot(), 0, i, 1, 1);
-      }
-    }
-
+  }
 };
 
-class DSpinButtonPannel: public PairWidget {
-  public:
-    DSpinButtonPannel(): size_(1) {
-      InitPannel();
+class DSpinButtonPannel : public PairWidget {
+public:
+  DSpinButtonPannel() : size_(1) { InitPannel(); }
+
+  DSpinButtonPannel(size_t size) : size_(size) { InitPannel(); }
+
+  DSpinButtonPannel(std::initializer_list<GtkAdjustment *> const &items) {
+    size_ = items.size();
+    auto it = items.begin();
+    for (size_t i = 0; i < size_; ++i) {
+      pair_.push_back(new LabelDSpinButtonPair("", *it++));
+      data_.push_back(pair_[i]->GetData());
+      gtk_grid_attach(GTK_GRID(GetGrid()), pair_[i]->GetRoot(), 0, i, 1, 1);
     }
+  }
 
-    DSpinButtonPannel(size_t size): size_(size) {
-      InitPannel();
+  ~DSpinButtonPannel() {
+    for (size_t i = 0; i < size_; ++i) {
+      delete pair_[i];
     }
+  };
 
-    DSpinButtonPannel(std::initializer_list<GtkAdjustment*> const &items) {
-      size_ = items.size();
-      auto it = items.begin();
-      for(size_t i = 0; i < size_; ++i) { 
-        pair_.push_back(new LabelDSpinButtonPair("",*it++));
-        data_.push_back(pair_[i]->GetData());
-        gtk_grid_attach(GTK_GRID(GetGrid()), pair_[i]->GetRoot(), 0, i, 1, 1);
-      }
+  double GetValue(size_t pos) {
+    if (pos >= size_)
+      throw std::out_of_range("s21::DSpinButtonPannel::GetValue Out of range");
+    return pair_.at(pos)->GetValue();
+  };
+
+  std::vector<float *> GetData() { return data_; }
+
+  void SetValue(double value) {
+    for (size_t i = 0; i < size_; ++i) {
+      pair_[i]->SetValue(value);
     }
+  };
 
-    ~DSpinButtonPannel() {
-      for (size_t i = 0; i < size_; ++i) {
-        delete pair_[i];
-      }
-    };
+  void SetValue(size_t pos, double value) {
+    if (pos >= size_)
+      throw std::out_of_range("s21::DSpinButtonPannel::SetValue Out of range");
+    return pair_.at(pos)->SetValue(value);
+  };
 
-    double GetValue(size_t pos) {
-      if (pos >= size_)
-        throw std::out_of_range("s21::DSpinButtonPannel::GetValue Out of range");
-      return pair_.at(pos)->GetValue();
-    };
+  void SetName(size_t pos, const char *name) { pair_[pos]->SetName(name); }
 
-    std::vector<float*> GetData() {
-      return data_;
+  void SetName(const char *name) override { // TODO override
+    s21::Widget::SetName(name);
+  }
+
+  void SetMother(s21::Widget *mother) {
+    for (size_t i = 0; i < size_; ++i) {
+      pair_[i]->SetMother(mother);
     }
+  }
 
-    void SetValue(double value) { 
-      for (size_t i = 0; i < size_; ++i) {
-        pair_[i]->SetValue(value);
-      }
-    };
+  void CatchSignal() override {
+    g_print("\nWarning: s21::DSpinButtonPannel::CatchSignal() has no "
+            "implementation!\n");
+  }
 
-    void SetValue(size_t pos, double value) {
-      if (pos >= size_)
-        throw std::out_of_range("s21::DSpinButtonPannel::SetValue Out of range");
-      return pair_.at(pos)->SetValue(value);
-    };
+  void SendSignal() override {
+    g_print("\nWarning: s21::DSpinButtonPannel::SendSignal() has no "
+            "implementation!\n");
+  }
 
-    void SetName(size_t pos, const char* name){
-      pair_[pos]->SetName(name);
+private:
+  std::vector<LabelDSpinButtonPair *> pair_;
+  std::vector<float *> data_;
+  size_t size_;
+
+  void InitPannel() {
+    for (size_t i = 0; i < size_; ++i) {
+      pair_.push_back(new LabelDSpinButtonPair());
+      data_.push_back(pair_[i]->GetData());
+      gtk_grid_attach(GTK_GRID(GetGrid()), pair_[i]->GetRoot(), 0, i, 1, 1);
     }
-
-    void SetName(const char* name) override { //TODO override
-      s21::Widget::SetName(name);
-    }
-
-	void SetMother(s21::Widget* mother) {
-	  for(size_t i = 0; i < size_; ++i) {
-	    pair_[i]->SetMother(mother);
-	  }
-	}
-
-	void CatchSignal() override {
-	  g_print("\nWarning: s21::DSpinButtonPannel::CatchSignal() has no implementation!\n");
-	}
-
-	void SendSignal() override {	
-	  g_print("\nWarning: s21::DSpinButtonPannel::SendSignal() has no implementation!\n");
-	}
-
-  private:
-    std::vector<LabelDSpinButtonPair*> pair_;
-    std::vector<float*> data_;
-    size_t size_;
-
-    void InitPannel() {
-      for (size_t i = 0; i < size_; ++i) {
-        pair_.push_back(new LabelDSpinButtonPair());
-	data_.push_back(pair_[i]->GetData());
-	gtk_grid_attach(GTK_GRID(GetGrid()), pair_[i]->GetRoot(), 0, i, 1, 1);
-      }
-    }
-
+  }
 };
 
-class DSliderPannel: public PairWidget {
-  public:
-    DSliderPannel(): size_(1) {
-      InitPannel();
+class DSliderPannel : public PairWidget {
+public:
+  DSliderPannel() : size_(1) { InitPannel(); }
+
+  DSliderPannel(size_t n) : size_(n) { InitPannel(); }
+
+  DSliderPannel(std::initializer_list<GtkAdjustment *> const &items) {
+    size_ = items.size();
+    auto it = items.begin();
+    for (size_t i = 0; i < size_; ++i) {
+      pair_.push_back(new LabelDSliderPair(*it++));
+      data_.push_back(pair_[i]->GetData());
+      gtk_grid_attach(GTK_GRID(GetGrid()), pair_[i]->GetRoot(), 0, i, 1, 1);
     }
+  }
 
-    DSliderPannel(size_t n): size_(n) {
-      InitPannel();
+  ~DSliderPannel() {
+    for (size_t i = 0; i < size_; ++i) {
+      delete pair_[i];
     }
+  }
 
-    DSliderPannel(std::initializer_list<GtkAdjustment*> const &items) {
-      size_ = items.size();
-      auto it = items.begin();
-      for(size_t i = 0; i < size_; ++i) { 
-        pair_.push_back(new LabelDSliderPair(*it++));
-	data_.push_back(pair_[i]->GetData());
-	gtk_grid_attach(GTK_GRID(GetGrid()), pair_[i]->GetRoot(), 0, i, 1, 1);
-      }
+  float GetValue(size_t pos) {
+    if (pos >= size_)
+      throw std::out_of_range("s21::DSliderPannel::GetValue Out of range");
+    return pair_.at(pos)->GetValue();
+  }
+
+  void SetValue(size_t pos, float value) {
+    if (pos >= size_)
+      throw std::out_of_range("s21::DSliderPannel::SetValue Out of range");
+    pair_.at(pos)->SetValue(value);
+  }
+
+  void SetValue(float value) {
+    for (size_t i = 0; i < size_; ++i) {
+      pair_[i]->SetValue(value);
     }
+  }
 
+  std::vector<float *> GetData() { return data_; }
 
-    ~DSliderPannel() {
-      for(size_t i = 0; i < size_; ++i) {
-        delete pair_[i];
-      }
+  void SetName(const char *name) override { s21::Widget::SetName(name); }
+
+  void SetName(size_t pos, const char *name) {
+    if (pos >= size_)
+      throw std::out_of_range("s21::DSliderPannel::SetName Out of range");
+    pair_[pos]->SetName(name);
+  }
+
+  void SetMother(s21::Widget *mother) {
+    for (size_t i = 0; i < size_; ++i) {
+      pair_[i]->SetMother(mother);
     }
+  }
 
-    float GetValue(size_t pos) { 
-      if (pos >= size_)
-        throw std::out_of_range("s21::DSliderPannel::GetValue Out of range");
-      return pair_.at(pos)->GetValue();
+  void CatchSignal() override {
+    g_print("\nWarning: s21::DSliderPannel::CatchSignal() has no "
+            "implementation!\n");
+  }
+
+  void SendSignal() override {
+    g_print(
+        "\nWarning: s21::DSliderPannel::SendSignal() has no implementation!\n");
+  }
+
+private:
+  std::vector<LabelDSliderPair *> pair_;
+  std::vector<float *> data_;
+  size_t size_;
+
+  void InitPannel() {
+    for (size_t i = 0; i < size_; ++i) {
+      pair_.push_back(new LabelDSliderPair());
+      data_.push_back(pair_[i]->GetData());
+      gtk_grid_attach(GTK_GRID(GetGrid()), pair_[i]->GetRoot(), 0, i, 1, 1);
     }
-
-    void SetValue(size_t pos, float value) { 
-      if (pos >= size_)
-        throw std::out_of_range("s21::DSliderPannel::SetValue Out of range");
-      pair_.at(pos)->SetValue(value);
-    }
-
-    void SetValue(float value) {
-      for(size_t i = 0; i < size_; ++i) {
-        pair_[i]->SetValue(value);
-      }
-    }
-
-    std::vector<float*> GetData() {
-      return data_;
-    }
-
-    void SetName(const char* name) override {
-      s21::Widget::SetName(name);
-    }
-
-    void SetName(size_t pos, const char* name) {
-      if (pos >= size_)
-        throw std::out_of_range("s21::DSliderPannel::SetName Out of range");
-      pair_[pos]->SetName(name);
-    }
-
-	void SetMother(s21::Widget* mother) {
-	  for(size_t i = 0; i < size_; ++i) {
-	    pair_[i]->SetMother(mother);
-	  }
-	}
-
-	void CatchSignal() override {
-	  g_print("\nWarning: s21::DSliderPannel::CatchSignal() has no implementation!\n");
-	}
-
-	void SendSignal() override {	
-	  g_print("\nWarning: s21::DSliderPannel::SendSignal() has no implementation!\n");
-	}
-
-  private:
-    std::vector<LabelDSliderPair*> pair_;
-    std::vector<float*> data_;
-    size_t size_;
-
-    void InitPannel() {
-      for (size_t i = 0; i < size_; ++i) {
-        pair_.push_back(new LabelDSliderPair());
-        data_.push_back(pair_[i]->GetData());
-        gtk_grid_attach(GTK_GRID(GetGrid()), pair_[i]->GetRoot(), 0, i, 1, 1);
-      }
-    }
+  }
 };
 
-}
+} // namespace s21
 #endif
-
