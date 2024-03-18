@@ -75,7 +75,7 @@ class DrawingArea: public Widget {
 
 	  glEnableVertexAttribArray(0);
 	  glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer_);
+		//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer_);
 	  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3*sizeof(GLfloat), nullptr);
 
 
@@ -99,12 +99,13 @@ class DrawingArea: public Widget {
     
     GLuint vao_ = 0;
     GLuint vertex_buffer_ = 0;
-    GLuint element_buffer_;
+    //GLuint element_buffer_;
     GLuint program_ = 0;
     GLuint mvp_location_ = 0;
 
     s21::Data* data_ = nullptr;
 
+    std::vector<GLuint> element_buffer_;
 
 	void InitArea() {
 	  area_ = gtk_gl_area_new();
@@ -143,12 +144,21 @@ class DrawingArea: public Widget {
       glDrawElements(GL_LINE_LOOP, start_ind + controller_->GetSurfaces(i).size(), GL_UNSIGNED_INT, nullptr);
       //glDrawRangeElements(GL_LINE_LOOP, start_ind, end_ind, length, GL_UNSIGNED_INT, 0);
 			//glFlush();
-      }*/
+      }*//*
 			int count = 0;
 			for(int i = 0; i < element_length; ++i) {
 			  count += controller_->GetSurfaces(i).size();
 			}
-			glDrawElements(GL_LINE_LOOP, count, GL_UNSIGNED_INT, nullptr);
+			//glDrawElements(GL_LINE_LOOP, count, GL_UNSIGNED_INT, nullptr);
+			GLuint* ptr = &element_buffer_;
+			for (size_t i = 0; i < controller_->GetSurfacesCount(); ++i) {
+                          int this_length = controller_->GetSurfaces(i).size();
+			  glDrawElements(GL_LINE_LOOP, this_length, GL_UNSIGNED_INT, controller_->GetSurfaces(i).data());
+			}*/
+                  for(size_t i = 0; i < element_buffer_.size(); ++i) {
+		    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer_[i]);
+		    glDrawElements(GL_LINE_LOOP, controller_->GetSurfaces(i).size(), GL_UNSIGNED_INT, nullptr);
+		  }
 		}
 	}
 
@@ -170,7 +180,7 @@ class DrawingArea: public Widget {
     */
     std::vector<float> v  = controller_->GetVertex();
 		v.shrink_to_fit();
-		g_print("\nv arr %i %i\n", v.capacity(), v.size());
+		//g_print("\nv arr %i %i\n", v.capacity(), v.size());
   //  g_print("\nvertexes:\n");
   //  for(size_t i = 0; i < v.size(); ++i) {
   //    g_print("%f\n", v[i]);
@@ -184,10 +194,13 @@ class DrawingArea: public Widget {
     glBufferData(GL_ARRAY_BUFFER, sizeof(float)*v.size(), v.data(), GL_STATIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
+
+    //ELEMENT//
     size_t element_length = 0;
-		for (size_t i = 0; i < controller_->GetSurfacesCount(); ++i) {
-		  element_length += controller_->GetSurfaces(i).size();
-		}
+    for (size_t i = 0; i < controller_->GetSurfacesCount(); ++i) {
+      element_length += controller_->GetSurfaces(i).size();
+    }
+    /*
     glGenBuffers(1, &element_buffer_);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer_);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int)*element_length, 0, GL_STATIC_DRAW);
@@ -199,6 +212,15 @@ class DrawingArea: public Widget {
       glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint)*offset, sizeof(unsigned int)*f.size(), f.data());
     }
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		*/
+    for(size_t i = 0; i < controller_->GetSurfacesCount(); ++i) {
+      GLuint this_buffer = 0;  
+      glGenBuffers(1, &this_buffer);
+      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this_buffer);
+      glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int)*controller_->GetSurfaces(i).size(), controller_->GetSurfaces(i).data(), GL_STATIC_DRAW);
+      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,0);
+      element_buffer_.push_back(this_buffer);
+    }
   }
 
   void InitShader() {
