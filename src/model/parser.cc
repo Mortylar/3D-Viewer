@@ -19,7 +19,7 @@ void s21::Parser::ParserMethod(const char *file_name) {
 
   ResetFigure();
   while (file_length) {
-    std::string buffer = ReadString(fp);
+    std::string buffer = ReadString(fp, &file_length);
     if ('v' == buffer[0]) {
       ReadVertexes(buffer);
     } else if (('f' == buffer[0]) && (' ' == buffer[1])) {
@@ -33,21 +33,21 @@ void s21::Parser::ParserMethod(const char *file_name) {
     throw std::invalid_argument("Empty figure");
 }
 
-void s21::Parser::ReadVertexes(std::string buffer) {
+void s21::Parser::ReadVertexes(const std::string& buffer) {
   float vertex[3]{0};
   int status = 0;
-
   if (buffer[1] == ' ') {
-    status = ExtractVertexData(buffer, "v %f %f %f", vertex[0], vertex[1],
-                               vertex[2]);
+    status = ExtractVertexData(buffer, "v %f %f %f ##1", &vertex[0], &vertex[1],
+                               &vertex[2]);
     s21::Figure::GetInstance()->AddVertex(vertex[0], vertex[1], vertex[2]);
   } else if (buffer[1] == 't') {
-    status = ExtractVertexData(buffer, "vt %f %f %f", vertex[0], vertex[1],
-                               vertex[2]);
+    status = ExtractVertexData(buffer, "vt %f %f %f", &vertex[0], &vertex[1],
+                               &vertex[2]);
+    if (status == 2) ++status;
     s21::Figure::GetInstance()->AddTextures(vertex[0], vertex[1], vertex[2]);
   } else if (buffer[1] == 'n') {
-    status = ExtractVertexData(buffer, "vn %f %f %f", vertex[0], vertex[1],
-                               vertex[2]);
+    status = ExtractVertexData(buffer, "vn %f %f %f", &vertex[0], &vertex[1],
+                               &vertex[2]);
     s21::Figure::GetInstance()->AddNormals(vertex[0], vertex[1], vertex[2]);
   }
   if (status != 3)
@@ -55,20 +55,24 @@ void s21::Parser::ReadVertexes(std::string buffer) {
                                 "coordinates in one vertex");
 }
 
-int s21::Parser::ExtractVertexData(std::string &buffer, std::string format,
-                                   float &x, float &y, float &z) {
-  return sscanf(buffer.data(), format.data(), &x, &y, &z);
+int s21::Parser::ExtractVertexData(const std::string &buffer, std::string format,
+                                   float *x, float *y, float *z) {
+  return sscanf(buffer.data(), format.data(), x, y, z);
 }
 
 void s21::Parser::ReadSurface(const std::string &buffer) {
   std::vector<unsigned int> v_surface;
   std::vector<unsigned int> t_surface;
-  std::vector<unsugned int> n_surface;
+  std::vector<unsigned int> n_surface;
   size_t pos = 2;
   while (pos < buffer.size()) {
     pos = ExtractFragment(buffer, pos, v_surface, t_surface, n_surface);
-    while (!IsNumber(buffer[pos])) {
-      ++pos;
+    while (!IsNumber(buffer[pos]) && (pos < buffer.size())) {
+      if (buffer[pos] == '#') {
+        pos = buffer.size();
+      } else {
+        ++pos;
+      }
     }
   }
 
@@ -155,8 +159,8 @@ size_t s21::Parser::GetFileLength(const char *file_name) {
 }
 
 std::string s21::Parser::ReadString(FILE *fp, size_t *file_length) {
-  std::string result{0};
-  char letter{0};
+  std::string result;
+  char letter{'a'};
   while ((*file_length) && (letter != '\n') && letter) {
     fread(&letter, 1, 1, fp);
     result += letter;

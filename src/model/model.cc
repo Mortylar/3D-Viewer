@@ -44,6 +44,6 @@ size_t s21::Model::GetSurfacesCount() {
 }
 
 const std::vector<unsigned int>& s21::Model::GetSurface(size_t n) {
-  return s21::Figure::GetInstance()->GetiVSurface(n);
+  return s21::Figure::GetInstance()->GetVSurface(n);
 }
 

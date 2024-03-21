@@ -66,7 +66,7 @@ void s21::Figure::AddNormals(float x, float y, float z) {
 //-------------------------surfaces----------------------------//
 
 size_t s21::Figure::GetSurfacesCount() {
-  return surfaces_->size();
+  return v_surfaces_->size();
 }
 
 const std::vector<unsigned int>& s21::Figure::GetVSurface(size_t i) {
