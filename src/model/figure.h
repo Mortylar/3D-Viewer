@@ -45,6 +45,10 @@ class Figure {
 
     size_t GetSurfacesCount();
 
+    const std::vector<std::vector<unsigned int>>& GetVSurface();
+    const std::vector<std::vector<unsigned int>>& GetTSurface();
+    const std::vector<std::vector<unsigned int>>& GetNSurface();
+
     const std::vector<unsigned int>& GetVSurface(size_t n);
     const std::vector<unsigned int>& GetTSurface(size_t n);
     const std::vector<unsigned int>& GetNSurface(size_t n);
