@@ -11,4 +11,6 @@ lib:
 	cd model/ && make s21_model.a
 	$(CC) main.cc $(GTK_FLAGS) $(EPOXY_FLAGS) $(MODEL_FLAGS)
 	./a.out
-  
+
+clean:
+	cd model/ && make clean  

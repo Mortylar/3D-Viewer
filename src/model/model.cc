@@ -8,9 +8,9 @@ void s21::Model::ReadFile(const char* file_name) {
   parser_->ParserMethod(file_name);
   affine_->Normalize(s21::Figure::GetInstance()->GetVertex());
 }
-
+/*
 void s21::Model::Translation(std::vector<float>& v, float dx, float dy, float dz) {
-  affine_->Translation(v, dx, dy, dz);
+//  affine_->Translation(v, dx, dy, dz);
 }
 
 void s21::Model::Rotation(std::vector<float>& v, float x_rad, float y_rad, float z_rad) {
@@ -28,7 +28,7 @@ void s21::Model::Normalize(std::vector<float>& v) {
 void s21::Model::Centring(std::vector<float>& v) {
   affine_->Centring(v);
 }
-
+*/
 
 size_t s21::Model::GetVertexCount() {
   return s21::Figure::GetInstance()->GetVertexCount();
@@ -45,5 +45,22 @@ size_t s21::Model::GetSurfacesCount() {
 
 const std::vector<unsigned int>& s21::Model::GetSurface(size_t n) {
   return s21::Figure::GetInstance()->GetVSurface(n);
+}
+
+
+void s21::Model::SetGLArea(GtkGLArea* area) {
+  opengl_model_->SetGLArea(area);
+}
+
+void s21::Model::ConnectData(s21::Data* data) {
+  opengl_model_->ConnectData(data);
+}
+
+void s21::Model::SetBuffers() {
+  opengl_model_->SetBuffer();
+}
+
+void s21::Model::Draw() {
+  opengl_model_->Draw();
 }
 

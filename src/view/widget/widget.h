@@ -204,10 +204,12 @@ public:
   }
 
   const char *GetValue() { return file_name_; }
+	const char* GetFileName() { return little_file_; }
 
 private:
   GtkWidget *button_ = nullptr;
   char *file_name_ = nullptr;
+	char* little_file_ = nullptr;
   s21::Widget *mother_ = nullptr;
 
   void ClearFile() {
@@ -237,6 +239,7 @@ private:
     if (file) {
       static_cast<s21::FileChooser *>(self)->ClearFile();
       static_cast<s21::FileChooser *>(self)->file_name_ = g_file_get_path(file);
+      static_cast<s21::FileChooser *>(self)->little_file_ = g_file_get_basename(file);
       static_cast<s21::FileChooser *>(self)->SendSignal();
     }
   }
@@ -266,10 +269,12 @@ public:
   }
 
   const char *GetValue() { return file_name_; }
+	const char* GetFileName() { return little_file_; }
 
 private:
   GtkWidget *button_ = nullptr;
   char *file_name_ = nullptr;
+	char* little_file_ = nullptr;
   s21::Widget *mother_ = nullptr;
 
   void ClearFile() {
@@ -300,6 +305,7 @@ private:
     if (file) {
       static_cast<s21::FileChooser *>(self)->ClearFile();
       static_cast<s21::FileChooser *>(self)->file_name_ = g_file_get_path(file);
+      static_cast<s21::FileChooser *>(self)->little_file_ = g_file_get_basename(file);
       static_cast<s21::FileChooser *>(self)->SendSignal();
     }
   }

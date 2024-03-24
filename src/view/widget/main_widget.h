@@ -29,7 +29,7 @@ public:
   void SetMother(s21::Widget *mother) override {}
 
   void CatchSignal() override {
-    //	 point_pannel
+    Update();
     area_->CatchSignal();
   }
 
@@ -130,6 +130,23 @@ private:
     area_ = new s21::DrawingArea(data_, controller_);
     area_->SetMother(this);
   }
+
+	void Update() {
+		UpdateData();
+		SetInfo();
+	}
+
+	void UpdateData() {	
+	  affine_pannel_->Update();
+		line_pannel_->Update();
+		point_pannel_->Update();
+	}
+
+	void SetInfo() {
+	  info_pannel_->SetFileName(file_->GetFileName());
+		info_pannel_->SetVertexCount(controller_->GetVertexCount());
+		info_pannel_->SetEdgesCount(controller_->GetSurfacesCount()); //TODO
+	}
 
   static void LoadFile(GtkWidget *button, s21::MainWidget *self) {
     const char *file_name = self->file_->GetValue();

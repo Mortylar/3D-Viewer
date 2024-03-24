@@ -29,6 +29,10 @@ public:
     RemoveScalingPannel();
   };
 
+  void Update() {
+	  CollectData();
+	}
+
   void CollectData() {
     CollectTranslation();
     CollectRotation();
@@ -201,6 +205,12 @@ public:
       mother_->CatchSignal();
   }
 
+  void Update() {
+    data_->SetType(type_->GetValue());
+    data_->SetColor(color_->GetColor());
+    data_->SetSize(size_->GetValue());
+  }
+
 private:
   GtkWidget *grid_ = nullptr;
   s21::Widget *mother_ = nullptr;
@@ -240,11 +250,6 @@ private:
     gtk_grid_attach(GTK_GRID(grid_), type_->GetRoot(), 0, 2, 1, 1);
   }
 
-  void Update() {
-    data_->SetType(type_->GetValue());
-    data_->SetColor(color_->GetColor());
-    data_->SetSize(size_->GetValue());
-  }
 };
 
 enum class PointType {
@@ -285,6 +290,12 @@ public:
       mother_->CatchSignal();
   }
 
+  void Update() {
+    data_->SetType(type_->GetValue());
+    data_->SetColor(color_->GetColor());
+    data_->SetSize(size_->GetValue());
+  }
+
 private:
   GtkWidget *grid_ = nullptr;
   s21::Widget *mother_ = nullptr;
@@ -323,12 +334,6 @@ private:
     type_->SetMother(this);
     gtk_grid_attach(GTK_GRID(grid_), type_->GetRoot(), 0, 2, 1, 1);
   }
-
-  void Update() {
-    data_->SetType(type_->GetValue());
-    data_->SetColor(color_->GetColor());
-    data_->SetSize(size_->GetValue());
-  }
 };
 
 class InfoPannel : public Widget {
@@ -354,6 +359,19 @@ public:
     if (mother_)
       mother_->CatchSignal();
   }
+
+  void SetFileName(const char* file_name) {
+	  file_name_->SetValue(file_name);
+	}
+
+  void SetVertexCount(size_t v_count) {
+	  vertex_count_->SetValue(std::to_string(v_count).data());
+	}
+
+	void SetEdgesCount(size_t edges_count) {
+	  edges_count_->SetValue(std::to_string(edges_count).data());
+	}
+
 
 private:
   GtkWidget *grid_ = nullptr;

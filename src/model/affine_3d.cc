@@ -5,42 +5,44 @@
 
 #include <iostream> //TODO remove
 
-void s21::Affine3D::Translation(std::vector<float>& v, float dx, float dy, float dz) {
-  size_t size = v.size();
-  CheckDimension(size);
-  for (size_t i = 0; i < size; i += dim_) {
-    v[i + 0] += dx;
-    v[i + 1] += dy;
-    v[i + 2] += dz;
-  }
+void s21::Affine3D::Translation(float(&v)[16], float dx, float dy, float dz) {
+	v[12] = dx;
+	v[13] = dy;
+	v[14] = dz;
 }
 
-void s21::Affine3D::Rotation(std::vector<float>& v, float x_rad, float y_rad, float z_rad) {
-  size_t size = v.size();
-  CheckDimension(size);
+void s21::Affine3D::Rotation(float(&v)[16], float x_rad, float y_rad, float z_rad) {
+  float sinA = sin(x_rad);
+  float sinB = sin(y_rad);
+  float sinG = sin(z_rad);
+  float cosA = cos(x_rad);
+  float cosB = cos(y_rad);
+  float cosG = cos(z_rad);
 
-  for (size_t i = 0; i < size; i += dim_) {
-    float x_tmp = v[i + 0];
-	float x_rot_1 = sin(x_rad) * v[i + 1] - cos(x_rad) * v[i + 2];
-	float x_rot_2 = cos(x_rad) * v[i + 1] + sin(x_rad) * v[i + 2];
-	float y_z_rot = cos(y_rad) * x_tmp;
-
-	v[i + 0] = cos(z_rad) * (y_z_rot + sin(y_rad) * x_rot_1) + sin(z_rad) * x_rot_2;
-	v[i + 1] = sin(z_rad) * (-y_z_rot - sin(y_rad) * x_rot_1)  + cos(z_rad) * x_rot_2;
-	v[i + 2] = x_tmp * sin(y_rad) - x_rot_1 * cos(y_rad);
-  }
-
+  v[0] = cosG * cosB;
+  v[1] = -sinG * cosB;
+  v[2] = sinB;    
+  v[3] = 0.f;   
+	v[4] = sinG * cosA + cosG * sinB * sinA;
+	v[5] = cosG * cosA - sinG * sinB * sinA;
+	v[6] = -cosB * sinA;
+  v[7] = 0.0;
+	v[8] = sinG * sinA - cosG * sinB * cosA;
+	v[9] = cosG * sinA + sinG * sinB * cosA; 
+	v[10] = cosB * cosA;          
+	v[11] = 0.f;
+	v[12] = 0.f;
+	v[13] = 0.f;
+	v[14] = 0.f;
+	v[15] = 1.f;
 }
 
-void s21::Affine3D::Scaling(std::vector<float>& v, float x_scale, float y_scale, float z_scale) {
+void s21::Affine3D::Scaling(float(&v)[16], float x_scale, float y_scale, float z_scale) {
   CheckScalingNilpotency(x_scale, y_scale, z_scale);
-  size_t size = v.size();
-  CheckDimension(size);
-
-  for (size_t i = 0; i < size; i += dim_) {
+  for (size_t i = 0; i < 3; ++i) {
     v[i + 0] *= x_scale;
-	v[i + 1] *= y_scale;
-	v[i + 2] *= z_scale;
+	  v[i + 4] *= y_scale;
+	  v[i + 8] *= z_scale;
   }
 }
 
@@ -51,8 +53,14 @@ void s21::Affine3D::Normalize(std::vector<float>& v) {
   for (size_t i = 1; i < size; ++i) {
     if (fabs(v[i]) > common_wide) common_wide = fabs(v[i]);
   }
-  if ((common_wide > 1.0) || (common_wide < 0.5))
-    Scaling(v, 1.0/common_wide, 1.0/common_wide, 1.0/common_wide);
+  if ((common_wide > 1.0) || (common_wide < 0.5)) {
+	  for (size_t i = 0; i < v.size(); i+= 1) {
+      v[i + 0] *= 1.0/common_wide;
+      //v[i + 1] *= y_scale;
+      //v[i + 2] *= z_scale;
+		}
+	}
+   // Scaling(v, 1.0/common_wide, 1.0/common_wide, 1.0/common_wide);
 }
 
 void s21::Affine3D::Centring(std::vector<float>& v) {
@@ -66,7 +74,7 @@ void s21::Affine3D::Centring(std::vector<float>& v) {
       if (max_v[j] < v[i + j]) max_v[j] = v[i + j];
     }
   }
-  Translation(v, -(max_v[0]+min_v[0])/2, -(max_v[1]+min_v[1])/2, -(max_v[2]+min_v[2])/2);
+  //Translation(v, -(max_v[0]+min_v[0])/2, -(max_v[1]+min_v[1])/2, -(max_v[2]+min_v[2])/2);
 }
 
 void s21::Affine3D::CheckScalingNilpotency(float x_scale, float y_scale, float z_scale) {

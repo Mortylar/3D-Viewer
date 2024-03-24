@@ -70,15 +70,15 @@ size_t s21::Figure::GetSurfacesCount() {
 }
 
 const std::vector<std::vector<unsigned int>>& s21::Figure::GetVSurface() {
-  return *v_surface_;
+  return *v_surfaces_;
 }
 
 const std::vector<std::vector<unsigned int>>& s21::Figure::GetTSurface() {
-  return *t_surface_;
+  return *t_surfaces_;
 }
 
 const std::vector<std::vector<unsigned int>>& s21::Figure::GetNSurface() {
-  return *n_surface_;
+  return *n_surfaces_;
 }
 
 const std::vector<unsigned int>& s21::Figure::GetVSurface(size_t i) {

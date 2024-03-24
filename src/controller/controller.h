@@ -28,7 +28,7 @@ class Controller {
   size_t GetSurfacesCount() {
 	  return model_->GetSurfacesCount();
 	}
-
+/*
 	void Translation(std::vector<float>& v, float x, float y, float z) {
 	  model_->Translation(v,x,y,z);
 	}
@@ -39,6 +39,22 @@ class Controller {
 
 	void Scaling(std::vector<float>& v, float x, float y, float z) {
 	  model_->Scaling(v,x,y,z);
+	}
+*/
+	void SetGLArea(GtkGLArea* area) {
+	  model_->SetGLArea(area);
+	}
+
+	void ConnectData(s21::Data* data) {
+	  model_->ConnectData(data);
+	}
+
+	void SetBuffer() {
+	  model_->SetBuffers();
+	}
+
+	void Draw() {
+	  model_->Draw();
 	}
 
   private:
