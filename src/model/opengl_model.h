@@ -49,8 +49,6 @@ private:
 
   void CreateElementBuffer(std::vector<std::vector<unsigned int>>& data) {
     for (size_t i = 0; i < data.size(); ++i) {
-			g_print("\nelement size = %li\n", element_.size());
-			g_print("\ndata size = %li\n", data.size());
       GLuint tmp_buffer = 0;
       glGenBuffers(1, &tmp_buffer);
       glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, tmp_buffer);
@@ -92,7 +90,6 @@ public:
 
   void SetGLArea(GtkGLArea* area) {
     area_ = area;
-    //gtk_gl_area_make_current(GTK_GL_AREA(area_));
   }
 
   void ConnectData(s21::Data* data) {
@@ -101,7 +98,6 @@ public:
 
   void SetBuffer() {
     gtk_gl_area_make_current(GTK_GL_AREA(area_));
-    //context_ = gtk_gl_area_get_context(GTK_GL_AREA(area_));
     InitBuffer();
     InitShader();
   }
@@ -109,22 +105,14 @@ public:
 	void Draw() {
 		if (vertex_->GetVertexBuffer() != 0) {
 	    DrawFigure();
-		} else {
-		  g_print("\nBuffers not set\n");
 		}
 	}
-
-
 
 private:
   s21::Data* data_ = nullptr;
   GtkGLArea* area_ = nullptr;
 
   GLuint vao_ = 0;
-  //GLuint vertex_buffer_ = 0;
-  //GLuint texture_buffer_ = 0;
-  //GLuint normals_buffer_ = 0;
-
   GLuint program_ = 0;
   GLuint mvp_location_ = 0;
 
@@ -132,20 +120,17 @@ private:
   Buffer* texture_ = nullptr;
   Buffer* normals_ = nullptr;
 
-  //std::vector<GLuint> element_buffer_;
-  //std::vector<GLuint> texture_buffer_;
-  //std::vector<GLuint> normals_buffer_;
-
 
   void DrawFigure() {
    float mvp[16] {1,0,0,0,
                   0,1,0,0,
 									0,0,1,0,
 									0,0,0,1};
-   ComputeMVP(mvp); //TODO
+   ComputeMVP(mvp);
 	 ResetField(); 
 
 	 glUseProgram(program_);
+	 glBindVertexArray(vao_);
 	 glUniformMatrix4fv(mvp_location_, 1, GL_FALSE, &mvp[0]);
    glEnableVertexAttribArray(0);
 
@@ -180,7 +165,6 @@ private:
 	void DrawLines() {
 	  if(data_->GetLineType()) {
 		  glLineWidth(data_->GetLineWidth());
-			g_print("\nDRAW LINES START\n");
 			std::vector<GLuint> element_buffer = vertex_->GetElementBuffer();
 			for(size_t i = 0; i < element_buffer.size(); ++i) {
 			  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer[i]);
@@ -194,18 +178,17 @@ private:
   void InitBuffer() {
     glGenVertexArrays(1, &vao_);
     glBindVertexArray(vao_);
-    g_print("\ninit buffer\n");
     std::vector<float> v = s21::Figure::GetInstance()->GetVertex();
     std::vector<std::vector<unsigned int>> e = s21::Figure::GetInstance()->GetVSurface();
     vertex_->CreateBuffer(v, e);
-/*
+
     v = s21::Figure::GetInstance()->GetTextures();
     e = s21::Figure::GetInstance()->GetTSurface();
     texture_->CreateBuffer(v,e);
 
     v = s21::Figure::GetInstance()->GetNormals();
     e = s21::Figure::GetInstance()->GetNSurface();
-    normals_->CreateBuffer(v,e);*/
+    normals_->CreateBuffer(v,e);
   }
 
   void InitShader() {
@@ -267,7 +250,10 @@ private:
   void ComputeMVP(float(&mvp)[16]) {
     Rotation(mvp);
 		Scaling(mvp);
-		Translation(mvp); 
+		Translation(mvp);
+		mvp[3] = 2*mvp[2];
+		mvp[7] = 2*mvp[6];
+		mvp[11] = 2*mvp[10]; 
 	}
 
 	void Rotation(float(&v)[16]) {
