@@ -4,10 +4,10 @@ layout(location = 0) in vec4 position;
 //layout(location = 1) in vec2 texture;
 
 uniform mat4 mvp;
-
-//out vec2 gl_texture;
+uniform vec4 color;
+out vec4 u_color;
 
 void main() {
   gl_Position = mvp * position;
-	//out_texture = texture;
+  u_color = color;
 }

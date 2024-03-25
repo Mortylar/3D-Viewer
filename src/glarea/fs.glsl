@@ -1,11 +1,11 @@
 #version 330
 
-//in vec2 gl_texture
+in vec4 u_color;
 out vec4 outputColor;
 
 //uniform sampler2D gSampler;
 
 void main() {
-  outputColor = vec4(1, 0, 1, 1);
+  outputColor = u_color;
 	//outputColor = texture2D(gSampler, glTexture.st);
 }
