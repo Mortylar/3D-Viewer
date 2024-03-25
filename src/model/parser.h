@@ -1,8 +1,8 @@
 #ifndef SRC_MODEL_PARSER_H_
 #define SRC_MODEL_PARSER_H_
 
-#include <vector>
 #include <string>
+#include <vector>
 
 namespace s21 {
 class Parser {
@@ -16,16 +16,16 @@ private:
   // const int buffer_length_ = 255;
 
   void ReadVertexes(const std::string &buffer);
-  int ExtractVertexData(const std::string &, std::string, float*, float*,
-                        float*);
+  int ExtractVertexData(const std::string &, std::string, float *, float *,
+                        float *);
 
   void ReadSurface(const std::string &buffer);
-  size_t ExtractFragment(const std::string&, size_t,
-                         std::vector<unsigned int>&,
-			 std::vector<unsigned int>&,
-                         std::vector<unsigned int>&);
+  size_t ExtractFragment(const std::string &, size_t,
+                         std::vector<unsigned int> &,
+                         std::vector<unsigned int> &,
+                         std::vector<unsigned int> &);
   void WriteFragment(const std::string &, int, std::vector<unsigned int> &,
-                     std::vector<unsigned int>&, std::vector<unsigned int> &);
+                     std::vector<unsigned int> &, std::vector<unsigned int> &);
   void ResetFigure();
   size_t GetFileLength(const char *file_name);
   std::string ReadString(FILE *, size_t *);

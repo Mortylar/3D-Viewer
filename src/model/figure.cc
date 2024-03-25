@@ -1,15 +1,12 @@
 #include "figure.h"
 
-
 #include <iostream>
 #include <vector>
 
-s21::Figure* s21::Figure::self_ = nullptr;
+s21::Figure *s21::Figure::self_ = nullptr;
 s21::FigureKiller s21::Figure::killer_;
 
-s21::FigureKiller::~FigureKiller() {
-  delete figure_;
-}
+s21::FigureKiller::~FigureKiller() { delete figure_; }
 
 void s21::Figure::Clear() {
   vertex_->clear();
@@ -23,26 +20,17 @@ void s21::Figure::Clear() {
 
 //---------------------------vertexes--------------------------//
 
-size_t s21::Figure::GetVertexCount() {
-  return vertex_->size() / 3;
-}
+size_t s21::Figure::GetVertexCount() { return vertex_->size() / 3; }
 
-std::vector<float>& s21::Figure::GetVertex() {
-  return *vertex_;
-}
+std::vector<float> &s21::Figure::GetVertex() { return *vertex_; }
 
-std::vector<float>& s21::Figure::GetTextures() {
-  return *textures_;
-}
+std::vector<float> &s21::Figure::GetTextures() { return *textures_; }
 
-std::vector<float>& s21::Figure::GetNormals() {
-  return *normals_;
-}
+std::vector<float> &s21::Figure::GetNormals() { return *normals_; }
 
-
-//const float* s21::Figure::GetVertexData() {
-//  return vertex_->data();
-//}
+// const float* s21::Figure::GetVertexData() {
+//   return vertex_->data();
+// }
 
 void s21::Figure::AddVertex(float x, float y, float z) {
   vertex_->push_back(x);
@@ -62,46 +50,42 @@ void s21::Figure::AddNormals(float x, float y, float z) {
   normals_->push_back(z);
 }
 
-
 //-------------------------surfaces----------------------------//
 
-size_t s21::Figure::GetSurfacesCount() {
-  return v_surfaces_->size();
-}
+size_t s21::Figure::GetSurfacesCount() { return v_surfaces_->size(); }
 
-const std::vector<std::vector<unsigned int>>& s21::Figure::GetVSurface() {
+const std::vector<std::vector<unsigned int>> &s21::Figure::GetVSurface() {
   return *v_surfaces_;
 }
 
-const std::vector<std::vector<unsigned int>>& s21::Figure::GetTSurface() {
+const std::vector<std::vector<unsigned int>> &s21::Figure::GetTSurface() {
   return *t_surfaces_;
 }
 
-const std::vector<std::vector<unsigned int>>& s21::Figure::GetNSurface() {
+const std::vector<std::vector<unsigned int>> &s21::Figure::GetNSurface() {
   return *n_surfaces_;
 }
 
-const std::vector<unsigned int>& s21::Figure::GetVSurface(size_t i) {
+const std::vector<unsigned int> &s21::Figure::GetVSurface(size_t i) {
   return v_surfaces_->at(i);
 }
 
-const std::vector<unsigned int>& s21::Figure::GetTSurface(size_t i) {
+const std::vector<unsigned int> &s21::Figure::GetTSurface(size_t i) {
   return t_surfaces_->at(i);
 }
 
-const std::vector<unsigned int>& s21::Figure::GetNSurface(size_t i) {
+const std::vector<unsigned int> &s21::Figure::GetNSurface(size_t i) {
   return n_surfaces_->at(i);
 }
 
-
-void s21::Figure::AddVSurface(const std::vector<unsigned int>& surface) {
+void s21::Figure::AddVSurface(const std::vector<unsigned int> &surface) {
   v_surfaces_->push_back(surface);
 }
 
-void s21::Figure::AddTSurface(const std::vector<unsigned int>& surface) {
+void s21::Figure::AddTSurface(const std::vector<unsigned int> &surface) {
   t_surfaces_->push_back(surface);
 }
 
-void s21::Figure::AddNSurface(const std::vector<unsigned int>& surface) {
+void s21::Figure::AddNSurface(const std::vector<unsigned int> &surface) {
   n_surfaces_->push_back(surface);
 }

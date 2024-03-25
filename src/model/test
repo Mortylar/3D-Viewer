@@ -1,0 +1,39 @@
+#include <iostream>
+
+size_t Extract(const std::string& buffer, size_t pos) {
+  std::string frag;
+  int count = 0;
+  while(buffer[pos] && (buffer[pos] != ' ') && (buffer[pos] != '\n')) {
+    //std::cout << buffer[pos] << std::endl;
+    if (buffer[pos] == '/') {
+      ++count;
+      frag += ' ';
+      if(buffer[pos + 1] == '/') {
+        ++count;
+        frag += "0 ";
+	pos+=2;
+      } else {
+        frag += ' ';
+        ++pos;
+      }
+    } else {
+     frag += buffer[pos];
+     ++pos;
+    }
+  }
+
+  std::cout << "Count = " << count << std::endl;
+  std::cout << "String = " << frag << std::endl;
+  return pos;
+}
+
+
+int main() {
+  std::string buffer = "f 1/2/3 4/5 7//8 1 2 3       ";
+  size_t pos = 2;
+  while(pos < buffer.size()) {
+    pos = Extract(buffer, pos);
+    while(buffer[pos] == ' ') {++pos;}
+  }
+  return 0;
+}

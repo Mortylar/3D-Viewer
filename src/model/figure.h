@@ -1,97 +1,95 @@
 #ifndef SRC_MODEL_FIGURE_H_
 #define SRC_MODEL_FIGURE_H_
 
-#include<vector>
-#include<cstddef>
-#include<iostream>
+#include <cstddef>
+#include <iostream>
+#include <vector>
 
-//singleton
+// singleton
 namespace s21 {
 
 class Figure;
 
 class FigureKiller {
-  public:
-//   FigureKiller();
+public:
+  //   FigureKiller();
   ~FigureKiller();
 
-  void Initialize(Figure* figure) {
-    figure_ = figure;
-  }
-  private:
-    Figure* figure_;
-};
+  void Initialize(Figure *figure) { figure_ = figure; }
 
+private:
+  Figure *figure_;
+};
 
 class Figure {
-  public:
-    static Figure* GetInstance() {
-      if (!self_) {
-        self_ = new Figure();
-        killer_.Initialize(self_);
-      }
-      return self_;
+public:
+  static Figure *GetInstance() {
+    if (!self_) {
+      self_ = new Figure();
+      killer_.Initialize(self_);
     }
+    return self_;
+  }
 
-    size_t GetVertexCount();
-    
-    std::vector<float>& GetVertex();
-    std::vector<float>& GetTextures();
-    std::vector<float>& GetNormals();
+  size_t GetVertexCount();
 
-    void AddVertex(float x, float y, float z); 
-    void AddTextures(float x, float y, float z);
-    void AddNormals(float x, float y, float z);
+  std::vector<float> &GetVertex();
+  std::vector<float> &GetTextures();
+  std::vector<float> &GetNormals();
 
-    size_t GetSurfacesCount();
+  void AddVertex(float x, float y, float z);
+  void AddTextures(float x, float y, float z);
+  void AddNormals(float x, float y, float z);
 
-    const std::vector<std::vector<unsigned int>>& GetVSurface();
-    const std::vector<std::vector<unsigned int>>& GetTSurface();
-    const std::vector<std::vector<unsigned int>>& GetNSurface();
+  size_t GetSurfacesCount();
 
-    const std::vector<unsigned int>& GetVSurface(size_t n);
-    const std::vector<unsigned int>& GetTSurface(size_t n);
-    const std::vector<unsigned int>& GetNSurface(size_t n);
+  const std::vector<std::vector<unsigned int>> &GetVSurface();
+  const std::vector<std::vector<unsigned int>> &GetTSurface();
+  const std::vector<std::vector<unsigned int>> &GetNSurface();
 
-    void AddVSurface(const std::vector<unsigned int>& x);
-    void AddTSurface(const std::vector<unsigned int>& x);
-    void AddNSurface(const std::vector<unsigned int>& x);
+  const std::vector<unsigned int> &GetVSurface(size_t n);
+  const std::vector<unsigned int> &GetTSurface(size_t n);
+  const std::vector<unsigned int> &GetNSurface(size_t n);
 
-    void Clear();
+  void AddVSurface(const std::vector<unsigned int> &x);
+  void AddTSurface(const std::vector<unsigned int> &x);
+  void AddNSurface(const std::vector<unsigned int> &x);
 
-  private:
-    static Figure* self_;
-    static FigureKiller killer_;
-    std::vector<float>* vertex_;
-    std::vector<float>* textures_;
-    std::vector<float>* normals_;
-    std::vector<std::vector<unsigned int>>* v_surfaces_; 
-    std::vector<std::vector<unsigned int>>* t_surfaces_;
-    std::vector<std::vector<unsigned int>>* n_surfaces_;
+  void Clear();
 
-    Figure() {
-      vertex_ = new std::vector<float>();
-      textures_ = new std::vector<float>();
-      normals_ = new std::vector<float>();
-      v_surfaces_ = new std::vector<std::vector<unsigned int>>(); 
-      t_surfaces_ = new std::vector<std::vector<unsigned int>>();
-      n_surfaces_ = new std::vector<std::vector<unsigned int>>();
-    }
+private:
+  static Figure *self_;
+  static FigureKiller killer_;
+  std::vector<float> *vertex_;
+  std::vector<float> *textures_;
+  std::vector<float> *normals_;
+  std::vector<std::vector<unsigned int>> *v_surfaces_;
+  std::vector<std::vector<unsigned int>> *t_surfaces_;
+  std::vector<std::vector<unsigned int>> *n_surfaces_;
 
-    ~Figure() {
-      delete vertex_;
-      delete textures_;
-      delete normals_;
-      delete v_surfaces_;
-      delete t_surfaces_;
-      delete n_surfaces_;
-    }
+  Figure() {
+    vertex_ = new std::vector<float>();
+    textures_ = new std::vector<float>();
+    normals_ = new std::vector<float>();
+    v_surfaces_ = new std::vector<std::vector<unsigned int>>();
+    t_surfaces_ = new std::vector<std::vector<unsigned int>>();
+    n_surfaces_ = new std::vector<std::vector<unsigned int>>();
+  }
 
-    Figure(const Figure&) = delete;
-    Figure(const Figure&&) = delete;
-    Figure operator=(Figure&) = delete;
-    friend class FigureKiller;
+  ~Figure() {
+    delete vertex_;
+    delete textures_;
+    delete normals_;
+    delete v_surfaces_;
+    delete t_surfaces_;
+    delete n_surfaces_;
+  }
+
+  Figure(const Figure &) = delete;
+  Figure(const Figure &&) = delete;
+  Figure operator=(Figure &) = delete;
+  friend class FigureKiller;
 };
-}
+} // namespace s21
 
 #endif // SRC_MODEL_FIGURE_H_
