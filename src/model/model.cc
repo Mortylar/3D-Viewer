@@ -56,3 +56,4 @@ void s21::Model::ConnectData(s21::Data *data) {
 void s21::Model::SetBuffers() { opengl_model_->SetBuffer(); }
 
 void s21::Model::Draw() { opengl_model_->Draw(); }
+

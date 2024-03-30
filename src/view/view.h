@@ -5,7 +5,7 @@
 
 #include "../controller/controller.h"
 
-#include "widget/data/data.h"
+#include "../libs/data.h"
 #include "widget/main_widget.h"
 #include "widget/widget.h"
 

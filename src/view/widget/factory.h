@@ -4,6 +4,7 @@
 #include "pair_widget.h"
 #include "pannel.h"
 #include "widget.h"
+
 namespace s21 {
 class Factory {
 public:

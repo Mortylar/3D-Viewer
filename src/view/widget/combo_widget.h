@@ -3,7 +3,7 @@
 
 #include <gtk/gtk.h>
 
-#include "data/data.h"
+#include "../../libs/data.h"
 #include "factory.h"
 #include "widget.h"
 
@@ -20,6 +20,7 @@ public:
     CreateRotationPannel();
     CreateScalingPannel();
     InitCommonScalingButton();
+    InitResetButton();
     SetMother(this);
   }
 
@@ -29,9 +30,7 @@ public:
     RemoveScalingPannel();
   };
 
-  void Update() {
-	  CollectData();
-	}
+  void Update() { CollectData(); }
 
   void CollectData() {
     CollectTranslation();
@@ -62,6 +61,7 @@ private:
   GtkAdjustment *adjustment_ = nullptr;
   GtkWidget *common_button_grid_ = nullptr;
   GtkWidget *common_button_frame_ = nullptr;
+  GtkWidget* reset_button_ = nullptr;
 
   s21::AffineData *data_ = nullptr;
 
@@ -70,6 +70,19 @@ private:
     gtk_frame_set_child(GTK_FRAME(GetFrame()), grid_);
     gtk_grid_set_row_homogeneous(GTK_GRID(grid_), true);
     gtk_grid_set_column_homogeneous(GTK_GRID(grid_), true);
+  }
+
+  void InitResetButton() {
+    reset_button_ = gtk_button_new_with_label("RESET");
+    g_signal_connect(reset_button_, "clicked", G_CALLBACK(Reset), this);
+    gtk_grid_attach(GTK_GRID(grid_), reset_button_, 0, 11, 1, 1);
+  }
+
+  static void Reset(GtkWidget* button, s21::AffinePannel* self) {
+    self->translation_pannel_->SetValue(0);
+    self->rotation_pannel_->SetValue(0);
+    self->scaling_pannel_->SetValue(0);
+    gtk_adjustment_set_value(GTK_ADJUSTMENT(self->adjustment_), 0);
   }
 
   void InitCommonScalingButton() {
@@ -249,7 +262,6 @@ private:
     type_->SetMother(this);
     gtk_grid_attach(GTK_GRID(grid_), type_->GetRoot(), 0, 2, 1, 1);
   }
-
 };
 
 enum class PointType {
@@ -360,18 +372,15 @@ public:
       mother_->CatchSignal();
   }
 
-  void SetFileName(const char* file_name) {
-	  file_name_->SetValue(file_name);
-	}
+  void SetFileName(const char *file_name) { file_name_->SetValue(file_name); }
 
   void SetVertexCount(size_t v_count) {
-	  vertex_count_->SetValue(std::to_string(v_count).data());
-	}
+    vertex_count_->SetValue(std::to_string(v_count).data());
+  }
 
-	void SetEdgesCount(size_t edges_count) {
-	  edges_count_->SetValue(std::to_string(edges_count).data());
-	}
-
+  void SetEdgesCount(size_t edges_count) {
+    edges_count_->SetValue(std::to_string(edges_count).data());
+  }
 
 private:
   GtkWidget *grid_ = nullptr;

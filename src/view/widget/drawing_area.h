@@ -4,7 +4,7 @@
 #include <gtk/gtk.h>
 
 #include "../../controller/controller.h"
-#include "data/data.h"
+#include "../../libs/data.h"
 #include "widget.h"
 #include <epoxy/gl.h>
 
@@ -16,7 +16,8 @@ public:
     InitArea();
   }
 
-  ~DrawingArea(){};
+  ~DrawingArea() {
+  };
 
   void SetMother(s21::Widget *mother) override { mother_ = mother; }
 
@@ -33,16 +34,15 @@ public:
     controller_->SetBuffer();
   }
 
-  static void Realize(GtkWidget* area, s21::DrawingArea* self) {
-	  gtk_gl_area_make_current(GTK_GL_AREA(self->area_));
-	}
+  static void Realize(GtkWidget *area, s21::DrawingArea *self) {
+    gtk_gl_area_make_current(GTK_GL_AREA(self->area_));
+  }
 
   static void Render(GtkWidget *area, GdkGLContext *context,
                      s21::DrawingArea *self) { // TODO private
     gtk_gl_area_make_current(GTK_GL_AREA(self->area_));
-    self->controller_->Draw(); //TODO
+    self->controller_->Draw(); // TODO
   }
-
 
 private:
   GtkWidget *area_ = nullptr;
@@ -62,7 +62,6 @@ private:
     controller_->SetGLArea(GTK_GL_AREA(area_));
     controller_->ConnectData(data_);
   }
-
 };
 } // namespace s21
 

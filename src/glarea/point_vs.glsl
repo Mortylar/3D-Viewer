@@ -8,10 +8,8 @@ uniform mat4 mvp;
 uniform vec4 color;
 
 out vec4 u_color;
-out vec2 TexCoord;
 
 void main() {
   gl_Position = mvp * position;
-  TexCoord = vec2(texture.x, texture.z);
   u_color = color;
 }

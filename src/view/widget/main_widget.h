@@ -8,7 +8,7 @@
 #include "pannel.h"
 #include "widget.h"
 
-#include "data/data.h"
+#include "../../libs/data.h"
 
 #include <iostream> //TODO remove
 
@@ -131,22 +131,22 @@ private:
     area_->SetMother(this);
   }
 
-	void Update() {
-		UpdateData();
-		SetInfo();
-	}
+  void Update() {
+    UpdateData();
+    SetInfo();
+  }
 
-	void UpdateData() {	
-	  affine_pannel_->Update();
-		line_pannel_->Update();
-		point_pannel_->Update();
-	}
+  void UpdateData() {
+    affine_pannel_->Update();
+    line_pannel_->Update();
+    point_pannel_->Update();
+  }
 
-	void SetInfo() {
-	  info_pannel_->SetFileName(file_->GetFileName());
-		info_pannel_->SetVertexCount(controller_->GetVertexCount());
-		info_pannel_->SetEdgesCount(controller_->GetSurfacesCount()); //TODO
-	}
+  void SetInfo() {
+    info_pannel_->SetFileName(file_->GetFileName());
+    info_pannel_->SetVertexCount(controller_->GetVertexCount());
+    info_pannel_->SetEdgesCount(controller_->GetSurfacesCount()); // TODO
+  }
 
   static void LoadFile(GtkWidget *button, s21::MainWidget *self) {
     const char *file_name = self->file_->GetValue();

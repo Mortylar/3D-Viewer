@@ -57,6 +57,7 @@ class Controller {
 	  model_->Draw();
 	}
 
+
   private:
 	s21::Model* model_ = nullptr;
 
