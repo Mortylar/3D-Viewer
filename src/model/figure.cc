@@ -18,6 +18,16 @@ void s21::Figure::Clear() {
   n_surfaces_->clear();
 }
 
+void s21::Figure::Reserve(size_t n) {
+  vertex_->reserve(n);
+  textures_->reserve(n);
+  normals_->reserve(n);
+
+  v_surfaces_->reserve(n);
+  t_surfaces_->reserve(n);
+  n_surfaces_->reserve(n);
+}
+
 //---------------------------vertexes--------------------------//
 
 size_t s21::Figure::GetVertexCount() { return vertex_->size() / 3; }

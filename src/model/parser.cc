@@ -133,7 +133,7 @@ void s21::Parser::WriteFragment(const std::string &fragment, int mod_count,
   v.push_back(static_cast<unsigned int>(vertex_id - 1));
 
   if (status == 3) {
-    t.push_back(static_cast<unsigned int>(texture_id));
+    t.push_back(static_cast<unsigned int>(texture_id - 1));
     n.push_back(static_cast<unsigned int>(normal_id));
   } else if (status == 2) {
     if (mod_count == 2) {
@@ -171,4 +171,7 @@ std::string s21::Parser::ReadString(FILE *fp, size_t *file_length) {
   return result;
 }
 
-void s21::Parser::ResetFigure() { s21::Figure::GetInstance()->Clear(); }
+void s21::Parser::ResetFigure() {
+  s21::Figure::GetInstance()->Clear();
+  s21::Figure::GetInstance()->Reserve(10000);
+}

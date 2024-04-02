@@ -10,5 +10,6 @@ out vec2 TexCoord;
 
 void main() {
   gl_Position = mvp * position;
-  TexCoord = vec2(texture.x, texture.z);
+  TexCoord = vec2(texture.x, 1.0f - texture.y);
+  //TexCoord = gl_Position.xy;
 }

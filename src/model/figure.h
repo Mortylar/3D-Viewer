@@ -56,7 +56,7 @@ public:
   void AddNSurface(const std::vector<unsigned int> &x);
 
   void Clear();
-
+  void Reserve(size_t n);
 private:
   static Figure *self_;
   static FigureKiller killer_;

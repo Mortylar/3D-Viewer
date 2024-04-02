@@ -184,7 +184,46 @@ private:
 
 };
 
+class Texture {
+public:
+  Texture() {};
 
+  ~Texture() {};
+
+  GLuint GetID() {
+    return id_;
+  }
+
+  void Create(const std::string& file_name) {
+    if (file_name != file_) {
+      file_ = file_name;
+      unsigned char* data = stbi_load(file_name.data(), &width_, &height_, &color_mod_, 0);
+      if (color_mod_ < 3) {} //TODO
+      glGenTextures(1, &id_);
+      glBindTexture(GL_TEXTURE_2D, id_);
+      glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width_, height_, 0,
+                   ((color_mod_ == 3) ? GL_RGB : GL_RGBA), GL_UNSIGNED_BYTE, data);
+
+      SamplerInit();
+      glBindTexture(id_, 0);
+      stbi_image_free(data);
+    }
+  }
+
+private:
+  GLuint id_ = 0;
+  int width_ = 0;
+  int height_ = 0;
+  int color_mod_ = 0;
+  std::string file_;
+
+  void SamplerInit() {
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  }
+};
 
 
 
@@ -211,8 +250,13 @@ public:
     gtk_gl_area_make_current(GTK_GL_AREA(area_));
     InitBuffer();
     InitShaders();
-    LoadTexture("1.png");
+    std::string file = "1.png"; //TODO
+    LoadTexture(file);
   }
+
+  void LoadTexture(std::string& file) {
+    texture_image_.Create(file);
+  }//TODO
 
   void Draw() {
     if (vertex_->GetVertexBuffer() != 0) {
@@ -229,7 +273,7 @@ private:
 
   GLuint vao_ = 0;
   //GLuint program_ = 0;
-  GLuint texture_buffer_ = 0;
+  Texture texture_image_;
   Shader point_shader;
   Shader line_shader;
   Shader texture_shader;
@@ -245,7 +289,7 @@ private:
 
   void DrawFigure() {
     float mvp[16]{1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1};
-    //LoadTexture("1.png");
+   // LoadTexture("1.png");
     ComputeMVP(mvp);
     ResetField();
 
@@ -269,6 +313,7 @@ private:
     glClearColor(color->red, color->green, color->blue, color->alpha + 1);
     glEnable(GL_DEPTH_TEST);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    //glClearDepth(1.0);
   }
 
   void ConnectBuffers() {
@@ -276,7 +321,7 @@ private:
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat),
                           nullptr);
     glEnableVertexAttribArray(0);
-    glBindBuffer(GL_TEXTURE_BUFFER, texture_->GetVertexBuffer());
+    glBindBuffer(GL_TEXTURE_2D, texture_->GetVertexBuffer());
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat),
                           nullptr); //TODO ->
     glEnableVertexAttribArray(1);
@@ -320,6 +365,7 @@ private:
       glUniform4fv(color_location_, 1, line_color);
       glLineWidth(data_->GetLineWidth());
       std::vector<GLuint> element_buffer = vertex_->GetElementBuffer();
+      g_print("\nelement size = %li\n", element_buffer.size());
       for (size_t i = 0; i < element_buffer.size(); ++i) {
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer[i]);
         glDrawElements(GL_LINE_LOOP,
@@ -335,21 +381,55 @@ private:
     glUseProgram(texture_shader.GetProgram());
     glBindVertexArray(vao_);
     glUniformMatrix4fv(mvp_location_, 1, GL_FALSE, &mvp[0]);
-    glEnableVertexAttribArray(0); //TODO??
 
-    glFrontFace(GL_CW);
-    glCullFace(GL_BACK);
-    glEnable(GL_CULL_FACE);
+
+
+    glBindBuffer(GL_ARRAY_BUFFER, vertex_->GetVertexBuffer());
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat),
+                          nullptr);
+    glEnableVertexAttribArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, texture_->GetVertexBuffer());
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat),
+                          nullptr); //TODO ->
+    glEnableVertexAttribArray(1);
+
+    //glEnableVertexAttribArray(0);
+    glDepthMask(GL_TRUE);
+    glDepthFunc(GL_LEQUAL);
+    glDepthRange(0.0f, 1.0f);
+
+    glTexBuffer(GL_TEXTURE_BUFFER, GL_TEXTURE0, texture_->GetVertexBuffer());
+
+    //glFrontFace(GL_CW);
+    //glCullFace(GL_BACK);
+    //glEnable(GL_CULL_FACE);
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, texture_buffer_);
+    glBindTexture(GL_TEXTURE_2D, texture_image_.GetID());
+    //glBindTexture(GL_TEXTURE_BUFFER, texture_->GetVertexBuffer());
+    //glDrawArrays(GL_TRIANGLE_FAN, 0, s21::Figure::GetInstance()->GetVertex().size());
+   
+   // std::vector<GLuint> texture_ind = texture_->GetElementBuffer();   
     std::vector<GLuint> element_buffer = vertex_->GetElementBuffer();
     for(size_t i = 0; i < element_buffer.size(); ++i) {
+      //glBindTexture(GL_TEXTURE_2D, texture_buffer_); 
       glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer[i]);
-      //glBindBuffer(GL_ELEMENT)
+     // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, texture_ind[i]);
       glDrawElements(GL_TRIANGLE_STRIP, s21::Figure::GetInstance()->GetVSurface(i).size(),
                      GL_UNSIGNED_INT, nullptr);
-      glFlush();
     }
+/*
+    std::vector<GLuint> t_element_buffer = texture_->GetElementBuffer();
+    for(size_t i = 0; i < t_element_buffer.size(); ++i) {
+      glBindTexture(GL_TEXTURE_2D, texture_buffer_); 
+      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, t_element_buffer[i]);
+      //glBindBuffer(GL_ELEMENT)
+      glDrawElements(GL_TRIANGLE_STRIP, s21::Figure::GetInstance()->GetTSurface(i).size(),
+                     GL_UNSIGNED_INT, nullptr);
+      glFlush();
+      glBindTexture(GL_TEXTURE_2D, 0);
+    }
+*/
+
   }
 
   void InitShaders() {
@@ -373,99 +453,6 @@ private:
     v = s21::Figure::GetInstance()->GetNormals();
     e = s21::Figure::GetInstance()->GetNSurface();
     normals_->CreateBuffer(v, e);
-  }
-/*
-  void InitShader() {
-    GLuint vertex, fragment;
-    int status; //??
-
-    const char *file_name = "glarea/vs.glsl";
-    vertex = CreateShader(GL_VERTEX_SHADER, LoadFile(file_name));
-
-    if (vertex) {
-      file_name = "glarea/fs.glsl";
-      fragment = CreateShader(GL_FRAGMENT_SHADER, LoadFile(file_name));
-    } else {
-      g_print("\nvertex shader failed\n");
-      return; // TODO
-    }
-
-    if (!fragment) {
-      glDeleteShader(vertex);
-      g_print("\nfragment shader failed\n");
-      return;
-    }
-
-    program_ = glCreateProgram();
-    glAttachShader(program_, vertex);
-    glAttachShader(program_, fragment);
-    glLinkProgram(program_);
-
-    glGetProgramiv(program_, GL_LINK_STATUS, &status);
-    if (status == GL_FALSE) {
-      int log_len;
-      char* buffer;
-      glGetProgramiv(program_, GL_INFO_LOG_LENGTH, &log_len);
-      buffer = (char*)g_malloc(log_len + 1);
-      glGetProgramInfoLog(program_, log_len, NULL, buffer);
-      g_print("\nprogram link failed = %s\n", buffer);
-    } // TODO
-
-    mvp_location_ = glGetUniformLocation(program_, "mvp");
-    color_location_ = glGetUniformLocation(program_, "color");
-    //point_size_location_ = glGetUniformLocation(program_, "p_size");
-
-    glDetachShader(program_, vertex);
-    glDetachShader(program_, fragment);
-
-    glDeleteShader(vertex);
-    glDeleteShader(fragment);
-  }
-
-  GLuint CreateShader(int type, const char *src) {
-    GLuint shader;
-    int status;
-
-    shader = glCreateShader(type);
-    glShaderSource(shader, 1, &src, NULL);
-    glCompileShader(shader);
-
-    glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
-    if (status == GL_FALSE) {
-      int log_len;
-      char* buffer;
-      glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &log_len);
-      buffer = (char*)g_malloc(log_len + 1);
-      glGetShaderInfoLog(shader, log_len, NULL, buffer);
-      g_print("\ntype = %s\n", (type == GL_VERTEX_SHADER) ? "vertex" : "fragment");
-      g_print("\nprogram link failed = %s\n", buffer);
-
-    } // TODO
-    delete src;
-    return shader;
-  }
-*/
-
-  void LoadTexture(const char* file_name) {
-    int width{0}, height{0}, color_mod{0};
-    unsigned char* texture_data = stbi_load("3.jpg", &width, &height, &color_mod, 0);
-    //g_print("Data = %s <->%li\n", "2.png", color_mod);
-    //for (int i = 0; i < 1000; ++i) {
-    //  g_print("a%c", texture_data[i]);
-    //}
-    glGenTextures(1, &texture_buffer_);
-    glBindTexture(GL_TEXTURE_2D, texture_buffer_);
-
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height,
-                 0, (color_mod == 3) ? GL_RGB : GL_RGBA , GL_UNSIGNED_BYTE, texture_data);
-
-
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glBindTexture(texture_buffer_, 0);
-    stbi_image_free(texture_data);
   }
 
   void ComputeMVP(float (&mvp)[16]) {
