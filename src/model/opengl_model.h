@@ -288,8 +288,9 @@ private:
   Buffer *normals_ = nullptr;
 
   void DrawFigure() {
-    float mvp[16]{1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1};
+    //float mvp[16]{1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1};
    // LoadTexture("1.png");
+    Matrix4f mvp;
     ComputeMVP(mvp);
     ResetField();
 
@@ -300,9 +301,9 @@ private:
 
     ConnectBuffers();
 
-    DrawSurfaces(mvp);
+    //DrawSurfaces(mvp);
     DrawLines(mvp);
-    DrawPoints(mvp);
+    //DrawPoints(mvp);
 
     glDisableVertexAttribArray(0);
     glUseProgram(0);
@@ -351,13 +352,14 @@ private:
     }
   }
 
-  void DrawLines(float(&mvp)[16]) {
+  void DrawLines(Matrix4f& mvp) {
     if (data_->GetLineType()) {
       mvp_location_ = glGetUniformLocation(line_shader.GetProgram(), "mvp");
       color_location_ = glGetUniformLocation(line_shader.GetProgram(), "color");
       glUseProgram(line_shader.GetProgram());
       glBindVertexArray(vao_);
-      glUniformMatrix4fv(mvp_location_, 1, GL_FALSE, &mvp[0]);
+      mvp.Print();
+      glUniformMatrix4fv(mvp_location_, 1, GL_TRUE, &mvp(0,0));
       glEnableVertexAttribArray(0); //TODO??
 
       GdkRGBA color = *(data_->GetLineColor());
@@ -455,36 +457,28 @@ private:
     normals_->CreateBuffer(v, e);
   }
 
-  void ComputeMVP(float (&mvp)[16]) {
-    Rotation(mvp);
+  void ComputeMVP(Matrix4f& mvp) {
     Scaling(mvp);
-    float* trans = data_->GetTranslation();
+    Rotation(mvp);
     Translation(mvp);
-    //mvp[3] = 2 * mvp[2];
-    //mvp[7] = 2 * mvp[6];
-    //mvp[11] = 2 * mvp[10];
-
-   // mvp[3] += trans[0];
-   // mvp[7] += trans[1];
-   // mvp[11] += trans[2];
   }
 
-  void Rotation(float (&v)[16]) {
+  void Rotation(Matrix4f& mvp) {
     Affine3D affine;
     float *rotor = data_->GetRotation();
-    affine.Rotation(v, rotor[0], rotor[1], rotor[2]);
+    mvp *= affine.GetRotation(rotor[0], rotor[1], rotor[2]);
   }
 
-  void Scaling(float (&v)[16]) {
+  void Scaling(Matrix4f& mvp) {
     Affine3D affine;
     float *scale = data_->GetScaling();
-    affine.Scaling(v, scale[0], scale[1], scale[2]);
+    mvp *= affine.GetScaling(scale[0], scale[1], scale[2]);
   }
 
-  void Translation(float (&v)[16]) {
+  void Translation(Matrix4f& mvp) {
     Affine3D affine;
     float *trans = data_->GetTranslation();
-    affine.Translation(v, trans[0], trans[1], trans[2]);
+    mvp *= affine.GetTranslation(trans[0], trans[1], trans[2]);
   }
 
 //  void DeleteProgram() {

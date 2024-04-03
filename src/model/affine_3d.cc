@@ -11,6 +11,51 @@ void s21::Affine3D::Translation(float (&v)[16], float dx, float dy, float dz) {
   v[14] = dz;
 }
 
+s21::Matrix4f s21::Affine3D::GetTranslation(float x, float y, float z) {
+  Matrix4f translation;
+  translation(0,3) = x;
+  translation(1,3) = y;
+  translation(2,3) = z;
+  return translation;
+}
+
+s21::Matrix4f s21::Affine3D::GetRotation(float x, float y, float z) {
+  Matrix4f rotation;
+
+  float sinA = sin(x);
+  float sinB = sin(y);
+  float sinG = sin(z);
+  float cosA = cos(x);
+  float cosB = cos(y);
+  float cosG = cos(z);
+
+  rotation(0,0) = cosG * cosB;
+  rotation(0,1) = -sinG * cosB;
+  rotation(0,2) = sinB;
+  rotation(0,3) = 0.f;
+  rotation(1,0) = sinG * cosA + cosG * sinB * sinA;
+  rotation(1,1) = cosG * cosA - sinG * sinB * sinA;
+  rotation(1,2) = -cosB * sinA;
+  rotation(1,3) = 0.0;
+  rotation(2,0) = sinG * sinA - cosG * sinB * cosA;
+  rotation(2,1) = cosG * sinA + sinG * sinB * cosA;
+  rotation(2,2) = cosB * cosA;
+  rotation(2,3) = 0.f;
+  rotation(3,0) = 0.f;
+  rotation(3,1) = 0.f;
+  rotation(3,2) = 0.f;
+  rotation(3,3) = 1.f;
+  return rotation;
+}
+
+s21::Matrix4f s21::Affine3D::GetScaling(float x, float y, float z) {
+  Matrix4f scaling;
+  scaling(0,0) = x;
+  scaling(1,1) = y;
+  scaling(2,2) = z;
+  return scaling;
+}
+
 void s21::Affine3D::Rotation(float (&v)[16], float x_rad, float y_rad,
                              float z_rad) {
   float sinA = sin(x_rad);
