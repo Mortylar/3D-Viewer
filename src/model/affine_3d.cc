@@ -56,6 +56,37 @@ s21::Matrix4f s21::Affine3D::GetScaling(float x, float y, float z) {
   return scaling;
 }
 
+s21::Matrix4f s21::Affine3D::GetParralelProjection() {
+  float angle_koef = 1.1917536; // 1/tan(80/2)
+  float near = 1.0;
+  float far = 100.0;
+  Matrix4f result;
+  result(0,0) = 1;
+  result(1,1) = 1;
+  result(2,2) = 2.0/(far - near);
+  result(2,3) = (near + far)/(near - far);
+  //result(3,2) = 0.0;
+  result(3,3) = 1.0;
+  result.Print();
+  return result;
+}
+
+s21::Matrix4f s21::Affine3D::GetCentralProjection() {
+  float angle_koef = 1.1917536; // 1/tan(80/2)
+  float near = 1.0;
+  float far = 100.0;
+  Matrix4f result;
+  result(0,0) = angle_koef;
+  result(1,1) = angle_koef;
+  result(2,2) = -(near + far)/(near - far);
+  result(2,3) = 2 * (far * near)/(near - far);
+  result(3,2) = 1.0;
+  result(3,3) = 0.0;
+  result.Print();
+  return result;
+}
+
+
 void s21::Affine3D::Rotation(float (&v)[16], float x_rad, float y_rad,
                              float z_rad) {
   float sinA = sin(x_rad);
@@ -123,6 +154,11 @@ void s21::Affine3D::Centring(std::vector<float> &v) {
       if (max_v[j] < v[i + j])
         max_v[j] = v[i + j];
     }
+  }
+  for (size_t i = 0; i < size; i += 3) {
+    v[i] -= (max_v[0] + min_v[0])/2;
+    v[i + 1] -= (max_v[1] + min_v[1])/2;
+    v[i + 2] -= (max_v[2] + min_v[2])/2;
   }
   // Translation(v, -(max_v[0]+min_v[0])/2, -(max_v[1]+min_v[1])/2,
   // -(max_v[2]+min_v[2])/2);

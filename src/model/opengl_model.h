@@ -458,9 +458,13 @@ private:
   }
 
   void ComputeMVP(Matrix4f& mvp) {
-    Scaling(mvp);
-    Rotation(mvp);
+    //Scaling(mvp);
+    //Rotation(mvp);
+    //Translation(mvp);
+    Projection(mvp);
     Translation(mvp);
+    Rotation(mvp);
+    Scaling(mvp);
   }
 
   void Rotation(Matrix4f& mvp) {
@@ -478,7 +482,13 @@ private:
   void Translation(Matrix4f& mvp) {
     Affine3D affine;
     float *trans = data_->GetTranslation();
-    mvp *= affine.GetTranslation(trans[0], trans[1], trans[2]);
+    mvp *= affine.GetTranslation(trans[0], trans[1], 5 + trans[2]);
+  }
+
+  void Projection(Matrix4f& mvp) {
+    Affine3D affine;
+   // mvp *= affine.GetTranslation(0,0,5);
+    mvp *= affine.GetParralelProjection();
   }
 
 //  void DeleteProgram() {

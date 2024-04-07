@@ -21,7 +21,8 @@ public:
   Matrix4f GetTranslation(float x, float y, float z);
   Matrix4f GetRotation(float x, float y, float z);
   Matrix4f GetScaling(float x, float y, float z);
-  Matrix4f GetProjection(); //TODO
+  Matrix4f GetCentralProjection(); //TODO 
+  Matrix4f GetParralelProjection(); //TODO
 
 private:
   const size_t dim_ = 3;
