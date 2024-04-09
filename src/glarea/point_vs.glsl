@@ -6,10 +6,13 @@ layout(location = 2) in vec3 normal;
 
 uniform mat4 mvp;
 uniform vec4 color;
+uniform float size;
 
-out vec4 u_color;
+out vec4 v_color;
+out float v_size;
 
 void main() {
   gl_Position = mvp * position;
-  u_color = color;
+  v_color = color;
+  v_size = size;
 }

@@ -89,8 +89,8 @@ public:
     program_ = 0;
   }
 
-  void LoadShader(const char* vertex_path, const char* fragment_path) {
-    InitShader(vertex_path, fragment_path);
+  void LoadShader(const char* vertex_path, const char* fragment_path, const char* geometry_path) {
+    InitShader(vertex_path, fragment_path, geometry_path);
   }
 
   GLuint GetProgram() {
@@ -100,14 +100,21 @@ public:
 private:
   GLuint program_ = 0;
 
-  void InitShader(const char* vertex_path, const char* fragment_path) {
-    GLuint vertex, fragment;
+  void InitShader(const char* vertex_path, const char* fragment_path, const char* geometry_path) {
+    GLuint vertex, fragment, geometry;
     int status;
 
     vertex = CreateShader(GL_VERTEX_SHADER, LoadFile(vertex_path));
 
     if (vertex) {
       fragment = CreateShader(GL_FRAGMENT_SHADER, LoadFile(fragment_path));
+        if (fragment && geometry_path) {
+          g_print("\ngeom shader start %s\n", geometry_path);
+	  geometry = CreateShader(GL_GEOMETRY_SHADER, LoadFile(geometry_path));
+	  if (!geometry) {
+	    g_print("\ngeometry shader failed\n");
+	  }
+	}
     } else {
       g_print("\nvertex shader failed\n");
       return; // TODO
@@ -122,6 +129,10 @@ private:
     program_ = glCreateProgram();
     glAttachShader(program_, vertex);
     glAttachShader(program_, fragment);
+    if (geometry_path) { 
+      glAttachShader(program_, geometry);
+      g_print("\nattach\n");
+    }
     glLinkProgram(program_);
 
     glGetProgramiv(program_, GL_LINK_STATUS, &status);
@@ -140,9 +151,11 @@ private:
 
     glDetachShader(program_, vertex);
     glDetachShader(program_, fragment);
+    glDetachShader(program_, geometry); //TODO
 
     glDeleteShader(vertex);
     glDeleteShader(fragment);
+    glDeleteShader(geometry);
   }
 
   GLuint CreateShader(int type, const char *src) {
@@ -160,7 +173,8 @@ private:
       glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &log_len);
       buffer = (char*)g_malloc(log_len + 1);
       glGetShaderInfoLog(shader, log_len, NULL, buffer);
-      g_print("\ntype = %s\n", (type == GL_VERTEX_SHADER) ? "vertex" : "fragment");
+      g_print("\ntype = %s\n", (type == GL_VERTEX_SHADER) ? "vertex" :
+                                   ((type == GL_FRAGMENT_SHADER) ? "fragment" : "geometry"));
       g_print("\nprogram link failed = %s\n", buffer);
 
     } // TODO
@@ -169,7 +183,7 @@ private:
   }
 
   char *LoadFile(const char *file_name) {
-    int len = 1024; // TODO
+    int len = 4096; // TODO
     char *text = new char[len]();
     FILE *fp = fopen(file_name, "rb");
     if (fp) {
@@ -302,8 +316,8 @@ private:
     ConnectBuffers();
 
     //DrawSurfaces(mvp);
-    DrawLines(mvp);
-    //DrawPoints(mvp);
+    //DrawLines(mvp);
+    DrawPoints(mvp);
 
     glDisableVertexAttribArray(0);
     glUseProgram(0);
@@ -333,20 +347,21 @@ private:
     glEnableVertexAttribArray(2);
   }
 
-  void DrawPoints(float(&mvp)[16]) {
+  void DrawPoints(Matrix4f& mvp) {
     if (data_->GetPointType()) {
       mvp_location_ = glGetUniformLocation(point_shader.GetProgram(), "mvp");
       color_location_ = glGetUniformLocation(point_shader.GetProgram(), "color");
       glUseProgram(point_shader.GetProgram());
       glBindVertexArray(vao_);
-      glUniformMatrix4fv(mvp_location_, 1, GL_FALSE, &mvp[0]);
+      glUniformMatrix4fv(mvp_location_, 1, GL_TRUE, &mvp(0,0));
       glEnableVertexAttribArray(0); //TODO??
 				    //
       GdkRGBA color = *(data_->GetPointColor());
       GLfloat point_color[4] {color.red, color.green, color.blue, color.alpha};
       glUniform4fv(color_location_, 1, point_color);
+      glUniform1f(glGetUniformLocation(point_shader.GetProgram(), "size"), data_->GetPointSize());
       //glUniform1f(point_size_location_, data_->GetPointSize());
-      glPointSize(data_->GetPointSize());
+      //glPointSize(data_->GetPointSize());
       glDrawArrays(GL_POINTS, 0, s21::Figure::GetInstance()->GetVertexCount());
       glFlush();
     }
@@ -435,9 +450,9 @@ private:
   }
 
   void InitShaders() {
-    point_shader.LoadShader("glarea/point_vs.glsl", "glarea/point_fs.glsl");
-    line_shader.LoadShader("glarea/line_vs.glsl", "glarea/line_fs.glsl");
-    texture_shader.LoadShader("glarea/texture_vs.glsl", "glarea/texture_fs.glsl");
+    point_shader.LoadShader("glarea/point_vs.glsl", "glarea/point_fs.glsl", "glarea/point_gs.glsl");
+    line_shader.LoadShader("glarea/line_vs.glsl", "glarea/line_fs.glsl", nullptr);
+    texture_shader.LoadShader("glarea/texture_vs.glsl", "glarea/texture_fs.glsl", nullptr);
   }
 
   void InitBuffer() {

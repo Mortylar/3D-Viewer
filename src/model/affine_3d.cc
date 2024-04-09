@@ -132,6 +132,7 @@ void s21::Affine3D::Normalize(std::vector<float> &v) {
     if (fabs(v[i]) > common_wide)
       common_wide = fabs(v[i]);
   }
+  if (common_wide == 0.0) common_wide = 1.0;
   if ((common_wide > 1.0) || (common_wide < 0.5)) {
     for (size_t i = 0; i < v.size(); i += 1) {
       v[i + 0] *= 1.0 / common_wide;
