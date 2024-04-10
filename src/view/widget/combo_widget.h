@@ -268,6 +268,7 @@ enum class PointType {
   k_ErrorType = -1,
   k_NoPointType = 0,
   k_RoundPointType,
+  k_TrianglePointType,
   k_SquarePointType
 };
 

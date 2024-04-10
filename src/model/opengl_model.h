@@ -360,6 +360,7 @@ private:
       GLfloat point_color[4] {color.red, color.green, color.blue, color.alpha};
       glUniform4fv(color_location_, 1, point_color);
       glUniform1f(glGetUniformLocation(point_shader.GetProgram(), "size"), data_->GetPointSize());
+      glUniform1i(glGetUniformLocation(point_shader.GetProgram(), "type"), data_->GetPointType());
       //glUniform1f(point_size_location_, data_->GetPointSize());
       //glPointSize(data_->GetPointSize());
       glDrawArrays(GL_POINTS, 0, s21::Figure::GetInstance()->GetVertexCount());

@@ -2,12 +2,16 @@
 #define SCALE 100
 #define M_PI 3.14159265
 
+#define ROUND_POINT 1
+#define TRIANGLE_POINT 2
+#define SQUARE_POINT 3
 
 layout(points) in;
 layout(triangle_strip, max_vertices = 100) out;
 
 in vec4 v_color[];
 in float v_size[];
+in int v_type[];
 
 out vec4 g_color;
 
@@ -67,8 +71,11 @@ void build_square(vec4 pos, float size) {
 void main() {
   g_color = v_color[0];
 
-
-  build_triangle(gl_in[0].gl_Position, v_size[0]);
-
-  //build_curcle(gl_in[0].gl_Position, v_size[0]);
+  if (v_type[0] == ROUND_POINT) {
+    build_curcle(gl_in[0].gl_Position, v_size[0]);
+  } else if (v_type[0] == TRIANGLE_POINT) {
+    build_triangle(gl_in[0].gl_Position, v_size[0]);
+  } else {
+    build_square(gl_in[0].gl_Position, v_size[0]);
+  }
 }

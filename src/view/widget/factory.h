@@ -164,7 +164,7 @@ public:
 
   s21::Widget *CreateWidget() override {
     const char *name = "Point Type";
-    const char *types[4] = {"NO_POINT", "ROUND_POINT", "SQUARE_POINT", nullptr};
+    const char *types[5] = {"NO_POINT", "ROUND_POINT", "TRIANGLE_POINT", "SQUARE_POINT", nullptr};
     s21::LabelDropDownButtonPair *point_type =
         new s21::LabelDropDownButtonPair(name, types);
     return point_type;
