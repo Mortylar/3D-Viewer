@@ -316,7 +316,7 @@ private:
     ConnectBuffers();
 
     //DrawSurfaces(mvp);
-    //DrawLines(mvp);
+    DrawLines(mvp);
     DrawPoints(mvp);
 
     glDisableVertexAttribArray(0);
@@ -381,9 +381,8 @@ private:
       GdkRGBA color = *(data_->GetLineColor());
       GLfloat line_color[4] {color.red, color.green, color.blue, color.alpha};
       glUniform4fv(color_location_, 1, line_color);
-      glLineWidth(data_->GetLineWidth());
+      glUniform1f(glGetUniformLocation(line_shader.GetProgram(), "size"), data_->GetLineWidth());
       std::vector<GLuint> element_buffer = vertex_->GetElementBuffer();
-      g_print("\nelement size = %li\n", element_buffer.size());
       for (size_t i = 0; i < element_buffer.size(); ++i) {
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer[i]);
         glDrawElements(GL_LINE_LOOP,
@@ -452,7 +451,7 @@ private:
 
   void InitShaders() {
     point_shader.LoadShader("glarea/point_vs.glsl", "glarea/point_fs.glsl", "glarea/point_gs.glsl");
-    line_shader.LoadShader("glarea/line_vs.glsl", "glarea/line_fs.glsl", nullptr);
+    line_shader.LoadShader("glarea/line_vs.glsl", "glarea/line_fs.glsl", "glarea/line_gs.glsl");
     texture_shader.LoadShader("glarea/texture_vs.glsl", "glarea/texture_fs.glsl", nullptr);
   }
 
