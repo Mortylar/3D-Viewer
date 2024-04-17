@@ -371,7 +371,7 @@ private:
   void DrawLines(Matrix4f& mvp) {
     if (data_->GetLineType()) {
       mvp_location_ = glGetUniformLocation(line_shader.GetProgram(), "mvp");
-      color_location_ = glGetUniformLocation(line_shader.GetProgram(), "color");
+      //color_location_ = glGetUniformLocation(line_shader.GetProgram(), "color");
       glUseProgram(line_shader.GetProgram());
       glBindVertexArray(vao_);
       mvp.Print();
@@ -380,8 +380,15 @@ private:
 
       GdkRGBA color = *(data_->GetLineColor());
       GLfloat line_color[4] {color.red, color.green, color.blue, color.alpha};
-      glUniform4fv(color_location_, 1, line_color);
+      glUniform4fv(glGetUniformLocation(line_shader.GetProgram(), "color"), 1, line_color);
+
+      color = *(data_->GetAreaColor());
+      GLfloat background_color[4] {color.red, color.green, color.blue, color.alpha};
+      glUniform4fv(glGetUniformLocation(line_shader.GetProgram(), "background_color"), 1, background_color);
+
+
       glUniform1f(glGetUniformLocation(line_shader.GetProgram(), "size"), data_->GetLineWidth());
+      glUniform1i(glGetUniformLocation(line_shader.GetProgram(), "type"), data_->GetLineType());
       std::vector<GLuint> element_buffer = vertex_->GetElementBuffer();
       for (size_t i = 0; i < element_buffer.size(); ++i) {
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer[i]);
@@ -503,7 +510,11 @@ private:
   void Projection(Matrix4f& mvp) {
     Affine3D affine;
    // mvp *= affine.GetTranslation(0,0,5);
-    mvp *= affine.GetParralelProjection();
+    if(data_->GetProjection() == 0) { 
+      mvp *= affine.GetParralelProjection();
+    } else {
+      mvp *= affine.GetCentralProjection();
+    }
   }
 
 //  void DeleteProgram() {

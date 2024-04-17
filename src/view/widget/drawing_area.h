@@ -41,6 +41,8 @@ public:
   static void Render(GtkWidget *area, GdkGLContext *context,
                      s21::DrawingArea *self) { // TODO private
     gtk_gl_area_make_current(GTK_GL_AREA(self->area_));
+    GdkRGBA color{1,0,1,1};
+    self->data_->SetAreaColor(color);
     self->controller_->Draw(); // TODO
   }
 

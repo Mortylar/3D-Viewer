@@ -15,8 +15,8 @@
 namespace s21 {
 class MainWidget : public Widget {
 public:
-  MainWidget(Data *data, s21::Controller *controller)
-      : data_(data), controller_(controller) {
+  MainWidget(GtkApplication* app, Data *data, s21::Controller *controller)
+      : application_(app), data_(data), controller_(controller) {
     InitGrid();
   };
 
@@ -45,15 +45,18 @@ public:
 private:
   s21::Data *data_ = nullptr;
   GtkWidget *grid_ = nullptr;
+  GtkApplication* application_ = nullptr;
   s21::Controller *controller_ = nullptr;
 
   GtkWidget *start_button_ = nullptr;
   GtkWidget *start_button_frame_ = nullptr;
   s21::FileChooser *file_ = nullptr;
   s21::AffinePannel *affine_pannel_ = nullptr;
-  s21::InfoPannel *info_pannel_ = nullptr;
+  s21::InfoPannel* info_pannel_ = nullptr;
+  GtkWidget* info_button_ = nullptr;
   s21::LinePannel *line_pannel_ = nullptr;
   s21::PointPannel *point_pannel_ = nullptr;
+  s21::ProjectionPannel* projection_ = nullptr;
 
   s21::DrawingArea *area_ = nullptr;
 
@@ -64,6 +67,7 @@ private:
     CreatePointPannel();
     CreateDrawingArea();
     CreateFileChooser();
+    CreateProjectionPannel();
   }
 
   void InitGrid() {
@@ -78,9 +82,12 @@ private:
     gtk_grid_attach(GTK_GRID(grid_), start_button_frame_, 9, 0, 1, 1);
     gtk_grid_attach(GTK_GRID(grid_), affine_pannel_->GetRoot(), 0, 1, 5, 9);
 
-    gtk_grid_attach(GTK_GRID(grid_), info_pannel_->GetRoot(), 5, 1, 5, 3);
-    gtk_grid_attach(GTK_GRID(grid_), line_pannel_->GetRoot(), 5, 4, 5, 3);
-    gtk_grid_attach(GTK_GRID(grid_), point_pannel_->GetRoot(), 5, 7, 5, 3);
+    //gtk_grid_attach(GTK_GRID(grid_), info_pannel_->GetRoot(), 5, 1, 5, 3);
+    gtk_grid_attach(GTK_GRID(grid_), info_button_, 5, 1, 5, 1);
+    gtk_grid_attach(GTK_GRID(grid_), line_pannel_->GetRoot(), 5, 2, 5, 3);
+    gtk_grid_attach(GTK_GRID(grid_), point_pannel_->GetRoot(), 5, 5, 5, 3);
+    gtk_grid_attach(GTK_GRID(grid_), projection_->GetRoot(), 5, 8, 5, 1);
+
 
     gtk_grid_attach(GTK_GRID(grid_), area_->GetRoot(), 10, 0, 10, 10);
   }
@@ -92,6 +99,7 @@ private:
     delete line_pannel_;
     delete area_;
     delete file_;
+    delete projection_;
   }
 
   void CreateAffinePannel() {
@@ -101,9 +109,19 @@ private:
   }
 
   void CreateInfoPannel() {
-    info_pannel_ = new s21::InfoPannel();
-    info_pannel_->BuildWidget();
-    info_pannel_->SetMother(this);
+    info_button_ = gtk_button_new_with_label("_INFO_");
+    //info_pannel_ = new s21::InfoPannel(application_);
+    //info_pannel_->BuildWidget();
+    //info_pannel_->SetMother(this);
+    g_signal_connect(GTK_BUTTON(info_button_), "clicked", G_CALLBACK(OpenInfo), this);
+  }
+
+  static void OpenInfo(GtkWidget* button, s21::MainWidget* self) {
+    if (self->info_pannel_) delete self->info_pannel_;
+    self->info_pannel_ = new s21::InfoPannel(self->application_);
+    self->info_pannel_->BuildWidget();
+    self->SetInfo();
+    gtk_widget_show(self->info_pannel_->GetWindow());
   }
 
   void CreateLinePannel() {
@@ -126,6 +144,10 @@ private:
     g_signal_connect(start_button_, "clicked", G_CALLBACK(LoadFile), this);
   }
 
+  void CreateProjectionPannel() {
+    projection_ = new s21::ProjectionPannel();
+  }
+
   void CreateDrawingArea() {
     area_ = new s21::DrawingArea(data_, controller_);
     area_->SetMother(this);
@@ -133,13 +155,14 @@ private:
 
   void Update() {
     UpdateData();
-    SetInfo();
+    //SetInfo();
   }
 
   void UpdateData() {
     affine_pannel_->Update();
     line_pannel_->Update();
     point_pannel_->Update();
+    data_->SetProjection(projection_->GetValue());
   }
 
   void SetInfo() {

@@ -351,7 +351,8 @@ private:
 
 class InfoPannel : public Widget {
 public:
-  InfoPannel() {
+  InfoPannel(GtkApplication* app): application_(app) {
+    InitWindow();
     InitGrid();
     s21::Widget::SetName("_INFORMATION_PANNEL_");
   }
@@ -362,6 +363,10 @@ public:
     CreateFileNamePannel();
     CreateVertexInfoPannel();
     CreateEdgesInfoPannel();
+  }
+
+  GtkWidget* GetWindow() {
+    return window_;
   }
 
   void SetMother(s21::Widget *mother) override { mother_ = mother; }
@@ -384,11 +389,20 @@ public:
   }
 
 private:
+  GtkApplication* application_ = nullptr;
+  GtkWidget* window_ = nullptr;
   GtkWidget *grid_ = nullptr;
   s21::Widget *mother_ = nullptr;
   s21::LabelPair *file_name_ = nullptr;
   s21::LabelPair *vertex_count_ = nullptr;
   s21::LabelPair *edges_count_ = nullptr;
+
+  void InitWindow() {
+    window_ = gtk_application_window_new(application_);
+    gtk_window_set_modal(GTK_WINDOW(window_), true);
+    gtk_window_set_title(GTK_WINDOW(window_), "_INFO_");
+    gtk_window_set_child(GTK_WINDOW(window_), GTK_WIDGET(GetRoot()));
+  }
 
   void InitGrid() {
     grid_ = gtk_grid_new();
@@ -418,6 +432,60 @@ private:
     gtk_grid_attach(GTK_GRID(grid_), edges_count_->GetRoot(), 0, 2, 1, 1);
   }
 };
+
+class ProjectionPannel : public Widget {
+public:
+  ProjectionPannel() {
+    InitGrid();
+    CreateDropDownButtonPannel();
+    s21::Widget::SetName("_PROJECTION_PANNEL_");
+  }
+
+  ~ProjectionPannel() {
+    delete projection_;
+  };
+
+  void BuildWidget() {
+   // CreateFileNamePannel();
+   // CreateVertexInfoPannel();
+   // CreateEdgesInfoPannel();
+  }
+
+  void SetMother(s21::Widget *mother) override { mother_ = mother; }
+
+  void CatchSignal() override { SendSignal(); }
+
+  void SendSignal() override {
+    if (mother_)
+      mother_->CatchSignal();
+  }
+
+  int GetValue() {
+    return projection_->GetValue();
+  }
+
+private:
+  GtkWidget *grid_ = nullptr;
+  s21::Widget *mother_ = nullptr;
+  s21::LabelDropDownButtonPair *projection_ = nullptr;
+
+  void InitGrid() {
+    grid_ = gtk_grid_new();
+    gtk_frame_set_child(GTK_FRAME(GetFrame()), grid_);
+    gtk_grid_set_row_homogeneous(GTK_GRID(grid_), true);
+    gtk_grid_set_column_homogeneous(GTK_GRID(grid_), true);
+  }
+
+  void CreateDropDownButtonPannel() {
+    const char* name = "Projection";
+    const char* types[3] = {"PARALEL", "CENTRAL", nullptr};
+    projection_ = new s21::LabelDropDownButtonPair(name, types);
+    projection_->SetMother(this);
+    gtk_grid_attach(GTK_GRID(grid_), projection_->GetRoot(), 0, 0, 1, 1);
+  }
+};
+
+
 } // namespace s21
 
 #endif
