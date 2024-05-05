@@ -46,6 +46,10 @@ public:
     self->controller_->Draw(); // TODO
   }
 
+  GtkWidget* GetArea() {
+    return area_;
+  }
+
 private:
   GtkWidget *area_ = nullptr;
   GdkGLContext *context_ = nullptr;

@@ -4,7 +4,7 @@ CONTROLLER_SOURCE=$(wildcard controller/*.cc)
 VIEW_SOURCE=$(wildcard view/*.cc view/*/*.cc)
 GTK_FLAGS=`pkg-config --cflags --libs gtk4`
 EPOXY_FLAGS=`pkg-config --cflags --libs epoxy`
-MODEL_FLAGS=-ls21_model -L model -lstb
+MODEL_FLAGS=-ls21_model -L model
 
 
 lib:
@@ -14,3 +14,4 @@ lib:
 
 clean:
 	cd model/ && make clean  
+

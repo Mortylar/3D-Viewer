@@ -12,11 +12,12 @@
 
 #include <iostream> //TODO remove
 
+
 namespace s21 {
 class MainWidget : public Widget {
 public:
-  MainWidget(GtkApplication* app, Data *data, s21::Controller *controller)
-      : application_(app), data_(data), controller_(controller) {
+  MainWidget(GtkApplication* app, GtkWidget* window, Data *data, s21::Controller *controller)
+      : application_(app), window_(window), data_(data), controller_(controller) {
     InitGrid();
   };
 
@@ -46,6 +47,7 @@ private:
   s21::Data *data_ = nullptr;
   GtkWidget *grid_ = nullptr;
   GtkApplication* application_ = nullptr;
+  GtkWidget* window_ = nullptr;
   s21::Controller *controller_ = nullptr;
 
   GtkWidget *start_button_ = nullptr;
@@ -59,6 +61,7 @@ private:
   s21::ProjectionPannel* projection_ = nullptr;
 
   s21::DrawingArea *area_ = nullptr;
+  GtkWidget* media_button_ = nullptr;
 
   void CreatePannel() {
     CreateAffinePannel();
@@ -68,6 +71,7 @@ private:
     CreateDrawingArea();
     CreateFileChooser();
     CreateProjectionPannel();
+    CreateMediaButton();
   }
 
   void InitGrid() {
@@ -86,7 +90,8 @@ private:
     gtk_grid_attach(GTK_GRID(grid_), info_button_, 5, 1, 5, 1);
     gtk_grid_attach(GTK_GRID(grid_), line_pannel_->GetRoot(), 5, 2, 5, 3);
     gtk_grid_attach(GTK_GRID(grid_), point_pannel_->GetRoot(), 5, 5, 5, 3);
-    gtk_grid_attach(GTK_GRID(grid_), projection_->GetRoot(), 5, 8, 5, 1);
+    gtk_grid_attach(GTK_GRID(grid_), projection_->GetRoot(), 5, 8, 5, 1); 
+    gtk_grid_attach(GTK_GRID(grid_), media_button_, 5, 9, 5, 1);
 
 
     gtk_grid_attach(GTK_GRID(grid_), area_->GetRoot(), 10, 0, 10, 10);
@@ -151,6 +156,17 @@ private:
   void CreateDrawingArea() {
     area_ = new s21::DrawingArea(data_, controller_);
     area_->SetMother(this);
+  }
+
+  void CreateMediaButton() {
+    media_button_ = gtk_button_new_with_label("Media");
+    g_signal_connect(GTK_BUTTON(media_button_), "clicked", G_CALLBACK(OpenMedia), this);
+  }
+
+  static void OpenMedia(GtkWidget* button, s21::MainWidget* self) {
+    size_t width = gtk_widget_get_width(self->GetFrame());
+    size_t height = gtk_widget_get_height(self->GetFrame());
+    self->controller_->SavePicture(width, height);
   }
 
   void Update() {

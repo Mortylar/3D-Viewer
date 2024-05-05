@@ -58,3 +58,5 @@ void s21::Model::SetBuffers() { opengl_model_->SetBuffer(); }
 
 void s21::Model::Draw() { opengl_model_->Draw(); }
 
+void s21::Model::SavePicture(size_t width, size_t height) { opengl_model_->SavePicture(width, height); }
+

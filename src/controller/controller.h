@@ -57,6 +57,9 @@ class Controller {
 	  model_->Draw();
 	}
 
+	void SavePicture(size_t width, size_t height) {
+	  model_->SavePicture(width, height);
+	}
 
   private:
 	s21::Model* model_ = nullptr;

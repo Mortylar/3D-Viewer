@@ -40,6 +40,7 @@ public:
   void ConnectData(s21::Data *data); // TODO
   void SetBuffers();                 // TODO
   void Draw();                       // TODO
+  void SavePicture(size_t width, size_t height);
 
 private:
   Affine3D *affine_;
