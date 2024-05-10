@@ -246,6 +246,73 @@ private:
   }
 };
 
+
+class FileSaver : public Widget {
+public:
+  FileSaver() { InitButton(); }
+
+  FileSaver(const char *name) { InitButton(name); }
+
+  ~FileSaver() { ClearFile(); };
+
+  void SetMother(s21::Widget *mother) override { mother_ = mother; }
+
+  void SendSignal() override {
+    if (mother_)
+      mother_->CatchSignal();
+  }
+
+  void CatchSignal() override{};
+
+  void SetName(const char *name) override {
+    gtk_button_set_label(GTK_BUTTON(button_), name);
+  }
+
+  const char *GetValue() { return file_name_; }
+  const char *GetFileName() { return little_file_; }
+
+private:
+  GtkWidget *button_ = nullptr;
+  char *file_name_ = nullptr;
+  char *little_file_ = nullptr;
+  s21::Widget *mother_ = nullptr;
+
+  void ClearFile() {
+    if (file_name_)
+      delete file_name_;
+  }
+
+  void InitButton(const char *name = "File_Button") {
+    button_ = gtk_button_new_with_label(name);
+    gtk_frame_set_child(GTK_FRAME(GetFrame()), button_);
+    g_signal_connect(button_, "clicked", G_CALLBACK(OpenFileDialog), this);
+  }
+
+  static void OpenFileDialog(GtkWidget *button, FileSaver *self) {
+    GtkWindow *parent = GTK_WINDOW(gtk_widget_get_root(button));
+    GtkFileChooserNative *dialog;
+    GtkFileChooserAction action = GTK_FILE_CHOOSER_ACTION_SAVE;
+    dialog = gtk_file_chooser_native_new("Open file", parent, action, "Save",
+                                         "Cancel");
+
+    g_signal_connect(dialog, "response", G_CALLBACK(GetFile), self);
+    gtk_native_dialog_show(GTK_NATIVE_DIALOG(dialog));
+  }
+
+  static void GetFile(GtkNativeDialog *dialog, int response, void *self) {
+    GFile *file = gtk_file_chooser_get_file(GTK_FILE_CHOOSER(dialog));
+    if (file) {
+      static_cast<s21::FileSaver *>(self)->ClearFile();
+      static_cast<s21::FileSaver *>(self)->file_name_ = g_file_get_path(file);
+      static_cast<s21::FileSaver *>(self)->little_file_ =
+          g_file_get_basename(file);
+      static_cast<s21::FileSaver *>(self)->SendSignal();
+    }
+  }
+};
+
+
+
 #else
 
 class FileChooser : public Widget {
@@ -312,6 +379,74 @@ private:
     }
   }
 };
+
+
+class FileSaver : public Widget {
+public:
+  FileSaver() { InitButton(); }
+
+  FileSaver(const char *name) { InitButton(name); }
+
+  ~FileSaver() { ClearFile(); };
+
+  void SetMother(s21::Widget *mother) override { mother_ = mother; }
+
+  void SendSignal() override {
+    if (mother_)
+      mother_->CatchSignal(); // TODO
+  }
+
+  void CatchSignal() override{};
+
+  void SetName(const char *name) override {
+    gtk_button_set_label(GTK_BUTTON(button_), name);
+  }
+
+  const char *GetValue() { return file_name_; }
+  const char *GetFileName() { return little_file_; }
+
+private:
+  GtkWidget *button_ = nullptr;
+  char *file_name_ = nullptr;
+  char *little_file_ = nullptr;
+  s21::Widget *mother_ = nullptr;
+
+  void ClearFile() {
+    if (file_name_)
+      delete file_name_;
+  }
+
+  void InitButton(const char *name = "File_Button") {
+    button_ = gtk_button_new_with_label(name);
+    gtk_frame_set_child(GTK_FRAME(GetFrame()), button_);
+    g_signal_connect(button_, "clicked", G_CALLBACK(OpenFileDialog), this);
+  }
+
+  static void OpenFileDialog(GtkWidget *button, FileChooser *self) {
+    GtkWindow *parent = GTK_WINDOW(gtk_widget_get_root(button));
+    GtkFileDialog *dialog;
+    // GtkFileChooserAction action = GTK_FILE_CHOOSER_ACTION_OPEN;
+    dialog = gtk_file_dialog_new(); //"Open file", parent, action, "Load",
+                                    //    "Cancel");
+
+    gtk_file_dialog_save(dialog, parent, NULL, GetFile, self);
+    g_object_unref(dialog);
+  }
+
+  static void GetFile(GObject *dialog, GAsyncResult *result, void *self) {
+    GFile *file =
+        gtk_file_dialog_save_finish(GTK_FILE_DIALOG(dialog), result, NULL);
+    if (file) {
+      static_cast<s21::FileSaver *>(self)->ClearFile();
+      static_cast<s21::FileSaver *>(self)->file_name_ = g_file_get_path(file);
+      static_cast<s21::FileSaver *>(self)->little_file_ =
+          g_file_get_basename(file);
+      static_cast<s21::FileSaver *>(self)->SendSignal();
+    }
+  }
+};
+
+
 
 #endif
 

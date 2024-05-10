@@ -316,6 +316,7 @@ public:
 
     unsigned int* data = new unsigned int[width * height]{0};
     Draw();
+    glPixelStorei(GL_PACK_ALIGNMENT, 1);
     glReadPixels(m_width - width, m_height - height, width, height, GL_RGBA, GL_UNSIGNED_BYTE, data);
     data = Mirroring(width, height, data);
    
