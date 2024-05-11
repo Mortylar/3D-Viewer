@@ -164,9 +164,11 @@ private:
   }
 
   static void OpenMedia(GtkWidget* button, s21::MainWidget* self) {
+    size_t scale = gtk_widget_get_scale_factor(self->GetFrame());
+    g_warning("\nscale = %li\n", scale);
     size_t width = gtk_widget_get_width(self->GetFrame());
     size_t height = gtk_widget_get_height(self->GetFrame());
-    self->controller_->SavePicture(width, height);
+    self->controller_->SavePicture(width*scale, height*scale);
   }
 
   void Update() {
