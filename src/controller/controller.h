@@ -57,8 +57,8 @@ class Controller {
 	  model_->Draw();
 	}
 
-	void SavePicture(size_t width, size_t height) {
-	  model_->SavePicture(width, height);
+	void SavePicture(size_t width, size_t height, const char* file_name, const char* type) {
+	  model_->SavePicture(width, height, file_name, type);
 	}
 
   private:

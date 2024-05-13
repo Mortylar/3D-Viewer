@@ -94,7 +94,6 @@ public:
   const char *GetName() { return first_->GetValue(); }
 
   void SetValue(const float value) {
-    g_print("\nSet = %f\n", value);
     second_->SetValue(value);
   }
 
@@ -108,13 +107,10 @@ public:
   }
 
   void CatchSignal() override {
-    g_print("\nWarning: s21::LabeliDSpinButtonPair::CatchSignal() has no "
-            "implementation!\n");
   }
 
   void SendSignal() override {
-    g_print("\nWarning: s21::LabelDSpinButtonPair::SendSignal() has no "
-            "implementation!\n");
+    //if (mother_) mother_->CatchSignal();
   }
 
 private:
@@ -310,6 +306,123 @@ private:
     // gtk_widget_set_hexpand(second_->GetRoot(), true);
   }
 };
+
+class FileSaverDropDownButtonPair: public PairWidget {
+public:
+  FileSaverDropDownButtonPair(const char* const* strings) {
+    InitFileSaver();
+		InitDropDownButton(strings);
+  }
+
+  ~FileSaverDropDownButtonPair() {
+    delete file_;
+		delete drop_down_;
+  }
+
+  void SetName(const char* name) override { s21::Widget::SetName(name); }
+	const char* GetName() override { return s21::Widget::GetName(); }
+
+	const char* GetFileName() {
+		return file_->GetValue();
+	}
+
+	int GetExtension() {
+		return drop_down_->GetValue();
+	} //TODO
+
+  void SetMother(s21::Widget* mother) override {
+	  file_->SetMother(mother);
+    drop_down_->SetMother(mother);
+	}
+
+	void CatchSignal() override{};
+	void SendSignal() override{};
+
+private:
+  FileSaver* file_ = nullptr;
+	DropDownButton* drop_down_ = nullptr;
+
+  void InitFileSaver() {
+	  file_ = new s21::FileSaver();
+		gtk_grid_attach(GTK_GRID(GetGrid()), file_->GetRoot(), 0, 0, 1, 1);
+	}
+
+	void InitDropDownButton(const char* const* strings) {
+	  drop_down_ = new s21::DropDownButton(strings);
+		gtk_grid_attach(GTK_GRID(GetGrid()), drop_down_->GetRoot(), 1, 0, 1, 1);
+	}
+
+};
+
+class FileSaverDSpinButtonPair : public PairWidget {
+public:
+  FileSaverDSpinButtonPair() {
+    InitFileSaver();
+    InitDSpinButton();
+  };
+
+  FileSaverDSpinButtonPair(GtkAdjustment *adjustment) {
+    InitFileSaver();
+    InitDSpinButton(adjustment);
+  }
+
+  ~FileSaverDSpinButtonPair() {
+    delete first_;
+    delete second_;
+  };
+
+  void SetName(const char *name) override {
+    s21::Widget::SetName(name);
+  }
+
+  const char *GetName() override { return s21::Widget::GetName(); }
+
+  void SetValue(const float value) {
+    second_->SetValue(value);
+  }
+
+  float GetValue() { return second_->GetValue(); }
+
+  float *GetData() { return second_->GetData(); }
+
+  void SetMother(s21::Widget *mother) override {
+    first_->SetMother(mother);
+    second_->SetMother(mother);
+  }
+
+  void CatchSignal() override {
+  }
+
+  void SendSignal() override {
+    //if (mother_) mother_->CatchSignal();
+  }
+
+	const char* GetFileName() {
+	  return first_->GetFileName();
+	}
+
+private:
+  FileSaver *first_ = nullptr;
+  DSpinButton *second_ = nullptr;
+
+  void InitFileSaver() {
+    first_ = new FileSaver();
+    gtk_grid_attach(GTK_GRID(GetGrid()), first_->GetRoot(), 0, 0, 1, 1);
+  }
+
+  void InitDSpinButton() {
+    second_ = new DSpinButton();
+    gtk_grid_attach(GTK_GRID(GetGrid()), second_->GetRoot(), 1, 0, 1, 1);
+  }
+
+  void InitDSpinButton(GtkAdjustment *adjustment) {
+    second_ = new DSpinButton(adjustment);
+    gtk_grid_attach(GTK_GRID(GetGrid()), second_->GetRoot(), 1, 0, 1, 1);
+  }
+};
+
+
+
 
 } // namespace s21
 

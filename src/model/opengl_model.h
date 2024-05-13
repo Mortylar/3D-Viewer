@@ -10,13 +10,13 @@
 #ifndef STB_IMAGE_WRITE_IMPLEMENTATION 
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #define STB_IMAGE_WRITE_STATIC
-#include <stb/stb_image_write.h>
+#include "../libs/stb_image_write.h"
 #endif
 
 #ifndef STB_IMAGE_IMPLEMENTATION 
 #define STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_STATIC
-#include <stb/stb_image.h>
+#include "../libs/stb_image.h"
 #endif
 
 #include "../libs/data.h"
@@ -275,7 +275,7 @@ public:
     gtk_gl_area_make_current(GTK_GL_AREA(area_));
     InitBuffer();
     InitShaders();
-    std::string file = "1.png"; //TODO
+    std::string file = "1.jpg"; //TODO
     LoadTexture(file);
   }
 
@@ -288,7 +288,7 @@ public:
       DrawFigure();
     }
 
-    //g_warning("\nepoxy = %i\n", epoxy_glsl_version());
+    g_warning("\nepoxy = %i\n", epoxy_glsl_version());
   }
 
   unsigned int* Mirroring(size_t width, size_t height, unsigned int* data) {
@@ -307,25 +307,32 @@ public:
     return data;
   }
 
-  void SavePicture(size_t m_width, size_t m_height) {
+  void SavePicture(size_t m_width, size_t m_height, const char* file_name, const char* type) {
     g_print("\nsave picture\n");
 
     size_t width = gtk_widget_get_width(GTK_WIDGET(area_));
     size_t height = gtk_widget_get_height(GTK_WIDGET(area_));
     size_t chanels = 4;
 
+		GLint default_frame_buffer; 
+		glGetIntegerv(GL_FRAMEBUFFER, &default_frame_buffer);
+		g_warning("\nframebuffer_id = %i\n", default_frame_buffer);
+
     unsigned int* data = new unsigned int[width * height]{0};
-    Draw();
-    glPixelStorei(GL_PACK_ALIGNMENT, 1);
+		//glBindBuffer(GL_FRAMEBUFFER, default_frame_buffer);
+   // Draw();
+   // glPixelStorei(GL_PACK_ALIGNMENT, 1);
+    //glReadPixels(m_width - width, m_height - height, width, height, GL_RGBA, GL_UNSIGNED_INT_8_8_8_8_REV, data);
+    
     glReadPixels(m_width - width, m_height - height, width, height, GL_RGBA, GL_UNSIGNED_BYTE, data);
-    data = Mirroring(width, height, data);
+		data = Mirroring(width, height, data);
    
-    stbi_write_png("png", width, height, chanels, data, chanels*width);
-    stbi_write_jpg("jpg", width, height, chanels, data, 80);
-    stbi_write_bmp("bmp", width, height, chanels, data);
+   stbi_write_png(file_name, width, height, chanels, data, chanels*width);
+   stbi_write_jpg(file_name, width, height, chanels, data, 80);
+   stbi_write_bmp(file_name, width, height, chanels, data);
 
     g_print("\nw = %li\nh = %li\n", width, height);
-     
+    glBindFramebuffer(GL_FRAMEBUFFER, 0); 
   }
 
 
@@ -363,7 +370,7 @@ private:
 
     ConnectBuffers();
 
-    //DrawSurfaces(mvp);
+    DrawSurfaces(mvp);
     DrawLines(mvp);
     DrawPoints(mvp);
 
@@ -422,7 +429,7 @@ private:
       //color_location_ = glGetUniformLocation(line_shader.GetProgram(), "color");
       glUseProgram(line_shader.GetProgram());
       glBindVertexArray(vao_);
-      mvp.Print();
+     // mvp.Print();
       glUniformMatrix4fv(mvp_location_, 1, GL_TRUE, &mvp(0,0));
       glEnableVertexAttribArray(0); //TODO??
 
@@ -448,11 +455,11 @@ private:
     }
   }
 
-  void DrawSurfaces(float(&mvp)[16]) { 
+  void DrawSurfaces(s21::Matrix4f& mvp) { 
     mvp_location_ = glGetUniformLocation(texture_shader.GetProgram(), "mvp");
     glUseProgram(texture_shader.GetProgram());
     glBindVertexArray(vao_);
-    glUniformMatrix4fv(mvp_location_, 1, GL_FALSE, &mvp[0]);
+    glUniformMatrix4fv(mvp_location_, 1, GL_FALSE, &mvp(0,0));
 
 
 

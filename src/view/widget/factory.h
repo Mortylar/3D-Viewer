@@ -199,6 +199,35 @@ public:
   }
 };
 
+class CapturePannelFactory : public Factory {
+public:
+  CapturePannelFactory(){};
+	~CapturePannelFactory(){};
+
+	s21::Widget* CreateWidget() {
+		const char* name = "Capture Pannel";
+	  const char* extensions[4] = {"PNG", "JPG", "BMP", nullptr};
+		s21::FileSaverDropDownButtonPair* capture_pannel = 
+		  new s21::FileSaverDropDownButtonPair(extensions);
+    capture_pannel->SetName(name);
+		return capture_pannel;
+	}
+};
+
+class GifPannelFactory : public Factory {
+public:
+  GifPannelFactory() {};
+	~GifPannelFactory() {};
+
+	s21::Widget* CreateWidget() {
+	  const char* name = "Gif Pannel";
+		GtkAdjustment* adjustment = gtk_adjustment_new(0.0, 0.0, 60.0, 1.0, 0.0, 0.0);
+		s21::FileSaverDSpinButtonPair* gif_pannel = new s21::FileSaverDSpinButtonPair(adjustment);
+		gif_pannel->SetName("Gif Pannel");
+		return gif_pannel;
+	}
+};
+
 } // namespace s21
 
 #endif

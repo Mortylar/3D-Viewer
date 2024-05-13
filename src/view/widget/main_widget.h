@@ -58,6 +58,7 @@ private:
   GtkWidget* info_button_ = nullptr;
   s21::LinePannel *line_pannel_ = nullptr;
   s21::PointPannel *point_pannel_ = nullptr;
+	s21::MediaPannel* media_pannel_ = nullptr;
   s21::ProjectionPannel* projection_ = nullptr;
 
   s21::DrawingArea *area_ = nullptr;
@@ -72,6 +73,7 @@ private:
     CreateFileChooser();
     CreateProjectionPannel();
     CreateMediaButton();
+		CreateMediaPannel();
   }
 
   void InitGrid() {
@@ -91,7 +93,7 @@ private:
     gtk_grid_attach(GTK_GRID(grid_), line_pannel_->GetRoot(), 5, 2, 5, 3);
     gtk_grid_attach(GTK_GRID(grid_), point_pannel_->GetRoot(), 5, 5, 5, 3);
     gtk_grid_attach(GTK_GRID(grid_), projection_->GetRoot(), 5, 8, 5, 1); 
-    gtk_grid_attach(GTK_GRID(grid_), media_button_, 5, 9, 5, 1);
+    gtk_grid_attach(GTK_GRID(grid_), media_pannel_->GetFrame(), 5, 9, 5, 1);
 
 
     gtk_grid_attach(GTK_GRID(grid_), area_->GetRoot(), 10, 0, 10, 10);
@@ -126,7 +128,7 @@ private:
     self->info_pannel_ = new s21::InfoPannel(self->application_);
     self->info_pannel_->BuildWidget();
     self->SetInfo();
-    gtk_widget_show(self->info_pannel_->GetWindow());
+    gtk_widget_set_visible(self->info_pannel_->GetWindow(), true);
   }
 
   void CreateLinePannel() {
@@ -149,6 +151,12 @@ private:
     g_signal_connect(start_button_, "clicked", G_CALLBACK(LoadFile), this);
   }
 
+  void CreateMediaPannel() {
+		media_pannel_ = new s21::MediaPannel(window_, controller_);
+		media_pannel_->BuildWidget();
+		media_pannel_->SetMother(this);
+	}
+
   void CreateProjectionPannel() {
     projection_ = new s21::ProjectionPannel();
   }
@@ -168,8 +176,17 @@ private:
     g_warning("\nscale = %li\n", scale);
     size_t width = gtk_widget_get_width(self->GetFrame());
     size_t height = gtk_widget_get_height(self->GetFrame());
-    self->controller_->SavePicture(width*scale, height*scale);
+		if (self->media_pannel_) delete self->media_pannel_;
+		self->media_pannel_ = new s21::MediaPannel(self->window_, self->controller_);
+		self->media_pannel_->BuildWidget();
+    //g_signal_connect(self->media_pannel_->GetWindow(), "destroy", G_CALLBACK(CloseMediaPannel), self);
+		gtk_widget_set_visible(self->media_pannel_->GetWindow(), true);
   }
+
+	static void CloseMediaPannel(GtkWidget* media_window, s21::MainWidget* self) {
+	  delete self->media_pannel_;
+		self->media_pannel_ = nullptr;
+	}
 
   void Update() {
     UpdateData();
