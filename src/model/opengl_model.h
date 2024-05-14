@@ -332,7 +332,7 @@ public:
    stbi_write_bmp(file_name, width, height, chanels, data);
 
     g_print("\nw = %li\nh = %li\n", width, height);
-    glBindFramebuffer(GL_FRAMEBUFFER, 0); 
+//    glBindFramebuffer(GL_FRAMEBUFFER, 0); 
   }
 
 
@@ -467,15 +467,15 @@ private:
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat),
                           nullptr);
     glEnableVertexAttribArray(0);
-    glBindBuffer(GL_ARRAY_BUFFER, texture_->GetVertexBuffer());
+    glBindBuffer(GL_TEXTURE_BUFFER, texture_->GetVertexBuffer());
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat),
                           nullptr); //TODO ->
     glEnableVertexAttribArray(1);
 
     //glEnableVertexAttribArray(0);
-    glDepthMask(GL_TRUE);
-    glDepthFunc(GL_LEQUAL);
-    glDepthRange(0.0f, 1.0f);
+    //glDepthMask(GL_TRUE);
+    //glDepthFunc(GL_LEQUAL);
+    //glDepthRange(0.0f, 1.0f);
 
     glTexBuffer(GL_TEXTURE_BUFFER, GL_TEXTURE0, texture_->GetVertexBuffer());
 
@@ -484,7 +484,7 @@ private:
     //glEnable(GL_CULL_FACE);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture_image_.GetID());
-    //glBindTexture(GL_TEXTURE_BUFFER, texture_->GetVertexBuffer());
+    glBindTexture(GL_TEXTURE_BUFFER, texture_->GetVertexBuffer());
     //glDrawArrays(GL_TRIANGLE_FAN, 0, s21::Figure::GetInstance()->GetVertex().size());
    
    // std::vector<GLuint> texture_ind = texture_->GetElementBuffer();   
@@ -496,18 +496,6 @@ private:
       glDrawElements(GL_TRIANGLE_STRIP, s21::Figure::GetInstance()->GetVSurface(i).size(),
                      GL_UNSIGNED_INT, nullptr);
     }
-/*
-    std::vector<GLuint> t_element_buffer = texture_->GetElementBuffer();
-    for(size_t i = 0; i < t_element_buffer.size(); ++i) {
-      glBindTexture(GL_TEXTURE_2D, texture_buffer_); 
-      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, t_element_buffer[i]);
-      //glBindBuffer(GL_ELEMENT)
-      glDrawElements(GL_TRIANGLE_STRIP, s21::Figure::GetInstance()->GetTSurface(i).size(),
-                     GL_UNSIGNED_INT, nullptr);
-      glFlush();
-      glBindTexture(GL_TEXTURE_2D, 0);
-    }
-*/
 
   }
 
