@@ -10,13 +10,13 @@
 #ifndef STB_IMAGE_WRITE_IMPLEMENTATION 
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #define STB_IMAGE_WRITE_STATIC
-#include "../libs/stb_image_write.h"
+#include <stb/stb_image_write.h>
 #endif
 
 #ifndef STB_IMAGE_IMPLEMENTATION 
 #define STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_STATIC
-#include "../libs/stb_image.h"
+#include <stb/stb_image.h>
 #endif
 
 #include "../libs/data.h"
