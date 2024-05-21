@@ -245,8 +245,8 @@ private:
   void SamplerInit() {
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   }
 };
 
@@ -275,7 +275,7 @@ public:
     gtk_gl_area_make_current(GTK_GL_AREA(area_));
     InitBuffer();
     InitShaders();
-    std::string file = "1.jpg"; //TODO
+    std::string file = "3.jpg"; //TODO
     LoadTexture(file);
   }
 
@@ -314,13 +314,13 @@ public:
     size_t height = gtk_widget_get_height(GTK_WIDGET(area_));
     size_t chanels = 4;
 
-		GLint default_frame_buffer; 
-		glGetIntegerv(GL_FRAMEBUFFER, &default_frame_buffer);
-		g_warning("\nframebuffer_id = %i\n", default_frame_buffer);
+	//	GLint default_frame_buffer; 
+	//	glGetIntegerv(GL_FRAMEBUFFER, &default_frame_buffer);
+	//	g_warning("\nframebuffer_id = %i\n", default_frame_buffer);
 
     unsigned int* data = new unsigned int[width * height]{0};
 		//glBindBuffer(GL_FRAMEBUFFER, default_frame_buffer);
-   // Draw();
+    Draw();
    // glPixelStorei(GL_PACK_ALIGNMENT, 1);
     //glReadPixels(m_width - width, m_height - height, width, height, GL_RGBA, GL_UNSIGNED_INT_8_8_8_8_REV, data);
     
@@ -383,7 +383,7 @@ private:
     glClearColor(color->red, color->green, color->blue, color->alpha + 1);
     glEnable(GL_DEPTH_TEST);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    //glClearDepth(1.0);
+    glClearDepth(1.0);
   }
 
   void ConnectBuffers() {
@@ -391,7 +391,7 @@ private:
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat),
                           nullptr);
     glEnableVertexAttribArray(0);
-    glBindBuffer(GL_TEXTURE_2D, texture_->GetVertexBuffer());
+    glBindBuffer(GL_TEXTURE_BUFFER, texture_->GetVertexBuffer());
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat),
                           nullptr); //TODO ->
     glEnableVertexAttribArray(1);
@@ -477,26 +477,25 @@ private:
     //glDepthFunc(GL_LEQUAL);
     //glDepthRange(0.0f, 1.0f);
 
-    glTexBuffer(GL_TEXTURE_BUFFER, GL_TEXTURE0, texture_->GetVertexBuffer());
+    //glTexBuffer(GL_TEXTURE_BUFFER, GL_TEXTURE0, texture_->GetVertexBuffer());
 
     //glFrontFace(GL_CW);
     //glCullFace(GL_BACK);
     //glEnable(GL_CULL_FACE);
-    glActiveTexture(GL_TEXTURE0);
+    //glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture_image_.GetID());
-    glBindTexture(GL_TEXTURE_BUFFER, texture_->GetVertexBuffer());
+    //glBindTexture(GL_TEXTURE_BUFFER, texture_->GetVertexBuffer());
     //glDrawArrays(GL_TRIANGLE_FAN, 0, s21::Figure::GetInstance()->GetVertex().size());
    
    // std::vector<GLuint> texture_ind = texture_->GetElementBuffer();   
     std::vector<GLuint> element_buffer = vertex_->GetElementBuffer();
     for(size_t i = 0; i < element_buffer.size(); ++i) {
-      //glBindTexture(GL_TEXTURE_2D, texture_buffer_); 
       glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer[i]);
-     // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, texture_ind[i]);
       glDrawElements(GL_TRIANGLE_STRIP, s21::Figure::GetInstance()->GetVSurface(i).size(),
                      GL_UNSIGNED_INT, nullptr);
+      glFlush();
     }
-
+    glFlush();
   }
 
   void InitShaders() {
