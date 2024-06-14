@@ -10,13 +10,15 @@
 #ifndef STB_IMAGE_WRITE_IMPLEMENTATION 
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #define STB_IMAGE_WRITE_STATIC
-#include <stb/stb_image_write.h>
+//#include <stb/stb_image_write.h>
+#include "../stb/stb_image_write.h"
 #endif
 
 #ifndef STB_IMAGE_IMPLEMENTATION 
 #define STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_STATIC
-#include <stb/stb_image.h>
+//#include <stb/stb_image.h>
+#include "../stb/stb_image.h"
 #endif
 
 #include "../libs/data.h"
@@ -276,7 +278,7 @@ public:
     InitBuffer();
     InitShaders();
     std::string file = "3.jpg"; //TODO
-    LoadTexture(file);
+    //LoadTexture(file);
   }
 
   void LoadTexture(std::string& file) {
@@ -288,7 +290,7 @@ public:
       DrawFigure();
     }
 
-    g_warning("\nepoxy = %i\n", epoxy_glsl_version());
+   // g_warning("\nepoxy = %i\n", epoxy_glsl_version());
   }
 
   unsigned int* Mirroring(size_t width, size_t height, unsigned int* data) {
@@ -357,6 +359,7 @@ private:
   Buffer *normals_ = nullptr;
 
   void DrawFigure() {
+		g_warning("\nStart_draw\n");
     //float mvp[16]{1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1};
    // LoadTexture("1.png");
     Matrix4f mvp;
@@ -370,7 +373,7 @@ private:
 
     ConnectBuffers();
 
-    DrawSurfaces(mvp);
+    //DrawSurfaces(mvp);
     DrawLines(mvp);
     DrawPoints(mvp);
 
@@ -444,12 +447,13 @@ private:
 
       glUniform1f(glGetUniformLocation(line_shader.GetProgram(), "size"), data_->GetLineWidth());
       glUniform1i(glGetUniformLocation(line_shader.GetProgram(), "type"), data_->GetLineType());
-      std::vector<GLuint> element_buffer = vertex_->GetElementBuffer();
-      for (size_t i = 0; i < element_buffer.size(); ++i) {
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer[i]);
+      //std::vector<GLuint> element_buffer = vertex_->GetElementBuffer();
+      for (size_t i = 0; i < vertex_->GetElementBuffer().size(); ++i) {
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vertex_->GetElementBuffer()[i]); //element_buffer[i]);
         glDrawElements(GL_LINE_LOOP,
                        s21::Figure::GetInstance()->GetVSurface(i).size(),
                        GL_UNSIGNED_INT, nullptr);
+				g_warning("\ndraw line %li\n", i);
         glFlush();
       }
     }
@@ -501,7 +505,7 @@ private:
   void InitShaders() {
     point_shader.LoadShader("glarea/point_vs.glsl", "glarea/point_fs.glsl", "glarea/point_gs.glsl");
     line_shader.LoadShader("glarea/line_vs.glsl", "glarea/line_fs.glsl", "glarea/line_gs.glsl");
-    texture_shader.LoadShader("glarea/texture_vs.glsl", "glarea/texture_fs.glsl", nullptr);
+    //texture_shader.LoadShader("glarea/texture_vs.glsl", "glarea/texture_fs.glsl", nullptr);
   }
 
   void InitBuffer() {

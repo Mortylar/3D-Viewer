@@ -17,12 +17,12 @@ out vec4 g_color;
 
 void build_curcle(vec4 pos, float size) {
   float radius = (size/SCALE);
-  float angle = M_PI/20;
+  float angle = M_PI/10;
 
   vec2 v_0 = vec2(1,0);
   vec2 v_i = v_0;
 
-  for (int i = 0; i < 41; ++i) {
+  for (int i = 0; i < 21; ++i) {
     v_i.x = v_0.x * cos(i * angle) - v_0.y * sin(i * angle);
     v_i.y = v_0.x * sin(i * angle) - v_0.y * cos(i * angle);
 

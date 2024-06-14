@@ -73,7 +73,7 @@ private:
     CreateFileChooser();
     CreateProjectionPannel();
     CreateMediaButton();
-		CreateMediaPannel();
+		//CreateMediaPannel();
   }
 
   void InitGrid() {
@@ -93,7 +93,7 @@ private:
     gtk_grid_attach(GTK_GRID(grid_), line_pannel_->GetRoot(), 5, 2, 5, 3);
     gtk_grid_attach(GTK_GRID(grid_), point_pannel_->GetRoot(), 5, 5, 5, 3);
     gtk_grid_attach(GTK_GRID(grid_), projection_->GetRoot(), 5, 8, 5, 1); 
-    gtk_grid_attach(GTK_GRID(grid_), media_pannel_->GetFrame(), 5, 9, 5, 1);
+   // gtk_grid_attach(GTK_GRID(grid_), media_pannel_->GetFrame(), 5, 9, 5, 1);
 
 
     gtk_grid_attach(GTK_GRID(grid_), area_->GetRoot(), 10, 0, 10, 10);
