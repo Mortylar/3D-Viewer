@@ -459,7 +459,7 @@ private:
     mvp_location_ = glGetUniformLocation(texture_shader.GetProgram(), "mvp");
     glUseProgram(texture_shader.GetProgram());
     glBindVertexArray(vao_);
-    glUniformMatrix4fv(mvp_location_, 1, GL_FALSE, &mvp(0,0));
+    glUniformMatrix4fv(mvp_location_, 1, GL_TRUE, &mvp(0,0));
 
 
 
@@ -473,16 +473,16 @@ private:
     glEnableVertexAttribArray(1);
 
     //glEnableVertexAttribArray(0);
-    //glDepthMask(GL_TRUE);
-    //glDepthFunc(GL_LEQUAL);
-    //glDepthRange(0.0f, 1.0f);
+   glDepthMask(GL_TRUE);
+   glDepthFunc(GL_LEQUAL);
+   glDepthRange(0.0f, 1.0f);
 
     //glTexBuffer(GL_TEXTURE_BUFFER, GL_TEXTURE0, texture_->GetVertexBuffer());
 
     //glFrontFace(GL_CW);
-    //glCullFace(GL_BACK);
+    //glCullFace(GL_FRONT);
     //glEnable(GL_CULL_FACE);
-    //glActiveTexture(GL_TEXTURE0);
+    glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture_image_.GetID());
     //glBindTexture(GL_TEXTURE_BUFFER, texture_->GetVertexBuffer());
     //glDrawArrays(GL_TRIANGLE_FAN, 0, s21::Figure::GetInstance()->GetVertex().size());

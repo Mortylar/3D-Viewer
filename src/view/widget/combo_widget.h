@@ -3,8 +3,8 @@
 
 #include <gtk/gtk.h>
 
-#include "../../libs/data.h"
 #include "../../controller/controller.h"
+#include "../../libs/data.h"
 #include "factory.h"
 #include "widget.h"
 
@@ -62,7 +62,7 @@ private:
   GtkAdjustment *adjustment_ = nullptr;
   GtkWidget *common_button_grid_ = nullptr;
   GtkWidget *common_button_frame_ = nullptr;
-  GtkWidget* reset_button_ = nullptr;
+  GtkWidget *reset_button_ = nullptr;
 
   s21::AffineData *data_ = nullptr;
 
@@ -79,7 +79,7 @@ private:
     gtk_grid_attach(GTK_GRID(grid_), reset_button_, 0, 11, 1, 1);
   }
 
-  static void Reset(GtkWidget* button, s21::AffinePannel* self) {
+  static void Reset(GtkWidget *button, s21::AffinePannel *self) {
     self->translation_pannel_->SetValue(0);
     self->rotation_pannel_->SetValue(0);
     self->scaling_pannel_->SetValue(0);
@@ -352,7 +352,7 @@ private:
 
 class InfoPannel : public Widget {
 public:
-  InfoPannel(GtkApplication* app): application_(app) {
+  InfoPannel(GtkApplication *app) : application_(app) {
     InitWindow();
     InitGrid();
     s21::Widget::SetName("_INFORMATION_PANNEL_");
@@ -366,9 +366,7 @@ public:
     CreateEdgesInfoPannel();
   }
 
-  GtkWidget* GetWindow() {
-    return window_;
-  }
+  GtkWidget *GetWindow() { return window_; }
 
   void SetMother(s21::Widget *mother) override { mother_ = mother; }
 
@@ -390,8 +388,8 @@ public:
   }
 
 private:
-  GtkApplication* application_ = nullptr;
-  GtkWidget* window_ = nullptr;
+  GtkApplication *application_ = nullptr;
+  GtkWidget *window_ = nullptr;
   GtkWidget *grid_ = nullptr;
   s21::Widget *mother_ = nullptr;
   s21::LabelPair *file_name_ = nullptr;
@@ -434,52 +432,46 @@ private:
   }
 };
 
-
-
-
 class MediaPannel : public Widget {
 public:
-  MediaPannel(GtkWidget* window, s21::Controller* controller) : main_window_(window), controller_(controller) {
-		//InitWindow();
+  MediaPannel(GtkWidget *window, s21::Controller *controller)
+      : main_window_(window), controller_(controller) {
+    // InitWindow();
     InitGrid();
   };
 
-	~MediaPannel() {};
+  ~MediaPannel(){};
 
-	void BuildWidget() {
-		CreateCapturePannel();
-		CreateGifPannel();
-		InitCaptureButton();
-		InitGifButton();
-	}
-  
-	GtkWidget* GetWindow() {
-	  return window_;
-	}
+  void BuildWidget() {
+    CreateCapturePannel();
+    CreateGifPannel();
+    InitCaptureButton();
+    InitGifButton();
+  }
 
-	void SetMother(s21::Widget* mother) override {
-    mother_ = mother;
-  };
+  GtkWidget *GetWindow() { return window_; }
 
-	void CatchSignal() override {};
-	void SendSignal() override {};
-//gtk_window_get_application(GTK_WINDOW(window_));
+  void SetMother(s21::Widget *mother) override { mother_ = mother; };
+
+  void CatchSignal() override{};
+  void SendSignal() override{};
+  // gtk_window_get_application(GTK_WINDOW(window_));
 
 private:
-  GtkApplication* app_ = nullptr;
-	GtkWidget* main_window_ = nullptr;
-	s21::Controller* controller_ = nullptr;
-  GtkWidget* window_ = nullptr;
-	GtkWidget* grid_ = nullptr;
-	s21::Widget* mother_ = nullptr;
-	s21::FileSaverDropDownButtonPair* capture_pannel_ = nullptr;
-	s21::FileSaverDSpinButtonPair* gif_pannel_ = nullptr;
-	GtkWidget* capture_button_ = nullptr;
-  GtkWidget* gif_button_ = nullptr;
+  GtkApplication *app_ = nullptr;
+  GtkWidget *main_window_ = nullptr;
+  s21::Controller *controller_ = nullptr;
+  GtkWidget *window_ = nullptr;
+  GtkWidget *grid_ = nullptr;
+  s21::Widget *mother_ = nullptr;
+  s21::FileSaverDropDownButtonPair *capture_pannel_ = nullptr;
+  s21::FileSaverDSpinButtonPair *gif_pannel_ = nullptr;
+  GtkWidget *capture_button_ = nullptr;
+  GtkWidget *gif_button_ = nullptr;
 
   void InitWindow() {
-		app_ = gtk_window_get_application(GTK_WINDOW(main_window_));
-    window_ = gtk_window_new(); //gtk_application_window_new(app_);
+    app_ = gtk_window_get_application(GTK_WINDOW(main_window_));
+    window_ = gtk_window_new(); // gtk_application_window_new(app_);
     gtk_window_set_modal(GTK_WINDOW(window_), true);
     gtk_window_set_title(GTK_WINDOW(window_), "_MEDIA_");
     gtk_window_set_child(GTK_WINDOW(window_), GTK_WIDGET(GetRoot()));
@@ -492,57 +484,55 @@ private:
     gtk_grid_set_column_homogeneous(GTK_GRID(grid_), true);
   }
 
-	void CreateCapturePannel() {
-	  CapturePannelFactory factory;
-		capture_pannel_ = static_cast<FileSaverDropDownButtonPair*>(factory.CreateWidget());
-		capture_pannel_->SetMother(this);
-		gtk_grid_attach(GTK_GRID(grid_), capture_pannel_->GetRoot(), 0, 0, 1, 1);
-	}
+  void CreateCapturePannel() {
+    CapturePannelFactory factory;
+    capture_pannel_ =
+        static_cast<FileSaverDropDownButtonPair *>(factory.CreateWidget());
+    capture_pannel_->SetMother(this);
+    gtk_grid_attach(GTK_GRID(grid_), capture_pannel_->GetRoot(), 0, 0, 1, 1);
+  }
 
-	void CreateGifPannel() {
-	  GifPannelFactory factory;
-		gif_pannel_ = static_cast<FileSaverDSpinButtonPair*>(factory.CreateWidget());
-		gif_pannel_->SetMother(this);
-		gtk_grid_attach(GTK_GRID(grid_), gif_pannel_->GetRoot(), 0, 1, 1, 1);
-	}
+  void CreateGifPannel() {
+    GifPannelFactory factory;
+    gif_pannel_ =
+        static_cast<FileSaverDSpinButtonPair *>(factory.CreateWidget());
+    gif_pannel_->SetMother(this);
+    gtk_grid_attach(GTK_GRID(grid_), gif_pannel_->GetRoot(), 0, 2, 1, 1);
+  }
 
-	void InitCaptureButton() {
-		capture_button_ = gtk_button_new_with_label("Create Capture");
-		g_signal_connect(capture_button_, "clicked", G_CALLBACK(CreateCapture), this);
-	  gtk_grid_attach(GTK_GRID(grid_), capture_button_, 1, 0, 1, 1);
-	}
+  void InitCaptureButton() {
+    capture_button_ = gtk_button_new_with_label("Create Capture");
+    g_signal_connect(capture_button_, "clicked", G_CALLBACK(CreateCapture),
+                     this);
+    gtk_grid_attach(GTK_GRID(grid_), capture_button_, 0, 1, 1, 1);
+  }
 
-	void InitGifButton() {
-		gif_button_ = gtk_button_new_with_label("Create Gif");
-		g_signal_connect(gif_button_, "clicked", G_CALLBACK(CreateGif), this);
-	  gtk_grid_attach(GTK_GRID(grid_), gif_button_, 1, 1, 1, 1);
-	}
+  void InitGifButton() {
+    gif_button_ = gtk_button_new_with_label("Create Gif");
+    g_signal_connect(gif_button_, "clicked", G_CALLBACK(CreateGif), this);
+    gtk_grid_attach(GTK_GRID(grid_), gif_button_, 0, 3, 1, 1);
+  }
 
+  static void CreateCapture(GtkWidget *button_, s21::MediaPannel *self) {
+    std::string file_name = self->capture_pannel_->GetFileName();
+    if (file_name != "") {
+      int extension = self->capture_pannel_->GetExtension();
+      std::string ext_string =
+          ((extension == 2) ? "bmp" : ((extension == 1) ? "jpg" : "png"));
+      size_t width = gtk_widget_get_width(self->main_window_);
+      size_t height = gtk_widget_get_height(self->main_window_);
+      file_name = file_name + "." + ext_string;
+      self->controller_->SavePicture(width, height, file_name.data(),
+                                     ext_string.data());
+      // gtk_window_destroy(GTK_WINDOW(self->window_));
+    }
+    // TODO close window  gtk_window_destroy
+  }
 
-	static void CreateCapture(GtkWidget* button_, s21::MediaPannel* self) {
-	  std::string file_name = self->capture_pannel_->GetFileName();
-		if (file_name != "") {
-		  int extension = self->capture_pannel_->GetExtension();
-			std::string ext_string = ((extension == 2) ? "bmp" : ((extension == 1) ? "jpg" : "png"));
-			size_t width = gtk_widget_get_width(self->main_window_);
-			size_t height = gtk_widget_get_height(self->main_window_);
-			file_name = file_name + "." + ext_string;
-			self->controller_->SavePicture(width, height, file_name.data(), ext_string.data());
-			//gtk_window_destroy(GTK_WINDOW(self->window_));
-		}
-		//TODO close window  gtk_window_destroy
-	}
-	
-  static void CreateGif(GtkWidget* button, s21::MediaPannel* self) {
-	  //TODO
-	}
-
-
+  static void CreateGif(GtkWidget *button, s21::MediaPannel *self) {
+    // TODO
+  }
 };
-
-
-
-
 
 class ProjectionPannel : public Widget {
 public:
@@ -552,14 +542,12 @@ public:
     s21::Widget::SetName("_PROJECTION_PANNEL_");
   }
 
-  ~ProjectionPannel() {
-    delete projection_;
-  };
+  ~ProjectionPannel() { delete projection_; };
 
   void BuildWidget() {
-   // CreateFileNamePannel();
-   // CreateVertexInfoPannel();
-   // CreateEdgesInfoPannel();
+    // CreateFileNamePannel();
+    // CreateVertexInfoPannel();
+    // CreateEdgesInfoPannel();
   }
 
   void SetMother(s21::Widget *mother) override { mother_ = mother; }
@@ -571,9 +559,7 @@ public:
       mother_->CatchSignal();
   }
 
-  int GetValue() {
-    return projection_->GetValue();
-  }
+  int GetValue() { return projection_->GetValue(); }
 
 private:
   GtkWidget *grid_ = nullptr;
@@ -583,19 +569,18 @@ private:
   void InitGrid() {
     grid_ = gtk_grid_new();
     gtk_frame_set_child(GTK_FRAME(GetFrame()), grid_);
-    gtk_grid_set_row_homogeneous(GTK_GRID(grid_), true);
-    gtk_grid_set_column_homogeneous(GTK_GRID(grid_), true);
+//    gtk_grid_set_row_homogeneous(GTK_GRID(grid_), true);
+//    gtk_grid_set_column_homogeneous(GTK_GRID(grid_), true);
   }
 
   void CreateDropDownButtonPannel() {
-    const char* name = "Projection";
-    const char* types[3] = {"PARALEL", "CENTRAL", nullptr};
+    const char *name = "Projection";
+    const char *types[3] = {"PARALEL", "CENTRAL", nullptr};
     projection_ = new s21::LabelDropDownButtonPair(name, types);
     projection_->SetMother(this);
     gtk_grid_attach(GTK_GRID(grid_), projection_->GetRoot(), 0, 0, 1, 1);
   }
 };
-
 
 } // namespace s21
 
