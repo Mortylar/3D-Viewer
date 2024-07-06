@@ -67,7 +67,7 @@ s21::Matrix4f s21::Affine3D::GetParralelProjection() {
   result(2,3) = (near + far)/(near - far);
   //result(3,2) = 0.0;
   result(3,3) = 1.0;
-  result.Print();
+  //result.Print();
   return result;
 }
 
@@ -82,7 +82,7 @@ s21::Matrix4f s21::Affine3D::GetCentralProjection() {
   result(2,3) = 2 * (far * near)/(near - far);
   result(3,2) = 1.0;
   result(3,3) = 0.0;
-  result.Print();
+ // result.Print();
   return result;
 }
 

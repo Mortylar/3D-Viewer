@@ -24,17 +24,11 @@ public:
 
   void ReadFile(const char *file_name);
 
-  // void Translation(std::vector<float>& v, float dx, float dy, float dz);
-  // void Rotation(std::vector<float>& v, float, float, float);
-  // void Scaling(std::vector<float>& v, float, float, float);
-  // void Normalize(std::vector<float>& v);
-  // void Centring(std::vector<float>& v);
-
   size_t GetVertexCount();
-  const std::vector<float> &GetVertex();
+  //const std::vector<float> &GetVertex();
 
   size_t GetSurfacesCount();
-  const std::vector<unsigned int> &GetSurface(size_t n);
+  //const std::vector<unsigned int> &GetSurface(size_t n);
 
   void SetGLArea(GtkGLArea *area);   // TODO
   void ConnectData(s21::Data *data); // TODO
