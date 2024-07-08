@@ -1,4 +1,4 @@
-CC = g++ -std=c++17
+CC = g++ -std=c++17 -O3
 CFLAGS = -Wall -Werror -Wextra
 GTK_FLAGS = `pkg-config --libs --cflags gtk4`
 EPOXY_FLAGS = `pkg-config --libs --cflags epoxy`
