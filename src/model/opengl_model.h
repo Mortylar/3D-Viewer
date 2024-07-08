@@ -31,13 +31,13 @@ class Buffer {
 public:
   Buffer() {
     vertex_ = 0;
-    element_.clear();
+    element_ = 0;
   }
 
   ~Buffer() { Clear(); }
 
   void CreateBuffer(std::vector<float> &v_data,
-                    std::vector<std::vector<unsigned int>> &e_data) {
+                    std::vector<unsigned int> &e_data) {
     Clear();
     CreateVertexBuffer(v_data);
     CreateElementBuffer(e_data);
@@ -45,21 +45,19 @@ public:
 
   GLuint &GetVertexBuffer() { return vertex_; }
 
-  std::vector<GLuint> &GetElementBuffer() { return element_; }
+  GLuint &GetElementBuffer() { return element_; }
 
 
   void Clear() {
     if (vertex_)
       glDeleteBuffers(1, &vertex_);
-    for (size_t i = 0; i < element_.size(); ++i) {
-      glDeleteBuffers(1, &(element_[i]));
-    }
-    element_.clear();
+    if (element_)
+      glDeleteBuffers(1, &element_);
   }
 
 private:
   GLuint vertex_ = 0;
-  std::vector<GLuint> element_;
+  GLuint element_ = 0;
 
   void CreateVertexBuffer(std::vector<float> &data) {
     glGenBuffers(1, &vertex_);
@@ -69,27 +67,15 @@ private:
     glBindBuffer(GL_ARRAY_BUFFER, 0);
   }
 
-  void CreateElementBuffer(std::vector<std::vector<unsigned int>> &data) {
-    for (size_t i = 0; i < data.size(); ++i) {
-      GLuint tmp_buffer = 0;
-      glGenBuffers(1, &tmp_buffer);
-      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, tmp_buffer);
+  void CreateElementBuffer(std::vector<unsigned int> &data) {
+      glGenBuffers(1, &element_);
+      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_);
       glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-                   sizeof(unsigned int) * data[i].size(), data[i].data(),
+                   sizeof(unsigned int) * data.size(), data.data(),
                    GL_STATIC_DRAW);
       glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-      element_.push_back(tmp_buffer);
-    }
   }
 
-  /*void Clear() {
-    if (vertex_)
-      glDeleteBuffers(1, &vertex_);
-    for (size_t i = 0; i < element_.size(); ++i) {
-      glDeleteBuffers(1, &(element_[i]));
-    }
-    element_.clear();
-  }*/
 };
 
 
@@ -343,7 +329,6 @@ private:
   GtkGLArea *area_ = nullptr;
 
   GLuint vao_ = 0;
-  //GLuint program_ = 0;
   Texture texture_image_;
   Shader point_shader;
   Shader line_shader;
@@ -360,8 +345,6 @@ private:
 
   void DrawFigure() {
 		g_warning("\nStart_draw\n");
-    //float mvp[16]{1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1};
-   // LoadTexture("1.png");
     Matrix4f mvp;
     ComputeMVP(mvp);
     ResetField();
@@ -393,7 +376,7 @@ private:
     glBindBuffer(GL_ARRAY_BUFFER, vertex_->GetVertexBuffer());
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat),
                           nullptr);
-    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(0);/*
     glBindBuffer(GL_TEXTURE_BUFFER, texture_->GetVertexBuffer());
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat),
                           nullptr); //TODO ->
@@ -402,7 +385,7 @@ private:
     glBindBuffer(GL_ARRAY_BUFFER, normals_->GetVertexBuffer());
     glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat),
                           nullptr); //TODO -> glTexCoordPointer
-    glEnableVertexAttribArray(2);
+    glEnableVertexAttribArray(2);*/
   }
 
   void DrawPoints(Matrix4f& mvp) {
@@ -447,15 +430,25 @@ private:
 
       glUniform1f(glGetUniformLocation(line_shader.GetProgram(), "size"), data_->GetLineWidth());
       glUniform1i(glGetUniformLocation(line_shader.GetProgram(), "type"), data_->GetLineType());
-      //std::vector<GLuint> element_buffer = vertex_->GetElementBuffer();
+      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vertex_->GetElementBuffer());
+
+      std::vector<unsigned int> offset = s21::Figure::GetInstance()->GetIndexOffset();
+      size_t last_position = 0;
+      glDrawElements(GL_LINE_LOOP, offset[0], GL_UNSIGNED_INT, (void *)(last_position));
+      for (size_t i = 1; i < offset.size(); ++i) {
+        last_position += offset[i-1] * sizeof(unsigned int);
+        glDrawElements(GL_LINE_LOOP, offset[i], GL_UNSIGNED_INT, (void *)(last_position));
+      }
+      /*
       for (size_t i = 0; i < vertex_->GetElementBuffer().size(); ++i) {
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vertex_->GetElementBuffer()[i]); //element_buffer[i]);
+      //  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vertex_->GetElementBuffer()[i]); //element_buffer[i]);
         glDrawElements(GL_LINE_LOOP,
                        s21::Figure::GetInstance()->GetVSurface(i).size(),
                        GL_UNSIGNED_INT, nullptr);
 				g_warning("\ndraw line %li\n", i);
         glFlush();
-      }
+      }*/
+      glFlush();
     }
   }
 
@@ -492,13 +485,13 @@ private:
     //glDrawArrays(GL_TRIANGLE_FAN, 0, s21::Figure::GetInstance()->GetVertex().size());
    
    // std::vector<GLuint> texture_ind = texture_->GetElementBuffer();   
-    std::vector<GLuint> element_buffer = vertex_->GetElementBuffer();
+    /*std::vector<GLuint> element_buffer = vertex_->GetElementBuffer();
     for(size_t i = 0; i < element_buffer.size(); ++i) {
       glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer[i]);
       glDrawElements(GL_TRIANGLE_STRIP, s21::Figure::GetInstance()->GetVSurface(i).size(),
                      GL_UNSIGNED_INT, nullptr);
       glFlush();
-    }
+    }*/
     glFlush();
   }
 
@@ -512,8 +505,7 @@ private:
     glGenVertexArrays(1, &vao_);
     glBindVertexArray(vao_);
     std::vector<float> v = s21::Figure::GetInstance()->GetVertex();
-    std::vector<std::vector<unsigned int>> e =
-        s21::Figure::GetInstance()->GetVSurface();
+    std::vector<unsigned int> e = s21::Figure::GetInstance()->GetVSurface();
     vertex_->CreateBuffer(v, e);
 
     v = s21::Figure::GetInstance()->GetTextures();

@@ -13,17 +13,17 @@ class Controller {
 	  model_->ReadFile(file_name);
 	}
 
-	const std::vector<float>& GetVertex() {
+/*	const std::vector<float>& GetVertex() {
 	  return model_->GetVertex();
-	}
+	}*/
 
 	size_t GetVertexCount() {
 	  return model_->GetVertexCount();
 	}
 
-	const std::vector<unsigned int>& GetSurfaces(size_t n) {
+/*	const std::vector<unsigned int>& GetSurfaces(size_t n) {
 	  return model_->GetSurface(n);
-	}
+	}*/
 
   size_t GetSurfacesCount() {
 	  return model_->GetSurfacesCount();
