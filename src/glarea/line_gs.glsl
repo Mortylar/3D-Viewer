@@ -71,7 +71,6 @@ void DrawDottedLine(vec4 pos1, vec4 pos2, float size) {
 
 
 void main() {
-  //g_color = v_color[0];
   if (v_type[0] == STRAIGHT_LINE_TYPE) {
     g_color = v_color[0];
     DrawStraightLine(gl_in[0].gl_Position, gl_in[1].gl_Position, v_size[0]);

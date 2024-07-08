@@ -144,10 +144,6 @@ private:
       g_print("\nprogram link failed = %s\n", buffer);
     } // TODO
 
-    //mvp_location_ = glGetUniformLocation(program_, "mvp");
-    //color_location_ = glGetUniformLocation(program_, "color");
-    //point_size_location_ = glGetUniformLocation(program_, "p_size");
-
     glDetachShader(program_, vertex);
     glDetachShader(program_, fragment);
     glDetachShader(program_, geometry); //TODO
@@ -263,7 +259,7 @@ public:
     gtk_gl_area_make_current(GTK_GL_AREA(area_));
     InitBuffer();
     InitShaders();
-    std::string file = "3.jpg"; //TODO
+    //std::string file = "3.jpg"; //TODO
     //LoadTexture(file);
   }
 
@@ -349,14 +345,8 @@ private:
     ComputeMVP(mvp);
     ResetField();
 
-    //glUseProgram(program_);
-    //glBindVertexArray(vao_);
-    //glUniformMatrix4fv(mvp_location_, 1, GL_FALSE, &mvp[0]);
-    //glEnableVertexAttribArray(0);
-
     ConnectBuffers();
 
-    //DrawSurfaces(mvp);
     DrawLines(mvp);
     DrawPoints(mvp);
 
@@ -369,7 +359,7 @@ private:
     glClearColor(color->red, color->green, color->blue, color->alpha + 1);
     glEnable(GL_DEPTH_TEST);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glClearDepth(1.0);
+    //glClearDepth(1.0);
   }
 
   void ConnectBuffers() {
@@ -402,9 +392,8 @@ private:
       glUniform4fv(color_location_, 1, point_color);
       glUniform1f(glGetUniformLocation(point_shader.GetProgram(), "size"), data_->GetPointSize());
       glUniform1i(glGetUniformLocation(point_shader.GetProgram(), "type"), data_->GetPointType());
-      //glUniform1f(point_size_location_, data_->GetPointSize());
-      //glPointSize(data_->GetPointSize());
-      glDrawArrays(GL_POINTS, 0, s21::Figure::GetInstance()->GetVertexCount());
+      
+			glDrawArrays(GL_POINTS, 0, s21::Figure::GetInstance()->GetVertexCount());
       glFlush();
     }
   }
@@ -433,25 +422,17 @@ private:
       glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vertex_->GetElementBuffer());
 
       std::vector<unsigned int> offset = s21::Figure::GetInstance()->GetIndexOffset();
+
       size_t last_position = 0;
       glDrawElements(GL_LINE_LOOP, offset[0], GL_UNSIGNED_INT, (void *)(last_position));
       for (size_t i = 1; i < offset.size(); ++i) {
         last_position += offset[i-1] * sizeof(unsigned int);
         glDrawElements(GL_LINE_LOOP, offset[i], GL_UNSIGNED_INT, (void *)(last_position));
       }
-      /*
-      for (size_t i = 0; i < vertex_->GetElementBuffer().size(); ++i) {
-      //  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vertex_->GetElementBuffer()[i]); //element_buffer[i]);
-        glDrawElements(GL_LINE_LOOP,
-                       s21::Figure::GetInstance()->GetVSurface(i).size(),
-                       GL_UNSIGNED_INT, nullptr);
-				g_warning("\ndraw line %li\n", i);
-        glFlush();
-      }*/
       glFlush();
     }
   }
-
+/*
   void DrawSurfaces(s21::Matrix4f& mvp) { 
     mvp_location_ = glGetUniformLocation(texture_shader.GetProgram(), "mvp");
     glUseProgram(texture_shader.GetProgram());
@@ -485,15 +466,15 @@ private:
     //glDrawArrays(GL_TRIANGLE_FAN, 0, s21::Figure::GetInstance()->GetVertex().size());
    
    // std::vector<GLuint> texture_ind = texture_->GetElementBuffer();   
-    /*std::vector<GLuint> element_buffer = vertex_->GetElementBuffer();
+    std::vector<GLuint> element_buffer = vertex_->GetElementBuffer();
     for(size_t i = 0; i < element_buffer.size(); ++i) {
       glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer[i]);
       glDrawElements(GL_TRIANGLE_STRIP, s21::Figure::GetInstance()->GetVSurface(i).size(),
                      GL_UNSIGNED_INT, nullptr);
       glFlush();
-    }*/
+    }
     glFlush();
-  }
+  }*/
 
   void InitShaders() {
     point_shader.LoadShader("glarea/point_vs.glsl", "glarea/point_fs.glsl", "glarea/point_gs.glsl");
@@ -507,14 +488,14 @@ private:
     std::vector<float> v = s21::Figure::GetInstance()->GetVertex();
     std::vector<unsigned int> e = s21::Figure::GetInstance()->GetVSurface();
     vertex_->CreateBuffer(v, e);
-
+    /*
     v = s21::Figure::GetInstance()->GetTextures();
     e = s21::Figure::GetInstance()->GetTSurface();
     texture_->CreateBuffer(v, e);
 
     v = s21::Figure::GetInstance()->GetNormals();
     e = s21::Figure::GetInstance()->GetNSurface();
-    normals_->CreateBuffer(v, e);
+    normals_->CreateBuffer(v, e);*/
   }
 
   void ComputeMVP(Matrix4f& mvp) {
@@ -554,25 +535,6 @@ private:
       mvp *= affine.GetCentralProjection();
     }
   }
-
-//  void DeleteProgram() {
-//    glDeleteProgram(program_);
-//    program_ = 0;
-//  }
-/*
-  char *LoadFile(const char *file_name) {
-    int len = 1024; // TODO
-    char *text = new char[len]();
-    FILE *fp = fopen(file_name, "rb");
-    if (fp) {
-      fread(text, 1, len, fp);
-      fclose(fp);
-    } else {
-      g_print("\nError Opening File\n");
-    }
-    return text;
-  }
-  */
 };
 } // namespace s21
 

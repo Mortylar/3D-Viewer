@@ -16,6 +16,8 @@ void s21::Figure::Clear() {
   v_surfaces_->clear();
   t_surfaces_->clear();
   n_surfaces_->clear();
+
+	index_offset_->clear();
 }
 
 void s21::Figure::Reserve(size_t n) {
@@ -81,18 +83,18 @@ const std::vector<unsigned int> &s21::Figure::GetIndexOffset() {
 void s21::Figure::AddVSurface(const std::vector<unsigned int> &surface) {
   index_offset_->push_back(surface.size());
   for (size_t i = 0; i < surface.size(); ++i) {
-  v_surfaces_->push_back(surface[i]);
+    v_surfaces_->push_back(surface[i]);
   }
 }
 
 void s21::Figure::AddTSurface(const std::vector<unsigned int> &surface) {
 for (size_t i = 0; i < surface.size(); ++i) {
-  t_surfaces_->push_back(surface[i]);
+    t_surfaces_->push_back(surface[i]);
   }
 }
 
 void s21::Figure::AddNSurface(const std::vector<unsigned int> &surface) {
 for (size_t i = 0; i < surface.size(); ++i) {
-  n_surfaces_->push_back(surface[i]);
+    n_surfaces_->push_back(surface[i]);
   }
 }
