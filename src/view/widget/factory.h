@@ -228,6 +228,20 @@ public:
 	}
 };
 
+
+class AreaColorFactory : public Factory {
+public:
+  AreaColorFactory(){};
+  ~AreaColorFactory(){};
+
+  s21::Widget *CreateWidget() override {
+    const char *name = "Area Color";
+    s21::LabelColorButtonPair *color_button =
+        new s21::LabelColorButtonPair(name);
+    return color_button;
+  }
+};
+
 } // namespace s21
 
 #endif

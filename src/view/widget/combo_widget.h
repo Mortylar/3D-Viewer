@@ -124,13 +124,11 @@ private:
   void CollectScaling() {
     std::vector<float *> scaling_data = scaling_pannel_->GetData();
     double scaling_vector[scaling_data.size()] = {0.0, 0.0, 0.0};
-    const int k_scaling_factor = 5;
+    const int k_scaling_factor = 20;
     for (size_t i = 0; i < scaling_data.size(); ++i) {
       if (*scaling_data[i] >= 0.0) {
-        // scaling_vector[i] = 1.0 / (1.0 - *scaling_data[i]);
         scaling_vector[i] = 1.0 + *scaling_data[i] * k_scaling_factor;
       } else {
-        // scaling_vector[i] = 1.0 + *scaling_data[i];
         scaling_vector[i] = 1.0 / (1.0 + -*scaling_data[i] * k_scaling_factor);
       }
     }
@@ -147,8 +145,6 @@ private:
     translation_pannel_->SetMother(this);
     gtk_grid_attach(GTK_GRID(grid_), translation_pannel_->GetRoot(), 0, 0, 1,
                     3);
-    // gtk_widget_set_hexpand(translation_pannel_->GetRoot(), true);
-    // gtk_widget_set_vexpand(translation_pannel_->GetRoot(), true);
   }
 
   void CreateRotationPannel() {
@@ -352,8 +348,7 @@ private:
 
 class InfoPannel : public Widget {
 public:
-  InfoPannel(GtkApplication *app) : application_(app) {
-    InitWindow();
+  InfoPannel() {
     InitGrid();
     s21::Widget::SetName("_INFORMATION_PANNEL_");
   }
@@ -365,8 +360,6 @@ public:
     CreateVertexInfoPannel();
     CreateEdgesInfoPannel();
   }
-
-  GtkWidget *GetWindow() { return window_; }
 
   void SetMother(s21::Widget *mother) override { mother_ = mother; }
 
@@ -384,24 +377,15 @@ public:
   }
 
   void SetEdgesCount(size_t edges_count) {
-    edges_count_->SetValue(std::to_string(edges_count).data());
+    edges_count_->SetValue(std::to_string(edges_count).data()); //TODO
   }
 
 private:
-  GtkApplication *application_ = nullptr;
-  GtkWidget *window_ = nullptr;
   GtkWidget *grid_ = nullptr;
   s21::Widget *mother_ = nullptr;
   s21::LabelPair *file_name_ = nullptr;
   s21::LabelPair *vertex_count_ = nullptr;
   s21::LabelPair *edges_count_ = nullptr;
-
-  void InitWindow() {
-    window_ = gtk_application_window_new(application_);
-    gtk_window_set_modal(GTK_WINDOW(window_), true);
-    gtk_window_set_title(GTK_WINDOW(window_), "_INFO_");
-    gtk_window_set_child(GTK_WINDOW(window_), GTK_WIDGET(GetRoot()));
-  }
 
   void InitGrid() {
     grid_ = gtk_grid_new();
@@ -569,8 +553,8 @@ private:
   void InitGrid() {
     grid_ = gtk_grid_new();
     gtk_frame_set_child(GTK_FRAME(GetFrame()), grid_);
-//    gtk_grid_set_row_homogeneous(GTK_GRID(grid_), true);
-//    gtk_grid_set_column_homogeneous(GTK_GRID(grid_), true);
+    gtk_grid_set_row_homogeneous(GTK_GRID(grid_), true);
+    gtk_grid_set_column_homogeneous(GTK_GRID(grid_), true);
   }
 
   void CreateDropDownButtonPannel() {
@@ -581,6 +565,62 @@ private:
     gtk_grid_attach(GTK_GRID(grid_), projection_->GetRoot(), 0, 0, 1, 1);
   }
 };
+
+
+class AreaColorPannel : public Widget {
+public:
+  AreaColorPannel(s21::Data *data) : data_(data) {
+    InitGrid();
+    s21::Widget::SetName("_AREA_PANNEL_");
+  }
+
+  ~AreaColorPannel() {
+    delete color_;
+  }
+
+  void BuildWidget() {
+    CreateColorPannel();
+  }
+
+  void SetMother(s21::Widget *mother) override { mother_ = mother; }
+
+  void CatchSignal() override {
+    Update();
+    SendSignal();
+  }
+
+  void SendSignal() override {
+    if (mother_)
+      mother_->CatchSignal();
+  }
+
+  void Update() {
+    data_->SetAreaColor(color_->GetColor());
+  }
+
+private:
+  GtkWidget *grid_ = nullptr;
+  s21::Widget *mother_ = nullptr;
+  s21::LabelColorButtonPair *color_ = nullptr;
+  s21::Data *data_ = nullptr;
+
+  void InitGrid() {
+    grid_ = gtk_grid_new();
+    gtk_frame_set_child(GTK_FRAME(GetFrame()), grid_);
+    gtk_grid_set_row_homogeneous(GTK_GRID(grid_), true);
+    gtk_grid_set_column_homogeneous(GTK_GRID(grid_), true);
+  }
+
+  void CreateColorPannel() {
+    s21::AreaColorFactory factory;
+    color_ = static_cast<s21::LabelColorButtonPair *>(factory.CreateWidget());
+    color_->SetValue(*(data_->GetAreaColor()));
+    color_->SetMother(this);
+    gtk_grid_attach(GTK_GRID(grid_), color_->GetRoot(), 0, 1, 1, 1);
+  }
+};
+
+
 
 } // namespace s21
 

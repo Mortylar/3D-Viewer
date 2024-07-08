@@ -284,7 +284,7 @@ class AffineData {
    void Init() {
      translation_ = new VectorData(kDim_);
      rotation_ = new VectorData(kDim_);
-     scaling_ = new VectorData{1,1,1};
+     scaling_ = new VectorData{0,0,0};
    }
 
   void TemplateInit(const AffineData& other) { 
