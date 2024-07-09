@@ -6,13 +6,13 @@
 
 namespace s21 {
 class Parser {
-public:
+ public:
   Parser() = default;
   ~Parser() = default;
 
   void ParserMethod(const char *file_name);
 
-private:
+ private:
   // const int buffer_length_ = 255;
 
   void ReadVertexes(const std::string &buffer);
@@ -31,6 +31,6 @@ private:
   std::string ReadString(FILE *, size_t *);
   bool IsNumber(char ch);
 };
-} // namespace s21
+}  // namespace s21
 
-#endif // SRC_MODEL_PARSER_H_
+#endif  // SRC_MODEL_PARSER_H_

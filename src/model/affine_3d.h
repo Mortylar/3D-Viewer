@@ -8,7 +8,7 @@
 
 namespace s21 {
 class Affine3D {
-public:
+ public:
   Affine3D() = default;
   ~Affine3D() = default;
 
@@ -21,15 +21,15 @@ public:
   Matrix4f GetTranslation(float x, float y, float z);
   Matrix4f GetRotation(float x, float y, float z);
   Matrix4f GetScaling(float x, float y, float z);
-  Matrix4f GetCentralProjection(); //TODO 
-  Matrix4f GetParralelProjection(); //TODO
+  Matrix4f GetCentralProjection();   // TODO
+  Matrix4f GetParralelProjection();  // TODO
 
-private:
+ private:
   const size_t dim_ = 3;
 
   void CheckDimension(size_t dim);
   void CheckScalingNilpotency(float x_scale, float y_scale, float z_scale);
 };
-} // namespace s21
+}  // namespace s21
 
-#endif // SRC_AFFINE_3D_H
+#endif  // SRC_AFFINE_3D_H

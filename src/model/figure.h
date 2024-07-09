@@ -10,18 +10,18 @@ namespace s21 {
 class Figure;
 
 class FigureKiller {
-public:
+ public:
   //   FigureKiller();
   ~FigureKiller();
 
   void Initialize(Figure *figure) { figure_ = figure; }
 
-private:
+ private:
   Figure *figure_;
 };
 
 class Figure {
-public:
+ public:
   static Figure *GetInstance() {
     if (!self_) {
       self_ = new Figure();
@@ -54,7 +54,8 @@ public:
 
   void Clear();
   void Reserve(size_t n);
-private:
+
+ private:
   static Figure *self_;
   static FigureKiller killer_;
 
@@ -93,6 +94,6 @@ private:
   Figure operator=(Figure &) = delete;
   friend class FigureKiller;
 };
-} // namespace s21
+}  // namespace s21
 
-#endif // SRC_MODEL_FIGURE_H_
+#endif  // SRC_MODEL_FIGURE_H_

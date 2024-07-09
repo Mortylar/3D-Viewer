@@ -2,12 +2,11 @@
 
 #include <cstring>
 #include <fstream>
+#include <iostream>  //TODO remove
 #include <stdexcept>
 #include <vector>
 
 #include "figure.h"
-
-#include <iostream> //TODO remove
 
 void s21::Parser::ParserMethod(const char *file_name) {
   setlocale(LC_NUMERIC, "C");
@@ -43,8 +42,7 @@ void s21::Parser::ReadVertexes(const std::string &buffer) {
   } else if (buffer[1] == 't') {
     status = ExtractVertexData(buffer, "vt %f %f %f", &vertex[0], &vertex[1],
                                &vertex[2]);
-    if (status == 2)
-      ++status;
+    if (status == 2) ++status;
     s21::Figure::GetInstance()->AddTextures(vertex[0], vertex[1], vertex[2]);
   } else if (buffer[1] == 'n') {
     status = ExtractVertexData(buffer, "vn %f %f %f", &vertex[0], &vertex[1],
@@ -52,8 +50,9 @@ void s21::Parser::ReadVertexes(const std::string &buffer) {
     s21::Figure::GetInstance()->AddNormals(vertex[0], vertex[1], vertex[2]);
   }
   if (status != 3)
-    throw std::invalid_argument("s21::Parser - object file include less then 3 "
-                                "coordinates in one vertex");
+    throw std::invalid_argument(
+        "s21::Parser - object file include less then 3 "
+        "coordinates in one vertex");
 }
 
 int s21::Parser::ExtractVertexData(const std::string &buffer,
@@ -79,10 +78,8 @@ void s21::Parser::ReadSurface(const std::string &buffer) {
   }
 
   s21::Figure::GetInstance()->AddVSurface(v_surface);
-  if (t_surface.size())
-    s21::Figure::GetInstance()->AddTSurface(t_surface);
-  if (n_surface.size())
-    s21::Figure::GetInstance()->AddNSurface(n_surface);
+  if (t_surface.size()) s21::Figure::GetInstance()->AddTSurface(t_surface);
+  if (n_surface.size()) s21::Figure::GetInstance()->AddNSurface(n_surface);
 }
 
 size_t s21::Parser::ExtractFragment(const std::string &buffer, size_t pos,
@@ -120,8 +117,7 @@ void s21::Parser::WriteFragment(const std::string &fragment, int mod_count,
   int vertex_id, texture_id, normal_id;
   int status =
       sscanf(fragment.data(), "%i %i %i", &vertex_id, &texture_id, &normal_id);
-  if (status == 0)
-    throw std::invalid_argument("s21::Parser - empty surface");
+  if (status == 0) throw std::invalid_argument("s21::Parser - empty surface");
 
   int vertex_count =
       static_cast<int>(s21::Figure::GetInstance()->GetVertexCount());

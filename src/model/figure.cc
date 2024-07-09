@@ -17,7 +17,7 @@ void s21::Figure::Clear() {
   t_surfaces_->clear();
   n_surfaces_->clear();
 
-	index_offset_->clear();
+  index_offset_->clear();
 }
 
 void s21::Figure::Reserve(size_t n) {
@@ -39,7 +39,6 @@ std::vector<float> &s21::Figure::GetVertex() { return *vertex_; }
 std::vector<float> &s21::Figure::GetTextures() { return *textures_; }
 
 std::vector<float> &s21::Figure::GetNormals() { return *normals_; }
-
 
 void s21::Figure::AddVertex(float x, float y, float z) {
   vertex_->push_back(x);
@@ -79,7 +78,6 @@ const std::vector<unsigned int> &s21::Figure::GetIndexOffset() {
   return *index_offset_;
 }
 
-
 void s21::Figure::AddVSurface(const std::vector<unsigned int> &surface) {
   index_offset_->push_back(surface.size());
   for (size_t i = 0; i < surface.size(); ++i) {
@@ -88,13 +86,13 @@ void s21::Figure::AddVSurface(const std::vector<unsigned int> &surface) {
 }
 
 void s21::Figure::AddTSurface(const std::vector<unsigned int> &surface) {
-for (size_t i = 0; i < surface.size(); ++i) {
+  for (size_t i = 0; i < surface.size(); ++i) {
     t_surfaces_->push_back(surface[i]);
   }
 }
 
 void s21::Figure::AddNSurface(const std::vector<unsigned int> &surface) {
-for (size_t i = 0; i < surface.size(); ++i) {
+  for (size_t i = 0; i < surface.size(); ++i) {
     n_surfaces_->push_back(surface[i]);
   }
 }

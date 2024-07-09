@@ -9,7 +9,7 @@
 
 namespace s21 {
 class Model {
-public:
+ public:
   Model() {
     affine_ = new Affine3D();
     parser_ = new Parser();
@@ -25,18 +25,19 @@ public:
   void ReadFile(const char *file_name);
 
   size_t GetVertexCount();
-  //const std::vector<float> &GetVertex();
+  const std::vector<float> &GetVertex();
 
   size_t GetSurfacesCount();
-  //const std::vector<unsigned int> &GetSurface(size_t n);
+  const std::vector<unsigned int> &GetSurface();
 
-  void SetGLArea(GtkGLArea *area);   // TODO
-  void ConnectData(s21::Data *data); // TODO
-  void SetBuffers();                 // TODO
-  void Draw();                       // TODO
-  void SavePicture(size_t width, size_t height, const char* file_name, const char* type);
+  void SetGLArea(GtkGLArea *area);    // TODO
+  void ConnectData(s21::Data *data);  // TODO
+  void SetBuffers();                  // TODO
+  void Draw();                        // TODO
+  void SavePicture(size_t width, size_t height, const char *file_name,
+                   const char *type);
 
-private:
+ private:
   Affine3D *affine_;
   Parser *parser_;
   OpenGLModel *opengl_model_;
@@ -45,6 +46,6 @@ private:
   Model(Model &&);
   Model &operator=(const Model &);
 };
-} // namespace s21
+}  // namespace s21
 
-#endif // SRC_MODEL_MODEL_H_
+#endif  // SRC_MODEL_MODEL_H_
