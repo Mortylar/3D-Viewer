@@ -3,12 +3,12 @@
 #include <cmath>
 #include <iostream>  //TODO remove
 #include <stdexcept>
-
+/*
 void s21::Affine3D::Translation(float (&v)[16], float dx, float dy, float dz) {
   v[12] = dx;
   v[13] = dy;
   v[14] = dz;
-}
+}*/
 
 s21::Matrix4f s21::Affine3D::GetTranslation(float x, float y, float z) {
   Matrix4f translation;

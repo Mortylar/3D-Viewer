@@ -2,6 +2,7 @@
 #define SRC_VIEW_WIDGET_DATA_DATA_H_
 
 #include <cstring>
+#include <string>
 //#include <algorithm>
 #include <stdexcept>
 #include <initializer_list>
