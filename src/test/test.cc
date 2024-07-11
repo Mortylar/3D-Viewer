@@ -112,6 +112,58 @@ TEST(Matrix4fTest, MoveAssignmentOperator) {
 //TEST(Matrix4fTest, ) {
 //}
 
+
+
+
+
+
+
+
+
+
+TEST(AffineTest, TestTranslation) {
+  s21::Affine3D A;
+	float dx = 1, dy = 2, dz = 3;
+	s21::Matrix4f tar;
+	tar(0,3) = dx;
+	tar(1,3) = dy;
+	tar(2,3) = dz;
+
+	s21::Matrix4f res = A.GetTranslation(dx, dy, dz);
+	CompareMatrix(tar, res);
+}
+
+TEST(AffineTest, TestRotation) {
+  s21::Affine3D A;
+	float dx = 0, dy = 0, dz = 0;
+
+	s21::Matrix4f e;
+	e.SetIdentity();
+
+	s21::Matrix4f res = A.GetRotation(dx, dy,dz);
+
+	CompareMatrix(res, e);
+
+}
+
+
+//TEST(AffineTest, Test) {
+//}
+
+//TEST(AffineTest, Test) {
+//}
+
+/*
+TEST(AffineTest, Test7) {
+  s21::Model A;
+  std::vector<double> v {1, 2, 3};
+  EXPECT_THROW(A.Scaling(v, 0, 1, 2), std::invalid_argument);
+  EXPECT_THROW(A.Scaling(v, -1, 0, 1), std::invalid_argument);
+  EXPECT_THROW(A.Scaling(v, -2, -1, 0), std::invalid_argument);
+}
+*/
+
+/*
 TEST(ParserTest, Test_1) {
   s21::Model A;
   const char* file_name = "files/simple_square";
@@ -167,42 +219,6 @@ TEST(ParserTest, Test5) {
   s21::Model A;
   const char* file_name = "files/no_vertex_file";
   EXPECT_THROW(A.ReadFile(file_name), std::invalid_argument);
-}
-
-/*
-TEST(AffineTest, Test1) {
-  s21::Affine3D A;
-  float mat[16]{0};
-	float dx = 1;
-	float dy = 2;
-	float dz = 3;
-	float res[16] = {0,0,0,0,0,0,0,0,
-	                 0,0,0,0,dx,dy,dz,0};
-
-  A.Translation(mat, dx, dy, dz);
-  Compare(mat, res);
-}
-
-TEST(AffineTest, Test2) {
-  s21::Affine3D A;
-	float mat[16]{};
-
-}
-*/
-
-//TEST(AffineTest, Test) {
-//}
-
-//TEST(AffineTest, Test) {
-//}
-
-/*
-TEST(AffineTest, Test7) {
-  s21::Model A;
-  std::vector<double> v {1, 2, 3};
-  EXPECT_THROW(A.Scaling(v, 0, 1, 2), std::invalid_argument);
-  EXPECT_THROW(A.Scaling(v, -1, 0, 1), std::invalid_argument);
-  EXPECT_THROW(A.Scaling(v, -2, -1, 0), std::invalid_argument);
 }
 */
 

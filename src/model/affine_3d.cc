@@ -85,6 +85,7 @@ s21::Matrix4f s21::Affine3D::GetCentralProjection() {
   return result;
 }
 
+/*
 void s21::Affine3D::Rotation(float (&v)[16], float x_rad, float y_rad,
                              float z_rad) {
   float sinA = sin(x_rad);
@@ -110,8 +111,8 @@ void s21::Affine3D::Rotation(float (&v)[16], float x_rad, float y_rad,
   v[13] = 0.f;
   v[14] = 0.f;
   v[15] = 1.f;
-}
-
+}*/
+/*
 void s21::Affine3D::Scaling(float (&v)[16], float x_scale, float y_scale,
                             float z_scale) {
   CheckScalingNilpotency(x_scale, y_scale, z_scale);
@@ -120,7 +121,7 @@ void s21::Affine3D::Scaling(float (&v)[16], float x_scale, float y_scale,
     v[i + 4] *= y_scale;
     v[i + 8] *= z_scale;
   }
-}
+}*/
 
 void s21::Affine3D::Normalize(std::vector<float> &v) {
   size_t size = v.size();
