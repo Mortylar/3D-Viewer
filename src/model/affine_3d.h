@@ -12,7 +12,7 @@ class Affine3D {
   Affine3D() = default;
   ~Affine3D() = default;
 
-  //void Translation(float (&v)[16], float dx, float dy, float dz);
+  // void Translation(float (&v)[16], float dx, float dy, float dz);
   void Rotation(float (&v)[16], float x_rad, float y_rad, float z_rad);
   void Scaling(float (&v)[16], float x_scale, float y_scale, float z_scale);
   void Normalize(std::vector<float> &v);

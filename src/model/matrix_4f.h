@@ -8,44 +8,17 @@ namespace s21 {
 
 class Matrix4f {
  public:
-  Matrix4f() {
-    Clear();
-    SetInit();
-  }
+  Matrix4f();
 
-  Matrix4f(const Matrix4f& other) {
-    if (this != &other) {
-      std::memcpy(data_, other.data_, size_ * size_ * sizeof(float));
-    } else {
-      Clear();
-      SetInit();
-    }
-  }
+  Matrix4f(const Matrix4f& other);
 
-  Matrix4f(Matrix4f&& other) {
-    if (this != &other) {
-      std::swap(data_, other.data_);
-    } else {
-      Clear();
-      SetInit();
-    }
-  }
+  Matrix4f(Matrix4f&& other);
 
-  Matrix4f& operator=(const Matrix4f& other) {
-    if (this != &other) {
-      std::memcpy(data_, other.data_, size_ * size_ * sizeof(float));
-    }
-    return *this;
-  }
+  Matrix4f& operator=(const Matrix4f& other);
 
-  Matrix4f& operator=(Matrix4f&& other) {
-    if (this != &other) {
-      std::swap(data_, other.data_);
-    }
-    return *this;
-  }
+  Matrix4f& operator=(Matrix4f&& other);
 
-  ~Matrix4f() { Clear(); }
+  ~Matrix4f();
 
   Matrix4f& operator+=(Matrix4f& other);
 

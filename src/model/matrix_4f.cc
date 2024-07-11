@@ -1,5 +1,44 @@
 #include "matrix_4f.h"
 
+s21::Matrix4f::Matrix4f() {
+  Clear();
+  SetInit();
+}
+
+s21::Matrix4f::Matrix4f(const Matrix4f& other) {
+  if (this != &other) {
+    std::memcpy(data_, other.data_, size_ * size_ * sizeof(float));
+  } else {
+    Clear();
+    SetInit();
+  }
+}
+
+s21::Matrix4f::Matrix4f(Matrix4f&& other) {
+  if (this != &other) {
+    std::swap(data_, other.data_);
+  } else {
+    Clear();
+    SetInit();
+  }
+}
+
+s21::Matrix4f& s21::Matrix4f::operator=(const Matrix4f& other) {
+  if (this != &other) {
+    std::memcpy(data_, other.data_, size_ * size_ * sizeof(float));
+  }
+  return *this;
+}
+
+s21::Matrix4f& s21::Matrix4f::operator=(Matrix4f&& other) {
+  if (this != &other) {
+    std::swap(data_, other.data_);
+  }
+  return *this;
+}
+
+s21::Matrix4f::~Matrix4f() { Clear(); }
+
 s21::Matrix4f& s21::Matrix4f::operator+=(Matrix4f& other) {
   for (int i = 0; i < size_; ++i) {
     for (int j = 0; j < size_; ++j) {

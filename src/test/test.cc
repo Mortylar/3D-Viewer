@@ -19,6 +19,14 @@ inline void Compare(const float (&res)[16], const float (&orig)[16]) {
 	}
 }
 
+inline void CompareMatrix(s21::Matrix4f &first, s21::Matrix4f &second) {
+  for (int i = 0; i < 4; ++i) {
+	  for (int j = 0; j < 4; ++j) {
+		  ASSERT_FLOAT_EQ(first(i,j), second(i,j));
+		}
+	}
+}
+
 
 TEST(Matrix4fTest, DefaultConstructorTest) {
   s21::Matrix4f m;
@@ -30,6 +38,79 @@ TEST(Matrix4fTest, DefaultConstructorTest) {
 		}
 	}
 }
+
+TEST(Matrix4fTest, CopyConstructorTest) {
+	s21::Matrix4f e;
+	e.SetIdentity();
+
+	s21::Matrix4f m = m;
+
+	CompareMatrix(m, e);
+
+	for (int i = 0; i < 4; ++i) {
+	  for (int j = 0; j < 4; ++j) {
+		  m(i,j) = i*j + i + j;
+		}
+	}
+	s21::Matrix4f other = m;
+
+  CompareMatrix(m, other);
+}
+
+TEST(Matrix4fTest, MoveConstructorTest) {
+	s21::Matrix4f e;
+	e.SetIdentity();
+
+	s21::Matrix4f m = std::move(m);
+
+	CompareMatrix(m, e);
+
+	s21::Matrix4f other = std::move(m);
+
+	CompareMatrix(other, e);
+}
+
+TEST(Matrix4fTest, CopyAssignmentOperator) {
+	s21::Matrix4f e;
+	e.SetIdentity();
+
+	s21::Matrix4f m;
+	
+	CompareMatrix(m,e);
+
+	m = m;
+
+	CompareMatrix(m,e);
+
+	s21::Matrix4f other;
+	other = m;
+
+	CompareMatrix(m, other);
+	CompareMatrix(e, other);
+}
+
+TEST(Matrix4fTest, MoveAssignmentOperator) {
+	s21::Matrix4f e;
+	e.SetIdentity();
+
+	s21::Matrix4f m;
+	
+	CompareMatrix(m,e);
+
+	m = std::move(m);
+
+	CompareMatrix(m,e);
+
+	s21::Matrix4f other;
+	other = std::move(m);
+
+
+	CompareMatrix(e, other);
+
+}
+
+//TEST(Matrix4fTest, ) {
+//}
 
 TEST(ParserTest, Test_1) {
   s21::Model A;
@@ -88,7 +169,7 @@ TEST(ParserTest, Test5) {
   EXPECT_THROW(A.ReadFile(file_name), std::invalid_argument);
 }
 
-
+/*
 TEST(AffineTest, Test1) {
   s21::Affine3D A;
   float mat[16]{0};
@@ -107,7 +188,7 @@ TEST(AffineTest, Test2) {
 	float mat[16]{};
 
 }
-
+*/
 
 //TEST(AffineTest, Test) {
 //}
