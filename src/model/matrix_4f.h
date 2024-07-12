@@ -11,35 +11,25 @@ class Matrix4f {
   Matrix4f();
 
   Matrix4f(const Matrix4f& other);
-
   Matrix4f(Matrix4f&& other);
 
   Matrix4f& operator=(const Matrix4f& other);
-
   Matrix4f& operator=(Matrix4f&& other);
 
   ~Matrix4f();
 
   Matrix4f& operator+=(Matrix4f& other);
-
   Matrix4f& operator-=(Matrix4f& other);
-
   Matrix4f operator+(Matrix4f& other);
-
   Matrix4f operator-(Matrix4f& other);
-
   Matrix4f& operator*=(Matrix4f& other);
-
   Matrix4f operator*(Matrix4f& other);
-
   Matrix4f& operator*(float x);
-
   Matrix4f& operator*=(Matrix4f other);
 
   float& operator()(int i, int j);
 
   Matrix4f& SetIdentity();
-
   Matrix4f& SetZero();
 
  private:
@@ -47,7 +37,6 @@ class Matrix4f {
   float data_[size_][size_];
 
   void Clear();
-
   void SetInit();
 };
 }  // namespace s21

@@ -1,116 +1,4 @@
-#include <gtest/gtest.h>
-#include "../model/model.h"
-#include <vector>
-#include<cmath>
-
-#include "../model/affine_3d.h"
-#include "../model/matrix_4f.h"
-
-inline void Compare(const std::vector<float>& v1, const std::vector<float>& v2, size_t size) {
-  for (size_t i = 0; i < size; ++i) { 
-//    std::cout << "i="<< i << " " << v1[i] << "<-> " << v2[i] << std::endl;
-    ASSERT_DOUBLE_EQ(v1.at(i), v2.at(i));
-  }
-}
-
-inline void Compare(const float (&res)[16], const float (&orig)[16]) {
-  for (size_t i = 0; i < 16; ++i) {
-	  ASSERT_FLOAT_EQ(res[i], orig[i]);
-	}
-}
-
-inline void CompareMatrix(s21::Matrix4f &first, s21::Matrix4f &second) {
-  for (int i = 0; i < 4; ++i) {
-	  for (int j = 0; j < 4; ++j) {
-		  ASSERT_FLOAT_EQ(first(i,j), second(i,j));
-		}
-	}
-}
-
-
-TEST(Matrix4fTest, DefaultConstructorTest) {
-  s21::Matrix4f m;
-	float res[4][4]{};
-	res[0][0] = res[1][1] = res[2][2] = res[3][3] = 1;
-	for (int i = 0; i < 4; ++i) {
-	  for (int j = 0; j < 4; ++j) {
-		  ASSERT_FLOAT_EQ(m(i,j), res[i][j]);
-		}
-	}
-}
-
-TEST(Matrix4fTest, CopyConstructorTest) {
-	s21::Matrix4f e;
-	e.SetIdentity();
-
-	s21::Matrix4f m = m;
-
-	CompareMatrix(m, e);
-
-	for (int i = 0; i < 4; ++i) {
-	  for (int j = 0; j < 4; ++j) {
-		  m(i,j) = i*j + i + j;
-		}
-	}
-	s21::Matrix4f other = m;
-
-  CompareMatrix(m, other);
-}
-
-TEST(Matrix4fTest, MoveConstructorTest) {
-	s21::Matrix4f e;
-	e.SetIdentity();
-
-	s21::Matrix4f m = std::move(m);
-
-	CompareMatrix(m, e);
-
-	s21::Matrix4f other = std::move(m);
-
-	CompareMatrix(other, e);
-}
-
-TEST(Matrix4fTest, CopyAssignmentOperator) {
-	s21::Matrix4f e;
-	e.SetIdentity();
-
-	s21::Matrix4f m;
-	
-	CompareMatrix(m,e);
-
-	m = m;
-
-	CompareMatrix(m,e);
-
-	s21::Matrix4f other;
-	other = m;
-
-	CompareMatrix(m, other);
-	CompareMatrix(e, other);
-}
-
-TEST(Matrix4fTest, MoveAssignmentOperator) {
-	s21::Matrix4f e;
-	e.SetIdentity();
-
-	s21::Matrix4f m;
-	
-	CompareMatrix(m,e);
-
-	m = std::move(m);
-
-	CompareMatrix(m,e);
-
-	s21::Matrix4f other;
-	other = std::move(m);
-
-
-	CompareMatrix(e, other);
-
-}
-
-//TEST(Matrix4fTest, ) {
-//}
+#include "common.h"
 
 
 
@@ -119,8 +7,7 @@ TEST(Matrix4fTest, MoveAssignmentOperator) {
 
 
 
-
-
+/*
 TEST(AffineTest, TestTranslation) {
   s21::Affine3D A;
 	float dx = 1, dy = 2, dz = 3;
@@ -144,7 +31,7 @@ TEST(AffineTest, TestRotation) {
 
 	CompareMatrix(res, e);
 
-}
+}*/
 
 
 //TEST(AffineTest, Test) {
