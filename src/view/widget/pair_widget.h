@@ -1,20 +1,20 @@
 #ifndef SRC_VIEW_PAIR_WIDGET_H_
 #define SRC_VIEW_PAIR_WIDGET_H_
 
-#include "widget.h"
-
 #include <gtk/gtk.h>
+
+#include "widget.h"
 
 namespace s21 {
 class PairWidget : public Widget {
-public:
+ public:
   PairWidget() { InitGrid(); };
 
   ~PairWidget(){};
 
   virtual GtkWidget *GetGrid() { return grid_; }
 
-private:
+ private:
   GtkWidget *grid_;
 
   void InitGrid() {
@@ -26,7 +26,7 @@ private:
 };
 
 class LabelPair : public PairWidget {
-public:
+ public:
   LabelPair() { InitLabels(); };
 
   ~LabelPair() {
@@ -34,7 +34,7 @@ public:
     delete second_;
   };
 
-  void SetName(const char *name) override { // TODO override
+  void SetName(const char *name) override {  // TODO override
     first_->SetName(name);
   }
 
@@ -58,7 +58,7 @@ public:
     g_print("\nWarning: s21::LabelPair::SendSignal() has no implementation!\n");
   }
 
-private:
+ private:
   Label *first_ = nullptr;
   Label *second_ = nullptr;
 
@@ -71,7 +71,7 @@ private:
 };
 
 class LabelDSpinButtonPair : public PairWidget {
-public:
+ public:
   LabelDSpinButtonPair(const char *name = "") {
     InitLabel(name);
     InitDSpinButton();
@@ -87,15 +87,13 @@ public:
     delete second_;
   };
 
-  void SetName(const char *name) override { // TODO override
+  void SetName(const char *name) override {  // TODO override
     first_->SetName(name);
   }
 
   const char *GetName() { return first_->GetValue(); }
 
-  void SetValue(const float value) {
-    second_->SetValue(value);
-  }
+  void SetValue(const float value) { second_->SetValue(value); }
 
   float GetValue() { return second_->GetValue(); }
 
@@ -106,14 +104,13 @@ public:
     second_->SetMother(mother);
   }
 
-  void CatchSignal() override {
-  }
+  void CatchSignal() override {}
 
   void SendSignal() override {
-    //if (mother_) mother_->CatchSignal();
+    // if (mother_) mother_->CatchSignal();
   }
 
-private:
+ private:
   Label *first_ = nullptr;
   DSpinButton *second_ = nullptr;
 
@@ -134,7 +131,7 @@ private:
 };
 
 class LabelDSliderPair : public PairWidget {
-public:
+ public:
   LabelDSliderPair() {
     InitLabel();
     InitSlider();
@@ -150,7 +147,7 @@ public:
     delete second_;
   }
 
-  void SetName(const char *name) override { // TODO override
+  void SetName(const char *name) override {  // TODO override
     first_->SetName(name);
   }
 
@@ -168,16 +165,18 @@ public:
   }
 
   void CatchSignal() override {
-    g_print("\nWarning: s21::LabelDSliderPair::CatchSignal() has no "
-            "implementation!\n");
+    g_print(
+        "\nWarning: s21::LabelDSliderPair::CatchSignal() has no "
+        "implementation!\n");
   }
 
   void SendSignal() override {
-    g_print("\nWarning: s21::LabelDSliderPair::SendSignal() has no "
-            "implementation!\n");
+    g_print(
+        "\nWarning: s21::LabelDSliderPair::SendSignal() has no "
+        "implementation!\n");
   }
 
-private:
+ private:
   Label *first_ = nullptr;
   DSlider *second_ = nullptr;
 
@@ -200,7 +199,7 @@ private:
 };
 
 class LabelColorButtonPair : public PairWidget {
-public:
+ public:
   LabelColorButtonPair() {
     InitLabel();
     InitColorButton();
@@ -226,12 +225,12 @@ public:
     second_->SetMother(mother);
   }
 
-  void SendSignal() override {}  // TODO
-  void CatchSignal() override {} // TODO
+  void SendSignal() override {}   // TODO
+  void CatchSignal() override {}  // TODO
 
   GdkRGBA GetColor() { return *(second_->GetColor()); }
 
-private:
+ private:
   Label *first_ = nullptr;
   ColorButton *second_ = nullptr;
 
@@ -249,7 +248,7 @@ private:
 };
 
 class LabelDropDownButtonPair : public PairWidget {
-public:
+ public:
   LabelDropDownButtonPair(const char *name = "",
                           const char *const *strings = nullptr) {
     InitLabel(name);
@@ -283,7 +282,7 @@ public:
   void CatchSignal() override{};
   void SendSignal() override{};
 
-private:
+ private:
   Label *first_ = nullptr;
   DropDownButton *second_ = nullptr;
 
@@ -307,55 +306,50 @@ private:
   }
 };
 
-class FileSaverDropDownButtonPair: public PairWidget {
-public:
-  FileSaverDropDownButtonPair(const char* const* strings) {
+class FileSaverDropDownButtonPair : public PairWidget {
+ public:
+  FileSaverDropDownButtonPair(const char *const *strings) {
     InitFileSaver();
-		InitDropDownButton(strings);
+    InitDropDownButton(strings);
   }
 
   ~FileSaverDropDownButtonPair() {
     delete file_;
-		delete drop_down_;
+    delete drop_down_;
   }
 
-  void SetName(const char* name) override { s21::Widget::SetName(name); }
-	const char* GetName() override { return s21::Widget::GetName(); }
+  void SetName(const char *name) override { s21::Widget::SetName(name); }
+  const char *GetName() override { return s21::Widget::GetName(); }
 
-	const char* GetFileName() {
-		return file_->GetValue();
-	}
+  const char *GetFileName() { return file_->GetValue(); }
 
-	int GetExtension() {
-		return drop_down_->GetValue();
-	} //TODO
+  int GetExtension() { return drop_down_->GetValue(); }  // TODO
 
-  void SetMother(s21::Widget* mother) override {
-	  file_->SetMother(mother);
+  void SetMother(s21::Widget *mother) override {
+    file_->SetMother(mother);
     drop_down_->SetMother(mother);
-	}
+  }
 
-	void CatchSignal() override{};
-	void SendSignal() override{};
+  void CatchSignal() override{};
+  void SendSignal() override{};
 
-private:
-  FileSaver* file_ = nullptr;
-	DropDownButton* drop_down_ = nullptr;
+ private:
+  FileSaver *file_ = nullptr;
+  DropDownButton *drop_down_ = nullptr;
 
   void InitFileSaver() {
-	  file_ = new s21::FileSaver();
-		gtk_grid_attach(GTK_GRID(GetGrid()), file_->GetRoot(), 0, 0, 1, 1);
-	}
+    file_ = new s21::FileSaver();
+    gtk_grid_attach(GTK_GRID(GetGrid()), file_->GetRoot(), 0, 0, 1, 1);
+  }
 
-	void InitDropDownButton(const char* const* strings) {
-	  drop_down_ = new s21::DropDownButton(strings);
-		gtk_grid_attach(GTK_GRID(GetGrid()), drop_down_->GetRoot(), 1, 0, 1, 1);
-	}
-
+  void InitDropDownButton(const char *const *strings) {
+    drop_down_ = new s21::DropDownButton(strings);
+    gtk_grid_attach(GTK_GRID(GetGrid()), drop_down_->GetRoot(), 1, 0, 1, 1);
+  }
 };
 
 class FileSaverDSpinButtonPair : public PairWidget {
-public:
+ public:
   FileSaverDSpinButtonPair() {
     InitFileSaver();
     InitDSpinButton();
@@ -371,15 +365,11 @@ public:
     delete second_;
   };
 
-  void SetName(const char *name) override {
-    s21::Widget::SetName(name);
-  }
+  void SetName(const char *name) override { s21::Widget::SetName(name); }
 
   const char *GetName() override { return s21::Widget::GetName(); }
 
-  void SetValue(const float value) {
-    second_->SetValue(value);
-  }
+  void SetValue(const float value) { second_->SetValue(value); }
 
   float GetValue() { return second_->GetValue(); }
 
@@ -390,18 +380,15 @@ public:
     second_->SetMother(mother);
   }
 
-  void CatchSignal() override {
-  }
+  void CatchSignal() override {}
 
   void SendSignal() override {
-    //if (mother_) mother_->CatchSignal();
+    // if (mother_) mother_->CatchSignal();
   }
 
-	const char* GetFileName() {
-	  return first_->GetFileName();
-	}
+  const char *GetFileName() { return first_->GetFileName(); }
 
-private:
+ private:
   FileSaver *first_ = nullptr;
   DSpinButton *second_ = nullptr;
 
@@ -421,9 +408,6 @@ private:
   }
 };
 
-
-
-
-} // namespace s21
+}  // namespace s21
 
 #endif

@@ -7,14 +7,14 @@
 
 namespace s21 {
 class Factory {
-public:
+ public:
   Factory(){};
   ~Factory(){};
   virtual s21::Widget *CreateWidget() = 0;
 };
 
 class TranslationPannelFactory : public Factory {
-public:
+ public:
   TranslationPannelFactory(){};
   ~TranslationPannelFactory(){};
 
@@ -28,14 +28,14 @@ public:
     return translation_pannel;
   }
 
-private:
+ private:
   GtkAdjustment *GetAdjustment() {
     return gtk_adjustment_new(0.0, -5.0, 5.0, 0.01, 0, 0);
   }
 };
 
 class RotationPannelFactory : public Factory {
-public:
+ public:
   RotationPannelFactory(){};
   ~RotationPannelFactory(){};
 
@@ -49,14 +49,14 @@ public:
     return rotation_pannel;
   }
 
-private:
+ private:
   GtkAdjustment *GetAdjustment() {
     return gtk_adjustment_new(0.0, -1 * G_PI, 1 * G_PI, 0.05, 0, 0);
   }
 };
 
 class ScalingPannelFactory : public Factory {
-public:
+ public:
   ScalingPannelFactory(){};
   ~ScalingPannelFactory(){};
 
@@ -70,14 +70,14 @@ public:
     return scaling_pannel;
   }
 
-private:
+ private:
   GtkAdjustment *GetAdjustment() {
     return gtk_adjustment_new(0.0, -0.9999999999, 0.999999999999, 0.001, 0, 0);
   }
 };
 
 class FileNamePannelFactory : public Factory {
-public:
+ public:
   FileNamePannelFactory(){};
   ~FileNamePannelFactory(){};
 
@@ -90,7 +90,7 @@ public:
 };
 
 class VertexInfoPannelFactory : public Factory {
-public:
+ public:
   VertexInfoPannelFactory(){};
   ~VertexInfoPannelFactory(){};
 
@@ -103,7 +103,7 @@ public:
 };
 
 class EdgesInfoPannelFactory : public Factory {
-public:
+ public:
   EdgesInfoPannelFactory(){};
   ~EdgesInfoPannelFactory(){};
 
@@ -116,7 +116,7 @@ public:
 };
 
 class LineTypeFactory : public Factory {
-public:
+ public:
   LineTypeFactory(){};
   ~LineTypeFactory(){};
 
@@ -130,7 +130,7 @@ public:
 };
 
 class LineColorFactory : public Factory {
-public:
+ public:
   LineColorFactory(){};
   ~LineColorFactory(){};
 
@@ -143,7 +143,7 @@ public:
 };
 
 class LineSizeFactory : public Factory {
-public:
+ public:
   LineSizeFactory(){};
   ~LineSizeFactory(){};
 
@@ -158,13 +158,14 @@ public:
 };
 
 class PointTypeFactory : public Factory {
-public:
+ public:
   PointTypeFactory(){};
   ~PointTypeFactory(){};
 
   s21::Widget *CreateWidget() override {
     const char *name = "Point Type";
-    const char *types[5] = {"NO_POINT", "ROUND_POINT", "TRIANGLE_POINT", "SQUARE_POINT", nullptr};
+    const char *types[5] = {"NO_POINT", "ROUND_POINT", "TRIANGLE_POINT",
+                            "SQUARE_POINT", nullptr};
     s21::LabelDropDownButtonPair *point_type =
         new s21::LabelDropDownButtonPair(name, types);
     return point_type;
@@ -172,7 +173,7 @@ public:
 };
 
 class PointColorFactory : public Factory {
-public:
+ public:
   PointColorFactory(){};
   ~PointColorFactory(){};
 
@@ -185,7 +186,7 @@ public:
 };
 
 class PointSizeFactory : public Factory {
-public:
+ public:
   PointSizeFactory(){};
   ~PointSizeFactory(){};
 
@@ -200,37 +201,38 @@ public:
 };
 
 class CapturePannelFactory : public Factory {
-public:
+ public:
   CapturePannelFactory(){};
-	~CapturePannelFactory(){};
+  ~CapturePannelFactory(){};
 
-	s21::Widget* CreateWidget() {
-		const char* name = "Capture Pannel";
-	  const char* extensions[4] = {"PNG", "JPG", "BMP", nullptr};
-		s21::FileSaverDropDownButtonPair* capture_pannel = 
-		  new s21::FileSaverDropDownButtonPair(extensions);
+  s21::Widget *CreateWidget() {
+    const char *name = "Capture Pannel";
+    const char *extensions[4] = {"PNG", "JPG", "BMP", nullptr};
+    s21::FileSaverDropDownButtonPair *capture_pannel =
+        new s21::FileSaverDropDownButtonPair(extensions);
     capture_pannel->SetName(name);
-		return capture_pannel;
-	}
+    return capture_pannel;
+  }
 };
 
 class GifPannelFactory : public Factory {
-public:
-  GifPannelFactory() {};
-	~GifPannelFactory() {};
+ public:
+  GifPannelFactory(){};
+  ~GifPannelFactory(){};
 
-	s21::Widget* CreateWidget() {
-	  const char* name = "Gif Pannel";
-		GtkAdjustment* adjustment = gtk_adjustment_new(0.0, 0.0, 60.0, 1.0, 0.0, 0.0);
-		s21::FileSaverDSpinButtonPair* gif_pannel = new s21::FileSaverDSpinButtonPair(adjustment);
-		gif_pannel->SetName("Gif Pannel");
-		return gif_pannel;
-	}
+  s21::Widget *CreateWidget() {
+    const char *name = "Gif Pannel";
+    GtkAdjustment *adjustment =
+        gtk_adjustment_new(0.0, 0.0, 60.0, 1.0, 0.0, 0.0);
+    s21::FileSaverDSpinButtonPair *gif_pannel =
+        new s21::FileSaverDSpinButtonPair(adjustment);
+    gif_pannel->SetName("Gif Pannel");
+    return gif_pannel;
+  }
 };
 
-
 class AreaColorFactory : public Factory {
-public:
+ public:
   AreaColorFactory(){};
   ~AreaColorFactory(){};
 
@@ -242,6 +244,6 @@ public:
   }
 };
 
-} // namespace s21
+}  // namespace s21
 
 #endif

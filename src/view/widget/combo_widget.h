@@ -10,7 +10,7 @@
 
 namespace s21 {
 class AffinePannel : public Widget {
-public:
+ public:
   AffinePannel(s21::AffineData *data) : data_(data) {
     InitGrid();
     s21::Widget::SetName("_AFFINE_PANNEL_");
@@ -41,17 +41,16 @@ public:
 
   void SetMother(s21::Widget *mother) override { mother_ = mother; }
 
-  void CatchSignal() override { // TODO
+  void CatchSignal() override {  // TODO
     CollectData();
-    if (mother_)
-      SendSignal();
+    if (mother_) SendSignal();
   }
 
   void SendSignal() override { mother_->CatchSignal(); }
 
   s21::AffineData *GetData() { return data_; }
 
-private:
+ private:
   GtkWidget *grid_ = nullptr;
   s21::Widget *mother_ = nullptr;
   s21::DSliderPannel *translation_pannel_ = nullptr;
@@ -184,9 +183,9 @@ enum class LineType {
 };
 
 class LinePannel : public Widget {
-public:
+ public:
   LinePannel(s21::FormatData *data)
-      : data_(data) { // connect with exterdal data
+      : data_(data) {  // connect with exterdal data
     InitGrid();
     s21::Widget::SetName("_LINE_PANNEL_");
   }
@@ -211,8 +210,7 @@ public:
   }
 
   void SendSignal() override {
-    if (mother_)
-      mother_->CatchSignal();
+    if (mother_) mother_->CatchSignal();
   }
 
   void Update() {
@@ -221,7 +219,7 @@ public:
     data_->SetSize(size_->GetValue());
   }
 
-private:
+ private:
   GtkWidget *grid_ = nullptr;
   s21::Widget *mother_ = nullptr;
   s21::LabelDropDownButtonPair *type_ = nullptr;
@@ -270,7 +268,7 @@ enum class PointType {
 };
 
 class PointPannel : public Widget {
-public:
+ public:
   PointPannel(s21::FormatData *data) : data_(data) {
     InitGrid();
     s21::Widget::SetName("_POINT_PANNEL_");
@@ -296,8 +294,7 @@ public:
   }
 
   void SendSignal() override {
-    if (mother_)
-      mother_->CatchSignal();
+    if (mother_) mother_->CatchSignal();
   }
 
   void Update() {
@@ -306,7 +303,7 @@ public:
     data_->SetSize(size_->GetValue());
   }
 
-private:
+ private:
   GtkWidget *grid_ = nullptr;
   s21::Widget *mother_ = nullptr;
   s21::LabelDropDownButtonPair *type_ = nullptr;
@@ -347,7 +344,7 @@ private:
 };
 
 class InfoPannel : public Widget {
-public:
+ public:
   InfoPannel() {
     InitGrid();
     s21::Widget::SetName("_INFORMATION_PANNEL_");
@@ -366,8 +363,7 @@ public:
   void CatchSignal() override { SendSignal(); }
 
   void SendSignal() override {
-    if (mother_)
-      mother_->CatchSignal();
+    if (mother_) mother_->CatchSignal();
   }
 
   void SetFileName(const char *file_name) { file_name_->SetValue(file_name); }
@@ -377,10 +373,10 @@ public:
   }
 
   void SetEdgesCount(size_t edges_count) {
-    edges_count_->SetValue(std::to_string(edges_count).data()); //TODO
+    edges_count_->SetValue(std::to_string(edges_count).data());  // TODO
   }
 
-private:
+ private:
   GtkWidget *grid_ = nullptr;
   s21::Widget *mother_ = nullptr;
   s21::LabelPair *file_name_ = nullptr;
@@ -417,7 +413,7 @@ private:
 };
 
 class MediaPannel : public Widget {
-public:
+ public:
   MediaPannel(GtkWidget *window, s21::Controller *controller)
       : main_window_(window), controller_(controller) {
     // InitWindow();
@@ -441,7 +437,7 @@ public:
   void SendSignal() override{};
   // gtk_window_get_application(GTK_WINDOW(window_));
 
-private:
+ private:
   GtkApplication *app_ = nullptr;
   GtkWidget *main_window_ = nullptr;
   s21::Controller *controller_ = nullptr;
@@ -455,7 +451,7 @@ private:
 
   void InitWindow() {
     app_ = gtk_window_get_application(GTK_WINDOW(main_window_));
-    window_ = gtk_window_new(); // gtk_application_window_new(app_);
+    window_ = gtk_window_new();  // gtk_application_window_new(app_);
     gtk_window_set_modal(GTK_WINDOW(window_), true);
     gtk_window_set_title(GTK_WINDOW(window_), "_MEDIA_");
     gtk_window_set_child(GTK_WINDOW(window_), GTK_WIDGET(GetRoot()));
@@ -519,7 +515,7 @@ private:
 };
 
 class ProjectionPannel : public Widget {
-public:
+ public:
   ProjectionPannel() {
     InitGrid();
     CreateDropDownButtonPannel();
@@ -539,13 +535,12 @@ public:
   void CatchSignal() override { SendSignal(); }
 
   void SendSignal() override {
-    if (mother_)
-      mother_->CatchSignal();
+    if (mother_) mother_->CatchSignal();
   }
 
   int GetValue() { return projection_->GetValue(); }
 
-private:
+ private:
   GtkWidget *grid_ = nullptr;
   s21::Widget *mother_ = nullptr;
   s21::LabelDropDownButtonPair *projection_ = nullptr;
@@ -566,21 +561,16 @@ private:
   }
 };
 
-
 class AreaColorPannel : public Widget {
-public:
+ public:
   AreaColorPannel(s21::Data *data) : data_(data) {
     InitGrid();
     s21::Widget::SetName("_AREA_PANNEL_");
   }
 
-  ~AreaColorPannel() {
-    delete color_;
-  }
+  ~AreaColorPannel() { delete color_; }
 
-  void BuildWidget() {
-    CreateColorPannel();
-  }
+  void BuildWidget() { CreateColorPannel(); }
 
   void SetMother(s21::Widget *mother) override { mother_ = mother; }
 
@@ -590,15 +580,12 @@ public:
   }
 
   void SendSignal() override {
-    if (mother_)
-      mother_->CatchSignal();
+    if (mother_) mother_->CatchSignal();
   }
 
-  void Update() {
-    data_->SetAreaColor(color_->GetColor());
-  }
+  void Update() { data_->SetAreaColor(color_->GetColor()); }
 
-private:
+ private:
   GtkWidget *grid_ = nullptr;
   s21::Widget *mother_ = nullptr;
   s21::LabelColorButtonPair *color_ = nullptr;
@@ -620,8 +607,6 @@ private:
   }
 };
 
-
-
-} // namespace s21
+}  // namespace s21
 
 #endif

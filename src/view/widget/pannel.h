@@ -3,13 +3,14 @@
 
 #include <gtk/gtk.h>
 
+#include <vector>
+
 #include "pair_widget.h"
 #include "widget.h"
-#include <vector>
 
 namespace s21 {
 class LabelPannel : public PairWidget {
-public:
+ public:
   LabelPannel() : size_(1) { InitPannel(); }
 
   LabelPannel(size_t size) : size_(size) { InitPannel(); }
@@ -38,7 +39,7 @@ public:
     pair_[pos]->SetName(name);
   }
 
-  void SetName(const char *name) override { // TODO override
+  void SetName(const char *name) override {  // TODO override
     s21::Widget::SetName(name);
   }
 
@@ -58,7 +59,7 @@ public:
         "\nWarning: s21::LabelPannel::SendSignal() has no implementation!\n");
   }
 
-private:
+ private:
   std::vector<LabelPair *> pair_;
   size_t size_;
 
@@ -71,7 +72,7 @@ private:
 };
 
 class DSpinButtonPannel : public PairWidget {
-public:
+ public:
   DSpinButtonPannel() : size_(1) { InitPannel(); }
 
   DSpinButtonPannel(size_t size) : size_(size) { InitPannel(); }
@@ -114,7 +115,7 @@ public:
 
   void SetName(size_t pos, const char *name) { pair_[pos]->SetName(name); }
 
-  void SetName(const char *name) override { // TODO override
+  void SetName(const char *name) override {  // TODO override
     s21::Widget::SetName(name);
   }
 
@@ -125,16 +126,18 @@ public:
   }
 
   void CatchSignal() override {
-    g_print("\nWarning: s21::DSpinButtonPannel::CatchSignal() has no "
-            "implementation!\n");
+    g_print(
+        "\nWarning: s21::DSpinButtonPannel::CatchSignal() has no "
+        "implementation!\n");
   }
 
   void SendSignal() override {
-    g_print("\nWarning: s21::DSpinButtonPannel::SendSignal() has no "
-            "implementation!\n");
+    g_print(
+        "\nWarning: s21::DSpinButtonPannel::SendSignal() has no "
+        "implementation!\n");
   }
 
-private:
+ private:
   std::vector<LabelDSpinButtonPair *> pair_;
   std::vector<float *> data_;
   size_t size_;
@@ -149,7 +152,7 @@ private:
 };
 
 class DSliderPannel : public PairWidget {
-public:
+ public:
   DSliderPannel() : size_(1) { InitPannel(); }
 
   DSliderPannel(size_t n) : size_(n) { InitPannel(); }
@@ -205,8 +208,9 @@ public:
   }
 
   void CatchSignal() override {
-    g_print("\nWarning: s21::DSliderPannel::CatchSignal() has no "
-            "implementation!\n");
+    g_print(
+        "\nWarning: s21::DSliderPannel::CatchSignal() has no "
+        "implementation!\n");
   }
 
   void SendSignal() override {
@@ -214,7 +218,7 @@ public:
         "\nWarning: s21::DSliderPannel::SendSignal() has no implementation!\n");
   }
 
-private:
+ private:
   std::vector<LabelDSliderPair *> pair_;
   std::vector<float *> data_;
   size_t size_;
@@ -228,5 +232,5 @@ private:
   }
 };
 
-} // namespace s21
+}  // namespace s21
 #endif

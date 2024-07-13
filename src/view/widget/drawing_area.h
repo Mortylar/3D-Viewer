@@ -1,32 +1,30 @@
 #ifndef SRC_VIEW_WIDGET_DRAWING_AREA_H_
 #define SRC_VIEW_WIDGET_DRAWING_AREA_H_
 
+#include <epoxy/gl.h>
 #include <gtk/gtk.h>
 
 #include "../../controller/controller.h"
 #include "../../libs/data.h"
 #include "widget.h"
-#include <epoxy/gl.h>
 
 namespace s21 {
 class DrawingArea : public Widget {
-public:
+ public:
   DrawingArea(s21::Data *data, s21::Controller *controller)
       : data_(data), controller_(controller) {
     InitArea();
   }
 
-  ~DrawingArea() {
-  };
+  ~DrawingArea(){};
 
   void SetMother(s21::Widget *mother) override { mother_ = mother; }
 
-  void CatchSignal() override { gtk_widget_queue_draw(area_); } // TODO
+  void CatchSignal() override { gtk_widget_queue_draw(area_); }  // TODO
 
   void SendSignal() override {
-    if (mother_)
-      mother_->CatchSignal();
-  } // TODO
+    if (mother_) mother_->CatchSignal();
+  }  // TODO
 
   void SetBuffer() {
     gtk_gl_area_make_current(GTK_GL_AREA(area_));
@@ -39,16 +37,14 @@ public:
   }
 
   static void Render(GtkWidget *area, GdkGLContext *context,
-                     s21::DrawingArea *self) { // TODO private
+                     s21::DrawingArea *self) {  // TODO private
     gtk_gl_area_make_current(GTK_GL_AREA(self->area_));
-    self->controller_->Draw(); // TODO
+    self->controller_->Draw();  // TODO
   }
 
-  GtkWidget* GetArea() {
-    return area_;
-  }
+  GtkWidget *GetArea() { return area_; }
 
-private:
+ private:
   GtkWidget *area_ = nullptr;
   GdkGLContext *context_ = nullptr;
   s21::Widget *mother_ = nullptr;
@@ -67,6 +63,6 @@ private:
     controller_->ConnectData(data_);
   }
 };
-} // namespace s21
+}  // namespace s21
 
 #endif

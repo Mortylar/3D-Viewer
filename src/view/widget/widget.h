@@ -5,20 +5,20 @@
 
 namespace s21 {
 class Widget {
-public:
+ public:
   Widget() { frame_ = gtk_frame_new(nullptr); }
 
   virtual ~Widget(){};
 
-  virtual GtkWidget *GetFrame() { // TODO virtual
+  virtual GtkWidget *GetFrame() {  // TODO virtual
     return frame_;
   }
 
-  virtual GtkWidget *GetRoot() { // TODO virtual
+  virtual GtkWidget *GetRoot() {  // TODO virtual
     return frame_;
   }
 
-  virtual void SetName(const char *name) { // TODO virual
+  virtual void SetName(const char *name) {  // TODO virual
     gtk_frame_set_label(GTK_FRAME(frame_), name);
     gtk_frame_set_label_align(GTK_FRAME(frame_), 0.5);
   }
@@ -32,12 +32,12 @@ public:
   // void CatchSignal(void* message);
   virtual void SendSignal() = 0;
 
-private:
+ private:
   GtkWidget *frame_ = nullptr;
 };
 
 class Label : public Widget {
-public:
+ public:
   Label() { InitLabel(); }
 
   Label(const char *text) {
@@ -47,7 +47,7 @@ public:
 
   ~Label(){};
 
-  void SetName(const char *name) override { // TODO override
+  void SetName(const char *name) override {  // TODO override
     gtk_label_set_text(GTK_LABEL(label_), name);
   }
 
@@ -65,7 +65,7 @@ public:
     g_print("\nWarning: s21::Label::CatchSignal() has no implementation!\n");
   }
 
-private:
+ private:
   GtkWidget *label_ = nullptr;
   s21::Widget *mother_ = nullptr;
   // TODO value_;
@@ -77,7 +77,7 @@ private:
 };
 
 class DSpinButton : public Widget {
-public:
+ public:
   DSpinButton() {
     adjustment_ = gtk_adjustment_new(0.0, -1e100, 1e100, 1, 0, 0);
     InitSpinButton();
@@ -100,8 +100,7 @@ public:
   void SetMother(s21::Widget *mother) override { mother_ = mother; }
 
   void SendSignal() override {
-    if (mother_)
-      mother_->CatchSignal();
+    if (mother_) mother_->CatchSignal();
   }
 
   void CatchSignal() override {
@@ -109,7 +108,7 @@ public:
         "\nWarning: s21::DSpinButton::CatchSignal() has no implementation!\n");
   }
 
-private:
+ private:
   GtkWidget *spin_button_ = nullptr;
   GtkAdjustment *adjustment_ = nullptr;
   s21::Widget *mother_ = nullptr;
@@ -132,7 +131,7 @@ private:
 };
 
 class DSlider : public Widget {
-public:
+ public:
   DSlider() {
     adjustment_ = gtk_adjustment_new(0.0, -100.0, 100.0, 1, 12, 0);
     InitSlider();
@@ -151,15 +150,14 @@ public:
   void SetMother(s21::Widget *mother) override { mother_ = mother; }
 
   void SendSignal() override {
-    if (mother_)
-      mother_->CatchSignal();
+    if (mother_) mother_->CatchSignal();
   }
 
   void CatchSignal() override {
     g_print("\nWarning: s21::DSlider::CatchSignal() has no implementation!\n");
   }
 
-private:
+ private:
   GtkWidget *scale_button_ = nullptr;
   GtkAdjustment *adjustment_ = nullptr;
   s21::Widget *mother_ = nullptr;
@@ -183,7 +181,7 @@ private:
 #ifndef GTK_TYPE_FILE_DIALOG
 
 class FileChooser : public Widget {
-public:
+ public:
   FileChooser() { InitButton(); }
 
   FileChooser(const char *name) { InitButton(name); }
@@ -193,8 +191,7 @@ public:
   void SetMother(s21::Widget *mother) override { mother_ = mother; }
 
   void SendSignal() override {
-    if (mother_)
-      mother_->CatchSignal();
+    if (mother_) mother_->CatchSignal();
   }
 
   void CatchSignal() override{};
@@ -206,15 +203,14 @@ public:
   const char *GetValue() { return file_name_; }
   const char *GetFileName() { return little_file_; }
 
-private:
+ private:
   GtkWidget *button_ = nullptr;
   char *file_name_ = nullptr;
   char *little_file_ = nullptr;
   s21::Widget *mother_ = nullptr;
 
   void ClearFile() {
-    if (file_name_)
-      delete file_name_;
+    if (file_name_) delete file_name_;
   }
 
   void InitButton(const char *name = "File_Button") {
@@ -246,9 +242,8 @@ private:
   }
 };
 
-
 class FileSaver : public Widget {
-public:
+ public:
   FileSaver() { InitButton(); }
 
   FileSaver(const char *name) { InitButton(name); }
@@ -258,8 +253,7 @@ public:
   void SetMother(s21::Widget *mother) override { mother_ = mother; }
 
   void SendSignal() override {
-    if (mother_)
-      mother_->CatchSignal();
+    if (mother_) mother_->CatchSignal();
   }
 
   void CatchSignal() override{};
@@ -271,15 +265,14 @@ public:
   const char *GetValue() { return file_name_; }
   const char *GetFileName() { return little_file_; }
 
-private:
+ private:
   GtkWidget *button_ = nullptr;
   char *file_name_ = nullptr;
   char *little_file_ = nullptr;
   s21::Widget *mother_ = nullptr;
 
   void ClearFile() {
-    if (file_name_)
-      delete file_name_;
+    if (file_name_) delete file_name_;
   }
 
   void InitButton(const char *name = "File_Button") {
@@ -311,12 +304,10 @@ private:
   }
 };
 
-
-
 #else
 
 class FileChooser : public Widget {
-public:
+ public:
   FileChooser() { InitButton(); }
 
   FileChooser(const char *name) { InitButton(name); }
@@ -326,8 +317,7 @@ public:
   void SetMother(s21::Widget *mother) override { mother_ = mother; }
 
   void SendSignal() override {
-    if (mother_)
-      mother_->CatchSignal(); // TODO
+    if (mother_) mother_->CatchSignal();  // TODO
   }
 
   void CatchSignal() override{};
@@ -339,15 +329,14 @@ public:
   const char *GetValue() { return file_name_; }
   const char *GetFileName() { return little_file_; }
 
-private:
+ private:
   GtkWidget *button_ = nullptr;
   char *file_name_ = nullptr;
   char *little_file_ = nullptr;
   s21::Widget *mother_ = nullptr;
 
   void ClearFile() {
-    if (file_name_)
-      delete file_name_;
+    if (file_name_) delete file_name_;
   }
 
   void InitButton(const char *name = "File_Button") {
@@ -360,8 +349,8 @@ private:
     GtkWindow *parent = GTK_WINDOW(gtk_widget_get_root(button));
     GtkFileDialog *dialog;
     // GtkFileChooserAction action = GTK_FILE_CHOOSER_ACTION_OPEN;
-    dialog = gtk_file_dialog_new(); //"Open file", parent, action, "Load",
-                                    //    "Cancel");
+    dialog = gtk_file_dialog_new();  //"Open file", parent, action, "Load",
+                                     //    "Cancel");
 
     gtk_file_dialog_open(dialog, parent, NULL, GetFile, self);
     g_object_unref(dialog);
@@ -380,9 +369,8 @@ private:
   }
 };
 
-
 class FileSaver : public Widget {
-public:
+ public:
   FileSaver() { InitButton(); }
 
   FileSaver(const char *name) { InitButton(name); }
@@ -392,8 +380,7 @@ public:
   void SetMother(s21::Widget *mother) override { mother_ = mother; }
 
   void SendSignal() override {
-    if (mother_)
-      mother_->CatchSignal(); // TODO
+    if (mother_) mother_->CatchSignal();  // TODO
   }
 
   void CatchSignal() override{};
@@ -405,15 +392,14 @@ public:
   const char *GetValue() { return file_name_; }
   const char *GetFileName() { return little_file_; }
 
-private:
+ private:
   GtkWidget *button_ = nullptr;
   char *file_name_ = nullptr;
   char *little_file_ = nullptr;
   s21::Widget *mother_ = nullptr;
 
   void ClearFile() {
-    if (file_name_)
-      delete file_name_;
+    if (file_name_) delete file_name_;
   }
 
   void InitButton(const char *name = "File_Button") {
@@ -426,8 +412,8 @@ private:
     GtkWindow *parent = GTK_WINDOW(gtk_widget_get_root(button));
     GtkFileDialog *dialog;
     // GtkFileChooserAction action = GTK_FILE_CHOOSER_ACTION_OPEN;
-    dialog = gtk_file_dialog_new(); //"Open file", parent, action, "Load",
-                                    //    "Cancel");
+    dialog = gtk_file_dialog_new();  //"Open file", parent, action, "Load",
+                                     //    "Cancel");
 
     gtk_file_dialog_save(dialog, parent, NULL, GetFile, self);
     g_object_unref(dialog);
@@ -446,14 +432,12 @@ private:
   }
 };
 
-
-
 #endif
 
 #if !defined GTK_TYPE_COLOR_DIALOG_BUTTON
 
 class ColorButton : public Widget {
-public:
+ public:
   ColorButton() { InitColorButton(); }
 
   ~ColorButton(){};
@@ -470,15 +454,14 @@ public:
   }
 
   void SendSignal() override {
-    if (mother_)
-      mother_->CatchSignal();
+    if (mother_) mother_->CatchSignal();
   }
 
-  void CatchSignal() override {} // TODO
+  void CatchSignal() override {}  // TODO
 
   GdkRGBA *GetColor() { return &color_; }
 
-private:
+ private:
   GtkWidget *color_button_ = nullptr;
   s21::Widget *mother_ = nullptr;
   GdkRGBA color_;
@@ -498,7 +481,7 @@ private:
 #else
 
 class ColorButton : public Widget {
-public:
+ public:
   ColorButton() { InitColorButton(); }
 
   ~ColorButton(){};
@@ -511,11 +494,10 @@ public:
   void SetMother(s21::Widget *mother) override { mother_ = mother; }
 
   void SendSignal() override {
-    if (mother_)
-      mother_->CatchSignal();
+    if (mother_) mother_->CatchSignal();
   }
 
-  void CatchSignal() override {} // TODO
+  void CatchSignal() override {}  // TODO
 
   GdkRGBA *GetColor() { return &color_; }
 
@@ -525,7 +507,7 @@ public:
                                      &color_);
   }
 
-private:
+ private:
   GtkWidget *color_button_ = nullptr;
   s21::Widget *mother_ = nullptr;
   GdkRGBA color_;
@@ -545,7 +527,7 @@ private:
 #endif
 
 class DropDownButton : public Widget {
-public:
+ public:
   DropDownButton(const char *const *strings) { InitDropDownButton(strings); }
 
   DropDownButton(GListModel *model, GtkExpression *expression) {
@@ -561,8 +543,7 @@ public:
   void SetMother(s21::Widget *mother) override { mother_ = mother; }
 
   void SendSignal() override {
-    if (mother_)
-      mother_->CatchSignal();
+    if (mother_) mother_->CatchSignal();
   }
 
   void CatchSignal() override {}
@@ -578,7 +559,7 @@ public:
                                static_cast<guint>(value));
   }
 
-private:
+ private:
   s21::Widget *mother_ = nullptr;
   GtkWidget *drop_down_button_ = nullptr;
 
@@ -593,6 +574,6 @@ private:
   }
 };
 
-} // namespace s21
+}  // namespace s21
 
 #endif
