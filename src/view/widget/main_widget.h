@@ -212,6 +212,19 @@ private:
 			self->SetInfo();
     }
   }
+
+	void ErrorMessage(std::string& error_message) {
+	  GtkWidget* error_window = gtk_dialog_new_with_buttons("_ERROR_", GTK_WINDOW(window_),
+		                                                      GTK_DIALOG_DESTROY_WITH_PARENT,
+																	                        "LADNO", GTK_RESPONSE_NONE, nullptr);
+
+		GtkWidget* content_area = gtk_dialog_get_content_area(GTK_DIALOG(error_window));
+		GtkWidget* label = gtk_label_new(error_message.data());
+
+		g_signal_connect_swapped(error_window, "response", G_CALLBACK(gtk_window_destroy), error_window);
+		gtk_box_append(GTK_BOX(content_area), label);
+		gtk_widget_set_visible(error_window, true);
+	}
 };
 } // namespace s21
 
