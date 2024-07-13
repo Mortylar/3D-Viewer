@@ -20,7 +20,7 @@ class View {
  public:
   explicit View( s21::Controller* controller):controller_(controller){}
 
-  ~View(){};
+  ~View(){}; //TODO delete data_, main_widget_
 
 
   void RunWindow() {
