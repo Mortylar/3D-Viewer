@@ -1,5 +1,5 @@
-#ifndef SRC_VIEW_WIDGET_DATA_DATA_H_
-#define SRC_VIEW_WIDGET_DATA_DATA_H_
+#ifndef SRC_LIBS_DATA_H_
+#define SRC_LIBS_DATA_H_
 
 #include <cstring>
 #include <string>
@@ -285,7 +285,7 @@ class AffineData {
    void Init() {
      translation_ = new VectorData(kDim_);
      rotation_ = new VectorData(kDim_);
-     scaling_ = new VectorData{0,0,0};
+     scaling_ = new VectorData{1,1,1};
    }
 
   void TemplateInit(const AffineData& other) { 
@@ -465,22 +465,24 @@ class Data {
    FormatData* line_data_ = nullptr;
    FormatData* point_data_ = nullptr;
    InfoData* info_data_ = nullptr;
-   GdkRGBA area_color_data_ = {0,0,0,0};
+   GdkRGBA area_color_data_;
    int projection_data_;
 
-   void InitData() {
-     affine_data_ = new AffineData();
-     line_data_ = new FormatData(1.0, {1,0,0,0}, 1);
-     point_data_ = new FormatData(1.0, {0,1,0,0}, 1);
-	 info_data_ = new InfoData();
-   }
+  void InitData() {
+    affine_data_ = new AffineData();
+    line_data_ = new FormatData(1.0, {1,0,0,1}, 1); //
+    point_data_ = new FormatData(1.0, {0,1,0,1}, 1); //
+    info_data_ = new InfoData();
+		area_color_data_ = {0,0,0,1}; //
+		projection_data_ = 0; //
+  }
 
-   void ClearData() {
-     delete affine_data_;
-     delete line_data_;
-     delete point_data_;
-	 delete info_data_;
-   }
+  void ClearData() {
+    delete affine_data_;
+    delete line_data_;
+    delete point_data_;
+    delete info_data_;
+  }
 
 };
 

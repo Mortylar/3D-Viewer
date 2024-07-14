@@ -160,10 +160,17 @@ class AffinePannel : public Widget {
   void CreateScalingPannel() {
     s21::ScalingPannelFactory factory;
     scaling_pannel_ = static_cast<s21::DSliderPannel *>(factory.CreateWidget());
-    // TODO anti Scaling function
-    scaling_pannel_->SetValue(0, data_->GetScaling()[0]);
-    scaling_pannel_->SetValue(1, data_->GetScaling()[1]);
-    scaling_pannel_->SetValue(2, data_->GetScaling()[2]);
+		float scaling_data[3] {0};
+		const int k_scaling_factor = 20;
+		for (int i = 0; i < 3; ++i) {
+		  float this_axis = data_->GetScaling()[i];
+			if (this_axis < 1) {
+			  scaling_data[i] = (this_axis - 1)/(k_scaling_factor * this_axis);
+			} else {
+			  scaling_data[i] = (this_axis - 1) / k_scaling_factor;
+			}
+			scaling_pannel_->SetValue(i, scaling_data[i]);
+		}
     scaling_pannel_->SetMother(this);
     gtk_grid_attach(GTK_GRID(grid_), scaling_pannel_->GetRoot(), 0, 7, 1, 3);
   }
