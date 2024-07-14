@@ -13,34 +13,16 @@ class Controller {
 	  model_->ReadFile(file_name);
 	}
 
-/*	const std::vector<float>& GetVertex() {
-	  return model_->GetVertex();
-	}*/
 
 	size_t GetVertexCount() {
 	  return model_->GetVertexCount();
 	}
 
-/*	const std::vector<unsigned int>& GetSurfaces(size_t n) {
-	  return model_->GetSurface(n);
-	}*/
 
   size_t GetSurfacesCount() {
 	  return model_->GetSurfacesCount();
 	}
-/*
-	void Translation(std::vector<float>& v, float x, float y, float z) {
-	  model_->Translation(v,x,y,z);
-	}
-
-	void Rotation(std::vector<float>& v, float x, float y, float z) {
-	  model_->Rotation(v,x,y,z);
-	}
-
-	void Scaling(std::vector<float>& v, float x, float y, float z) {
-	  model_->Scaling(v,x,y,z);
-	}
-*/
+	
 	void SetGLArea(GtkGLArea* area) {
 	  model_->SetGLArea(area);
 	}
@@ -57,9 +39,6 @@ class Controller {
 	  model_->Draw();
 	}
 
-	void SavePicture(size_t width, size_t height, const char* file_name, const char* type) {
-	  model_->SavePicture(width, height, file_name, type);
-	}
 
   private:
 	s21::Model* model_ = nullptr;

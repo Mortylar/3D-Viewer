@@ -502,8 +502,8 @@ class MediaPannel : public Widget {
       size_t width = gtk_widget_get_width(self->main_window_);
       size_t height = gtk_widget_get_height(self->main_window_);
       file_name = file_name + "." + ext_string;
-      self->controller_->SavePicture(width, height, file_name.data(),
-                                     ext_string.data());
+      //self->controller_->SavePicture(width, height, file_name.data(),
+      //                               ext_string.data());
       // gtk_window_destroy(GTK_WINDOW(self->window_));
     }
     // TODO close window  gtk_window_destroy

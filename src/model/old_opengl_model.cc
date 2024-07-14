@@ -1,4 +1,5 @@
 #include "opengl_model.h"
+
 #include "figure.h"
 
 void s21::Buffer::CreateBuffer(std::vector<float>& v_data,
@@ -126,8 +127,33 @@ char* s21::Shader::LoadFile(const char* file_name) {
   return text;
 }  // TODO GetFileLength
 
+/*
+void s21::Texture::Create(const std::string& file_name) {
+  if (file_name != file_) {
+    file_ = file_name;
+    unsigned char* data =
+        stbi_load(file_name.data(), &width_, &height_, &color_mod_, 0);
+    if (color_mod_ < 3) {
+    }  // TODO
+    glGenTextures(1, &id_);
+    glBindTexture(GL_TEXTURE_2D, id_);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width_, height_, 0,
+                 ((color_mod_ == 3) ? GL_RGB : GL_RGBA), GL_UNSIGNED_BYTE,
+                 data);
 
+    SamplerInit();
+    glBindTexture(id_, 0);
+    stbi_image_free(data);
+  }
+}
 
+void s21::Texture::SamplerInit() {
+  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+}
+*/
 
 void s21::OpenGLModel::SetBuffer() {
   gtk_gl_area_make_current(GTK_GL_AREA(area_));
@@ -135,6 +161,9 @@ void s21::OpenGLModel::SetBuffer() {
   InitShaders();
 }
 
+//void s21::OpenGLModel::LoadTexture(std::string& file) {
+//  texture_image_.Create(file);
+//}
 
 void s21::OpenGLModel::Draw() {
   if (vertex_->GetVertexBuffer() != 0) {
@@ -142,6 +171,39 @@ void s21::OpenGLModel::Draw() {
   }
 }
 
+/*
+unsigned int* s21::OpenGLModel::Mirroring(size_t width, size_t height,
+                                          unsigned int* data) {
+  unsigned int arr[width * height];
+  for (size_t i = 0; i < height; ++i) {
+    unsigned int* row = data + width * i;
+    unsigned int* arr_row = arr + width * (height - i - 1);
+    for (size_t j = 0; j < width; ++j) {
+      arr_row[j] = row[j];
+    }
+  }
+  for (size_t i = 0; i < width * height; ++i) {
+    data[i] = arr[i];
+  }
+  return data;
+}
+
+void s21::OpenGLModel::SavePicture(size_t m_width, size_t m_height,
+                                   const char* file_name, const char* type) {
+  size_t width = gtk_widget_get_width(GTK_WIDGET(area_));
+  size_t height = gtk_widget_get_height(GTK_WIDGET(area_));
+  size_t chanels = 4;
+
+  unsigned int* data = new unsigned int[width * height]{0};
+  Draw();
+  glReadPixels(m_width - width, m_height - height, width, height, GL_RGBA,
+               GL_UNSIGNED_BYTE, data);
+  data = Mirroring(width, height, data);
+
+  stbi_write_png(file_name, width, height, chanels, data, chanels * width);
+  stbi_write_jpg(file_name, width, height, chanels, data, 80);
+  stbi_write_bmp(file_name, width, height, chanels, data);
+}*/
 
 void s21::OpenGLModel::DrawFigure() {
   Matrix4f mvp;

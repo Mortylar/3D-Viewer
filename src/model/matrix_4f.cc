@@ -69,11 +69,11 @@ s21::Matrix4f s21::Matrix4f::operator-(Matrix4f& other) {
 
 //----------------------------------end block-----------------------------//
 //--------------------------------multiply block-------------------------//
-
+/*
 s21::Matrix4f& s21::Matrix4f::operator*=(Matrix4f& other) {
   *this = (*this) * other;
   return *this;
-}
+}*/
 
 s21::Matrix4f s21::Matrix4f::operator*(Matrix4f& other) {
   Matrix4f result;
