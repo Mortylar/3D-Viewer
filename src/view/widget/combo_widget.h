@@ -546,6 +546,7 @@ class ProjectionPannel : public Widget {
   }
 
   int GetValue() { return projection_->GetValue(); }
+  void SetValue(int value) { projection_->SetValue(value); }
 
  private:
   GtkWidget *grid_ = nullptr;

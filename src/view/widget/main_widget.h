@@ -150,7 +150,10 @@ class MainWidget : public Widget {
     media_pannel_->SetMother(this);
   }
 
-  void CreateProjectionPannel() { projection_ = new s21::ProjectionPannel(); }
+  void CreateProjectionPannel() {
+    projection_ = new s21::ProjectionPannel();
+    projection_->SetValue(data_->GetProjection());
+  }
 
   void CreateAreaColorPannel() {
     area_color_pannel_ = new s21::AreaColorPannel(data_);

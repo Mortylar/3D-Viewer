@@ -6,6 +6,7 @@
 #include "../controller/controller.h"
 
 #include "../libs/data.h"
+#include "../libs/data_saver.h"
 #include "widget/main_widget.h"
 #include "widget/widget.h"
 
@@ -20,7 +21,13 @@ class View {
  public:
   explicit View( s21::Controller* controller):controller_(controller){}
 
-  ~View(){}; //TODO delete data_, main_widget_
+  ~View(){
+    DataSaver ds(data_);
+		ds.SaveData();
+		delete main_widget_;
+		delete data_;
+
+		}; //TODO delete data_, main_widget_
 
 
   void RunWindow() {
@@ -59,6 +66,8 @@ class View {
 
     void InitData() {
       data_ = new s21::Data();
+			DataSaver ds(data_);
+			ds.LoadData();
           //TODO
     }
 
