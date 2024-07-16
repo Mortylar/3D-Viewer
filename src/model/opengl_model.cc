@@ -1,5 +1,10 @@
+
+#include <stdexcept>
+
 #include "opengl_model.h"
 #include "figure.h"
+
+
 
 void s21::Buffer::CreateBuffer(std::vector<float>& v_data,
                                std::vector<unsigned int>& e_data) {
@@ -29,6 +34,8 @@ void s21::Buffer::CreateElementBuffer(std::vector<unsigned int>& data) {
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
+
+
 void s21::Shader::LoadShader(const char* vertex_path, const char* fragment_path,
                              const char* geometry_path) {
   InitShader(vertex_path, fragment_path, geometry_path);
@@ -38,7 +45,6 @@ void s21::Shader::InitShader(const char* vertex_path, const char* fragment_path,
                              const char* geometry_path) {
   GLuint vertex, fragment, geometry;
   int status;
-
   vertex = CreateShader(GL_VERTEX_SHADER, LoadFile(vertex_path));
 
   if (vertex) {
@@ -46,18 +52,16 @@ void s21::Shader::InitShader(const char* vertex_path, const char* fragment_path,
     if (fragment && geometry_path) {
       geometry = CreateShader(GL_GEOMETRY_SHADER, LoadFile(geometry_path));
       if (!geometry) {
-        g_print("\ngeometry shader failed\n");
-      }
+				throw std::invalid_argument("Geometry shader failed");
+      } 	
     }
   } else {
-    g_print("\nvertex shader failed\n");
-    return;  // TODO
+    throw std::invalid_argument("Vertex shader failed");
   }
 
   if (!fragment) {
     glDeleteShader(vertex);
-    g_print("\nfragment shader failed\n");
-    return;
+    throw std::invalid_argument("fragment shader failed");
   }
 
   program_ = glCreateProgram();
@@ -73,24 +77,27 @@ void s21::Shader::InitShader(const char* vertex_path, const char* fragment_path,
     int log_len;
     char* buffer;
     glGetProgramiv(program_, GL_INFO_LOG_LENGTH, &log_len);
-    buffer = (char*)g_malloc(log_len + 1);
-    glGetProgramInfoLog(program_, log_len, NULL, buffer);
-    g_print("\nprogram link failed = %s\n", buffer);
-  }  // TODO
+    buffer = new char[log_len + 1]();
+    glGetProgramInfoLog(program_, log_len, 0, buffer);
+		std::string error_message = "Program link failed: \n";
+		error_message += buffer;
+		throw std::invalid_argument(error_message);
+  } 
 
   glDetachShader(program_, vertex);
   glDetachShader(program_, fragment);
-  glDetachShader(program_, geometry);  // TODO
+  glDetachShader(program_, geometry);
 
   glDeleteShader(vertex);
   glDeleteShader(fragment);
   glDeleteShader(geometry);
 }
 
+
+
 GLuint s21::Shader::CreateShader(int type, const char* src) {
   GLuint shader;
   int status;
-
   shader = glCreateShader(type);
   glShaderSource(shader, 1, &src, NULL);
   glCompileShader(shader);
@@ -98,33 +105,52 @@ GLuint s21::Shader::CreateShader(int type, const char* src) {
   glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
   if (status == GL_FALSE) {
     int log_len;
-    char* buffer;
+    char* buffer;	
     glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &log_len);
-    buffer = (char*)g_malloc(log_len + 1);
+    buffer = new char[log_len + 1];
     glGetShaderInfoLog(shader, log_len, NULL, buffer);
-    g_print("\ntype = %s\n",
-            (type == GL_VERTEX_SHADER)
-                ? "vertex"
-                : ((type == GL_FRAGMENT_SHADER) ? "fragment" : "geometry"));
-    g_print("\nprogram link failed = %s\n", buffer);
+		std::string error_type = ((type == GL_VERTEX_SHADER) ? "vertex" :
+		                         ((type == GL_FRAGMENT_SHADER) ? "fragment" : "geometry"));
 
-  }  // TODO
+    std::string error_message = "Program link failed on ";
+		error_message += error_type;
+		error_message += " shader. \n";
+		error_message += "Program text is:\n";
+		error_message += src;
+		error_message += '\0';
+		throw std::invalid_argument(error_message);
+  } 
   delete src;
   return shader;
 }
 
+size_t s21::Shader::GetFileLength(const char* file_name) {
+  size_t length = 0;
+	FILE* fp = fopen(file_name, "rb");
+	if (fp) {
+	  fseek(fp, 0, SEEK_END);
+		length = ftell(fp);
+		fclose(fp);
+	}
+	return length;
+}
+
 char* s21::Shader::LoadFile(const char* file_name) {
-  int len = 4096;  // TODO
-  char* text = new char[len]();
+  size_t length = GetFileLength(file_name);
+  char* text = new char[length + 1]();
   FILE* fp = fopen(file_name, "rb");
   if (fp) {
-    fread(text, 1, len, fp);
+    fread(text, 1, length, fp);
+		text[length] = 0;
     fclose(fp);
   } else {
-    g_print("\nError Opening File\n");
+		std::string error_message = "s21::Shader::LoadFile : error opening shader file \"";
+		error_message += file_name;
+		error_message += "\"";
+    throw std::invalid_argument(error_message.data());
   }
   return text;
-}  // TODO GetFileLength
+}
 
 
 
