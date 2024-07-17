@@ -22,7 +22,7 @@ class Matrix4f {
   Matrix4f& operator-=(Matrix4f& other);
   Matrix4f operator+(Matrix4f& other);
   Matrix4f operator-(Matrix4f& other);
-  //Matrix4f& operator*=(Matrix4f& other);
+  // Matrix4f& operator*=(Matrix4f& other);
   Matrix4f operator*(Matrix4f& other);
   Matrix4f& operator*(float x);
   Matrix4f& operator*=(Matrix4f other);

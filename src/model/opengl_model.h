@@ -6,7 +6,6 @@
 
 #include <vector>
 
-
 #include "../libs/data.h"
 #include "affine_3d.h"
 
@@ -51,21 +50,15 @@ class Shader {
   void InitShader(const char* vertex_path, const char* fragment_path,
                   const char* geometry_path);
   GLuint CreateShader(int type, const char* src);
-	size_t GetFileLength(const char* file);
+  size_t GetFileLength(const char* file);
   char* LoadFile(const char* file_name);
 };
 
-
-
 class OpenGLModel {
  public:
-  OpenGLModel() {
-    vertex_ = new s21::Buffer();
-  }
+  OpenGLModel() { vertex_ = new s21::Buffer(); }
 
-  ~OpenGLModel() {
-    delete vertex_;
-  }
+  ~OpenGLModel() { delete vertex_; }
 
   inline void SetGLArea(GtkGLArea* area) { area_ = area; }
 
@@ -73,7 +66,6 @@ class OpenGLModel {
 
   void SetBuffer();
   void Draw();
-
 
  private:
   s21::Data* data_ = nullptr;

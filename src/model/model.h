@@ -34,8 +34,8 @@ class Model {
   void ConnectData(s21::Data *data);  // TODO
   void SetBuffers();                  // TODO
   void Draw();                        // TODO
-//  void SavePicture(size_t width, size_t height, const char *file_name,
-//                   const char *type);
+  //  void SavePicture(size_t width, size_t height, const char *file_name,
+  //                   const char *type);
 
  private:
   Affine3D *affine_;

@@ -3,6 +3,7 @@
 
 #include <gtk/gtk.h>
 
+#include <stdexcept>
 #include <vector>
 
 #include "pair_widget.h"
@@ -115,9 +116,7 @@ class DSpinButtonPannel : public PairWidget {
 
   void SetName(size_t pos, const char *name) { pair_[pos]->SetName(name); }
 
-  void SetName(const char *name) override {  // TODO override
-    s21::Widget::SetName(name);
-  }
+  void SetName(const char *name) override { s21::Widget::SetName(name); }
 
   void SetMother(s21::Widget *mother) {
     for (size_t i = 0; i < size_; ++i) {

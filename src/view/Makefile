@@ -1,12 +1,11 @@
-CC=g++ -std=c++17
+CC=g++ -std=c++17 -O3
 GTK_FLAGS=`pkg-config --cflags --libs gtk4`
-EPOXY_FLAGS=`pkg-config --cflags --libs epoxy`
-SOURCE=$(wildcard *.cc *.)
+SOURCE=$(wildcard *.cc widget/*.cc)
 
 s21_view.a:
-	$(CC) -g main.cc $(GTK_FLAGS) $(EPOXY_FLAGS)
-	./a.out
+	$(CC) -c $(SOURCE) $(GTK_FLAGS)
+	ar rcs libs21_view.a *.o
+	ranlib libs21_view.a
 
-b:
-	$(CC) -g asd.cc $(GTK_FLAGS) $(EPOXY_FLAGS)
-	./a.out
+clean:
+	-rm *.o libs21_view.a

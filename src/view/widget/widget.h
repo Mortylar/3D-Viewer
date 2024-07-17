@@ -10,15 +10,11 @@ class Widget {
 
   virtual ~Widget(){};
 
-  virtual GtkWidget *GetFrame() {  // TODO virtual
-    return frame_;
-  }
+  virtual GtkWidget *GetFrame() { return frame_; }
 
-  virtual GtkWidget *GetRoot() {  // TODO virtual
-    return frame_;
-  }
+  virtual GtkWidget *GetRoot() { return frame_; }
 
-  virtual void SetName(const char *name) {  // TODO virual
+  virtual void SetName(const char *name) {
     gtk_frame_set_label(GTK_FRAME(frame_), name);
     gtk_frame_set_label_align(GTK_FRAME(frame_), 0.5);
   }
@@ -29,7 +25,6 @@ class Widget {
 
   virtual void SetMother(s21::Widget *mother) = 0;
   virtual void CatchSignal() = 0;
-  // void CatchSignal(void* message);
   virtual void SendSignal() = 0;
 
  private:
@@ -47,7 +42,7 @@ class Label : public Widget {
 
   ~Label(){};
 
-  void SetName(const char *name) override {  // TODO override
+  void SetName(const char *name) override {
     gtk_label_set_text(GTK_LABEL(label_), name);
   }
 
@@ -68,7 +63,6 @@ class Label : public Widget {
  private:
   GtkWidget *label_ = nullptr;
   s21::Widget *mother_ = nullptr;
-  // TODO value_;
 
   void InitLabel() {
     label_ = gtk_label_new(nullptr);
@@ -171,8 +165,6 @@ class DSlider : public Widget {
   void InitSlider() {
     scale_button_ = gtk_scale_new(GTK_ORIENTATION_HORIZONTAL, adjustment_);
     gtk_frame_set_child(GTK_FRAME(GetFrame()), scale_button_);
-    // gtk_widget_set_hexpand(scale_button_, true);
-    // gtk_widget_set_vexpand(scale_button_, true);
     g_signal_connect(adjustment_, "value_changed", G_CALLBACK(ValueReboot),
                      this);
   }
@@ -317,7 +309,7 @@ class FileChooser : public Widget {
   void SetMother(s21::Widget *mother) override { mother_ = mother; }
 
   void SendSignal() override {
-    if (mother_) mother_->CatchSignal();  // TODO
+    if (mother_) mother_->CatchSignal();
   }
 
   void CatchSignal() override{};
@@ -348,10 +340,7 @@ class FileChooser : public Widget {
   static void OpenFileDialog(GtkWidget *button, FileChooser *self) {
     GtkWindow *parent = GTK_WINDOW(gtk_widget_get_root(button));
     GtkFileDialog *dialog;
-    // GtkFileChooserAction action = GTK_FILE_CHOOSER_ACTION_OPEN;
-    dialog = gtk_file_dialog_new();  //"Open file", parent, action, "Load",
-                                     //    "Cancel");
-
+    dialog = gtk_file_dialog_new();
     gtk_file_dialog_open(dialog, parent, NULL, GetFile, self);
     g_object_unref(dialog);
   }
@@ -380,7 +369,7 @@ class FileSaver : public Widget {
   void SetMother(s21::Widget *mother) override { mother_ = mother; }
 
   void SendSignal() override {
-    if (mother_) mother_->CatchSignal();  // TODO
+    if (mother_) mother_->CatchSignal();
   }
 
   void CatchSignal() override{};
@@ -411,10 +400,7 @@ class FileSaver : public Widget {
   static void OpenFileDialog(GtkWidget *button, FileChooser *self) {
     GtkWindow *parent = GTK_WINDOW(gtk_widget_get_root(button));
     GtkFileDialog *dialog;
-    // GtkFileChooserAction action = GTK_FILE_CHOOSER_ACTION_OPEN;
-    dialog = gtk_file_dialog_new();  //"Open file", parent, action, "Load",
-                                     //    "Cancel");
-
+    dialog = gtk_file_dialog_new();
     gtk_file_dialog_save(dialog, parent, NULL, GetFile, self);
     g_object_unref(dialog);
   }
@@ -457,7 +443,7 @@ class ColorButton : public Widget {
     if (mother_) mother_->CatchSignal();
   }
 
-  void CatchSignal() override {}  // TODO
+  void CatchSignal() override {}
 
   GdkRGBA *GetColor() { return &color_; }
 
@@ -487,7 +473,6 @@ class ColorButton : public Widget {
   ~ColorButton(){};
 
   void SetName(const char *name) override {
-    // gtk_color_button_set_title(GTK_COLOR_BUTTON(color_button_), name);
     gtk_button_set_label(GTK_BUTTON(color_button_), name);
   }
 
@@ -497,7 +482,7 @@ class ColorButton : public Widget {
     if (mother_) mother_->CatchSignal();
   }
 
-  void CatchSignal() override {}  // TODO
+  void CatchSignal() override {}
 
   GdkRGBA *GetColor() { return &color_; }
 

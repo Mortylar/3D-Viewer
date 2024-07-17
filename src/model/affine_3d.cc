@@ -42,7 +42,7 @@ s21::Matrix4f s21::Affine3D::GetRotation(float x, float y, float z) {
 }
 
 s21::Matrix4f s21::Affine3D::GetScaling(float x, float y, float z) {
-	CheckScalingNilpotency(x, y, z);
+  CheckScalingNilpotency(x, y, z);
   Matrix4f scaling;
   scaling(0, 0) = x;
   scaling(1, 1) = y;

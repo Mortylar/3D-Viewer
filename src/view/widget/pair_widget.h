@@ -106,9 +106,7 @@ class LabelDSpinButtonPair : public PairWidget {
 
   void CatchSignal() override {}
 
-  void SendSignal() override {
-    // if (mother_) mother_->CatchSignal();
-  }
+  void SendSignal() override {}
 
  private:
   Label *first_ = nullptr;
@@ -147,9 +145,7 @@ class LabelDSliderPair : public PairWidget {
     delete second_;
   }
 
-  void SetName(const char *name) override {  // TODO override
-    first_->SetName(name);
-  }
+  void SetName(const char *name) override { first_->SetName(name); }
 
   const char *GetName() { return first_->GetValue(); }
 
@@ -225,8 +221,8 @@ class LabelColorButtonPair : public PairWidget {
     second_->SetMother(mother);
   }
 
-  void SendSignal() override {}   // TODO
-  void CatchSignal() override {}  // TODO
+  void SendSignal() override {}
+  void CatchSignal() override {}
 
   GdkRGBA GetColor() { return *(second_->GetColor()); }
 
@@ -237,13 +233,11 @@ class LabelColorButtonPair : public PairWidget {
   void InitLabel(const char *name = "") {
     first_ = new Label(name);
     gtk_grid_attach(GTK_GRID(GetGrid()), first_->GetRoot(), 0, 0, 1, 1);
-    // gtk_widget_set_hexpand(first_->GetRoot(), true);
   }
 
   void InitColorButton() {
     second_ = new ColorButton();
     gtk_grid_attach(GTK_GRID(GetGrid()), second_->GetRoot(), 1, 0, 1, 1);
-    // gtk_widget_set_hexpand(second_->GetRoot(), true);
   }
 };
 
@@ -289,20 +283,16 @@ class LabelDropDownButtonPair : public PairWidget {
   void InitLabel(const char *name = "") {
     first_ = new Label(name);
     gtk_grid_attach(GTK_GRID(GetGrid()), first_->GetRoot(), 0, 0, 1, 1);
-    // gtk_widget_set_hexpand(first_->GetRoot(), true);
   }
 
   void InitDropDownButton(const char *const *strings) {
     second_ = new DropDownButton(strings);
     gtk_grid_attach(GTK_GRID(GetGrid()), second_->GetRoot(), 1, 0, 1, 1);
-    // gtk_widget_set_hexpand(second_->GetRoot(), true);
-    // gtk_widget_set_halign(second_->GetRoot(), )
   }
 
   void InitDropDownButton(GListModel *model, GtkExpression *expression) {
     second_ = new DropDownButton(model, expression);
     gtk_grid_attach(GTK_GRID(GetGrid()), second_->GetRoot(), 1, 0, 1, 1);
-    // gtk_widget_set_hexpand(second_->GetRoot(), true);
   }
 };
 
@@ -323,7 +313,7 @@ class FileSaverDropDownButtonPair : public PairWidget {
 
   const char *GetFileName() { return file_->GetValue(); }
 
-  int GetExtension() { return drop_down_->GetValue(); }  // TODO
+  int GetExtension() { return drop_down_->GetValue(); }
 
   void SetMother(s21::Widget *mother) override {
     file_->SetMother(mother);
@@ -382,9 +372,7 @@ class FileSaverDSpinButtonPair : public PairWidget {
 
   void CatchSignal() override {}
 
-  void SendSignal() override {
-    // if (mother_) mother_->CatchSignal();
-  }
+  void SendSignal() override {}
 
   const char *GetFileName() { return first_->GetFileName(); }
 
