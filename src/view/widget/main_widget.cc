@@ -136,9 +136,9 @@ void s21::MainWidget::ReadAndDrawFile(const char* file_name) {
 }
 
 void s21::MainWidget::ErrorMessage(std::string& error_message) {
-  GtkWidget* error_window = gtk_dialog_new_with_buttons(
-      "_ERROR_", GTK_WINDOW(window_), GTK_DIALOG_DESTROY_WITH_PARENT, "LADNO",
-      GTK_RESPONSE_NONE, nullptr);
+	GtkDialogFlags flags = static_cast<GtkDialogFlags>(GTK_DIALOG_DESTROY_WITH_PARENT | GTK_DIALOG_MODAL);
+  GtkWidget* error_window = gtk_dialog_new_with_buttons( "_ERROR_", GTK_WINDOW(window_), flags,
+	                                                       "LADNO", GTK_RESPONSE_NONE, nullptr);
 
   GtkWidget* content_area =
       gtk_dialog_get_content_area(GTK_DIALOG(error_window));

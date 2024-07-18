@@ -5,7 +5,7 @@ EPOXY_FLAGS = `pkg-config --libs --cflags epoxy`
 SOURCE=$(wildcard *.cc)
 TEST_DIR=../test/
 
-s21_model.a:
+libs21_model.a:
 	$(CC) -c $(SOURCE) $(GTK_FLAGS) $(EPOXY_FLAGS)
 	ar rcs libs21_model.a *.o
 	ranlib libs21_model.a

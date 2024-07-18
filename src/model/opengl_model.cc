@@ -1,6 +1,6 @@
 
 #include "opengl_model.h"
-
+#include <filesystem>
 #include <stdexcept>
 
 #include "figure.h"
@@ -35,6 +35,9 @@ void s21::Buffer::CreateElementBuffer(std::vector<unsigned int>& data) {
 
 void s21::Shader::LoadShader(const char* vertex_path, const char* fragment_path,
                              const char* geometry_path) {
+	std::filesystem::path path  = std::filesystem::current_path();
+	std::string str = path.string();
+	g_warning ("\npath == %s\n", str.data());
   InitShader(vertex_path, fragment_path, geometry_path);
 }
 

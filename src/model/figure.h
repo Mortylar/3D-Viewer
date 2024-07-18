@@ -52,6 +52,8 @@ class Figure {
   void AddTSurface(const std::vector<unsigned int> &x);
   void AddNSurface(const std::vector<unsigned int> &x);
 
+	int GetEdgesCount();
+
   void Clear();
   void Reserve(size_t n);
 

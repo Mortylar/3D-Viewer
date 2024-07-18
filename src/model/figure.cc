@@ -62,6 +62,10 @@ void s21::Figure::AddNormals(float x, float y, float z) {
 
 size_t s21::Figure::GetSurfacesCount() { return index_offset_->size(); }
 
+int s21::Figure::GetEdgesCount() {
+  return GetVertexCount() + GetSurfacesCount() - 2;
+}
+
 const std::vector<unsigned int> &s21::Figure::GetVSurface() {
   return *v_surfaces_;
 }

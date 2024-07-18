@@ -20,7 +20,8 @@ class Controller {
 
 
   size_t GetSurfacesCount() {
-	  return model_->GetSurfacesCount();
+		return model_->GetEdgesCount();
+	  //return model_->GetSurfacesCount();
 	}
 	
 	void SetGLArea(GtkGLArea* area) {

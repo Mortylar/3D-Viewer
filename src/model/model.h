@@ -1,8 +1,6 @@
 #ifndef SRC_MODEL_MODEL_H_
 #define SRC_MODEL_MODEL_H_
 
-// fasade
-
 #include "affine_3d.h"
 #include "opengl_model.h"
 #include "parser.h"
@@ -30,12 +28,12 @@ class Model {
   size_t GetSurfacesCount();
   const std::vector<unsigned int> &GetSurface();
 
-  void SetGLArea(GtkGLArea *area);    // TODO
-  void ConnectData(s21::Data *data);  // TODO
-  void SetBuffers();                  // TODO
-  void Draw();                        // TODO
-  //  void SavePicture(size_t width, size_t height, const char *file_name,
-  //                   const char *type);
+  int GetEdgesCount();
+
+  void SetGLArea(GtkGLArea *area);    
+  void ConnectData(s21::Data *data);  
+  void SetBuffers();                  
+  void Draw();                        
 
  private:
   Affine3D *affine_;

@@ -18,6 +18,10 @@ const std::vector<float> &s21::Model::GetVertex() {
   return s21::Figure::GetInstance()->GetVertex();
 }
 
+int s21::Model::GetEdgesCount() {
+  return s21::Figure::GetInstance()->GetEdgesCount();
+}
+
 size_t s21::Model::GetSurfacesCount() {
   return s21::Figure::GetInstance()->GetSurfacesCount();
 }
@@ -36,8 +40,3 @@ void s21::Model::SetBuffers() { opengl_model_->SetBuffer(); }
 
 void s21::Model::Draw() { opengl_model_->Draw(); }
 
-// void s21::Model::SavePicture(size_t width, size_t height, const char
-// *file_name,
-//                              const char *type) {
-//   opengl_model_->SavePicture(width, height, file_name, type);
-// }
