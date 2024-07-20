@@ -1,44 +1,36 @@
 #include "common.h"
 
-
-
-
-
-
-
-
 /*
 TEST(AffineTest, TestTranslation) {
   s21::Affine3D A;
-	float dx = 1, dy = 2, dz = 3;
-	s21::Matrix4f tar;
-	tar(0,3) = dx;
-	tar(1,3) = dy;
-	tar(2,3) = dz;
+        float dx = 1, dy = 2, dz = 3;
+        s21::Matrix4f tar;
+        tar(0,3) = dx;
+        tar(1,3) = dy;
+        tar(2,3) = dz;
 
-	s21::Matrix4f res = A.GetTranslation(dx, dy, dz);
-	CompareMatrix(tar, res);
+        s21::Matrix4f res = A.GetTranslation(dx, dy, dz);
+        CompareMatrix(tar, res);
 }
 
 TEST(AffineTest, TestRotation) {
   s21::Affine3D A;
-	float dx = 0, dy = 0, dz = 0;
+        float dx = 0, dy = 0, dz = 0;
 
-	s21::Matrix4f e;
-	e.SetIdentity();
+        s21::Matrix4f e;
+        e.SetIdentity();
 
-	s21::Matrix4f res = A.GetRotation(dx, dy,dz);
+        s21::Matrix4f res = A.GetRotation(dx, dy,dz);
 
-	CompareMatrix(res, e);
+        CompareMatrix(res, e);
 
 }*/
 
+// TEST(AffineTest, Test) {
+// }
 
-//TEST(AffineTest, Test) {
-//}
-
-//TEST(AffineTest, Test) {
-//}
+// TEST(AffineTest, Test) {
+// }
 
 /*
 TEST(AffineTest, Test7) {
@@ -79,7 +71,8 @@ TEST(ParserTest, Test_1) {
     EXPECT_EQ(this_surface.size(), orig_surfaces.size());
     for (size_t i = 0; i < this_surface.size(); ++i) {
      EXPECT_EQ(this_surface.at(i), orig_surfaces.at(i) - 1);
-		 //g_print("\ns21 = %i <==> file = %i\n", orig_surfaces[i], this_surface[i]);
+                 //g_print("\ns21 = %i <==> file = %i\n", orig_surfaces[i],
+this_surface[i]);
     }
 }
 
@@ -113,4 +106,3 @@ int main(int argc, char** argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
 }
-

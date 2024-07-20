@@ -20,8 +20,8 @@ void s21::MainWidget::CreatePannel() {
 void s21::MainWidget::InitGrid() {
   grid_ = gtk_grid_new();
   gtk_frame_set_child(GTK_FRAME(GetFrame()), grid_);
-   //gtk_grid_set_row_homogeneous(GTK_GRID(grid_), true);
-   //gtk_grid_set_column_homogeneous(GTK_GRID(grid_), true);
+  // gtk_grid_set_row_homogeneous(GTK_GRID(grid_), true);
+  // gtk_grid_set_column_homogeneous(GTK_GRID(grid_), true);
 }
 
 void s21::MainWidget::GridPlacement() {
@@ -136,9 +136,11 @@ void s21::MainWidget::ReadAndDrawFile(const char* file_name) {
 }
 
 void s21::MainWidget::ErrorMessage(std::string& error_message) {
-	GtkDialogFlags flags = static_cast<GtkDialogFlags>(GTK_DIALOG_DESTROY_WITH_PARENT | GTK_DIALOG_MODAL);
-  GtkWidget* error_window = gtk_dialog_new_with_buttons( "_ERROR_", GTK_WINDOW(window_), flags,
-	                                                       "LADNO", GTK_RESPONSE_NONE, nullptr);
+  GtkDialogFlags flags = static_cast<GtkDialogFlags>(
+      GTK_DIALOG_DESTROY_WITH_PARENT | GTK_DIALOG_MODAL);
+  GtkWidget* error_window =
+      gtk_dialog_new_with_buttons("_ERROR_", GTK_WINDOW(window_), flags,
+                                  "LADNO", GTK_RESPONSE_NONE, nullptr);
 
   GtkWidget* content_area =
       gtk_dialog_get_content_area(GTK_DIALOG(error_window));

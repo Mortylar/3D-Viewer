@@ -5,49 +5,33 @@
 
 namespace s21 {
 class Controller {
-  public:
-   explicit Controller(s21::Model* model):model_(model){};
-	~Controller() = default;
+ public:
+  explicit Controller(s21::Model* model) : model_(model){};
+  ~Controller() = default;
 
-	void ReadFile(const char* file_name) {
-	  model_->ReadFile(file_name);
-	}
+  void ReadFile(const char* file_name) { model_->ReadFile(file_name); }
 
-
-	size_t GetVertexCount() {
-	  return model_->GetVertexCount();
-	}
-
+  size_t GetVertexCount() { return model_->GetVertexCount(); }
 
   size_t GetSurfacesCount() {
-		return model_->GetEdgesCount();
-	  //return model_->GetSurfacesCount();
-	}
-	
-	void SetGLArea(GtkGLArea* area) {
-	  model_->SetGLArea(area);
-	}
+    return model_->GetEdgesCount();
+    // return model_->GetSurfacesCount();
+  }
 
-	void ConnectData(s21::Data* data) {
-	  model_->ConnectData(data);
-	}
+  void SetGLArea(GtkGLArea* area) { model_->SetGLArea(area); }
 
-	void SetBuffer() {
-	  model_->SetBuffers();
-	}
+  void ConnectData(s21::Data* data) { model_->ConnectData(data); }
 
-	void Draw() {
-	  model_->Draw();
-	}
+  void SetBuffer() { model_->SetBuffers(); }
 
+  void Draw() { model_->Draw(); }
 
-  private:
-	s21::Model* model_ = nullptr;
+ private:
+  s21::Model* model_ = nullptr;
 
-	Controller(const Controller&);
-	Controller(Controller&&);
-	Controller& operator=(const Controller&);
-
+  Controller(const Controller&);
+  Controller(Controller&&);
+  Controller& operator=(const Controller&);
 };
-}
+}  // namespace s21
 #endif

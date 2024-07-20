@@ -27,7 +27,7 @@ class View {
     delete data_;
   };
 
-  void RunWindow();
+  void RunWindow(char* exe_name);
 
  private:
   GtkApplication* application_ = nullptr;
@@ -36,6 +36,7 @@ class View {
   s21::Data* data_ = nullptr;
   s21::MainWidget* main_widget_ = nullptr;
   s21::Controller* controller_ = nullptr;
+  char* exe_name_ = nullptr;
 
   static void Activate(GtkApplication* app, s21::View* self) {
     self->InitWindow();

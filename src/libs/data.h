@@ -372,6 +372,14 @@ class Data {
 
   void SetEdgesCount(size_t count) { info_data_->SetEdgesCount(count); }
 
+	void SetExecutionName(char* exe_name) {
+	  exe_name_ = exe_name;
+	}
+
+	char* GetExecutionName() {
+	  return exe_name_;
+	}
+
  private:
   AffineData* affine_data_ = nullptr;
   FormatData* line_data_ = nullptr;
@@ -379,14 +387,15 @@ class Data {
   InfoData* info_data_ = nullptr;
   GdkRGBA area_color_data_;
   int projection_data_;
+	char* exe_name_ = nullptr;
 
   void InitData() {
     affine_data_ = new AffineData();
-    line_data_ = new FormatData(1.0, {1, 0, 0, 1}, 1);   //
-    point_data_ = new FormatData(1.0, {0, 1, 0, 1}, 1);  //
+    line_data_ = new FormatData(1.0, {1, 0, 0, 1}, 1);  
+    point_data_ = new FormatData(1.0, {0, 1, 0, 1}, 1); 
     info_data_ = new InfoData();
-    area_color_data_ = {0, 0, 0, 1};  //
-    projection_data_ = 0;             //
+    area_color_data_ = {0, 0, 0, 1};
+    projection_data_ = 0; 
   }
 
   void ClearData() {

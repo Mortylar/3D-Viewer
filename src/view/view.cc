@@ -1,6 +1,7 @@
 #include "view.h"
 
-void s21::View::RunWindow() {
+void s21::View::RunWindow(char* exe_name) {
+  exe_name_ = exe_name;
   application_ = gtk_application_new("_3D.Viewer", APPLICATION_NONE_FLAG);
   g_signal_connect(application_, "activate", G_CALLBACK(Activate), this);
   g_application_run(G_APPLICATION(application_), 0, nullptr);
@@ -22,6 +23,7 @@ void s21::View::InitData() {
   data_ = new s21::Data();
   DataSaver ds(data_);
   ds.LoadData();
+  data_->SetExecutionName(exe_name_);
 }
 
 void s21::View::InitMainWidget() {

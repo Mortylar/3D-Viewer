@@ -1,6 +1,6 @@
 
 #include "opengl_model.h"
-#include <filesystem>
+
 #include <stdexcept>
 
 #include "figure.h"
@@ -35,9 +35,6 @@ void s21::Buffer::CreateElementBuffer(std::vector<unsigned int>& data) {
 
 void s21::Shader::LoadShader(const char* vertex_path, const char* fragment_path,
                              const char* geometry_path) {
-	std::filesystem::path path  = std::filesystem::current_path();
-	std::string str = path.string();
-	g_warning ("\npath == %s\n", str.data());
   InitShader(vertex_path, fragment_path, geometry_path);
 }
 
@@ -256,10 +253,20 @@ void s21::OpenGLModel::DrawLines(Matrix4f& mvp) {
 }
 
 void s21::OpenGLModel::InitShaders() {
-  point_shader.LoadShader("glarea/point_vs.glsl", "glarea/point_fs.glsl",
-                          "glarea/point_gs.glsl");
-  line_shader.LoadShader("glarea/line_vs.glsl", "glarea/line_fs.glsl",
-                         "glarea/line_gs.glsl");
+  std::string path{data_->GetExecutionName()};
+  RebuildPath(path);
+  point_shader.LoadShader((path + std::string("glarea/point_vs.glsl")).data(),
+                          (path + "glarea/point_fs.glsl").data(),
+                          (path + "glarea/point_gs.glsl").data());
+  line_shader.LoadShader((path + "glarea/line_vs.glsl").data(),
+                         (path + "glarea/line_fs.glsl").data(),
+                         (path + "glarea/line_gs.glsl").data());
+}
+
+void s21::OpenGLModel::RebuildPath(std::string& path) {
+  while ((path.back()) != '/') {
+    path.pop_back();
+  }
 }
 
 void s21::OpenGLModel::InitBuffer() {
@@ -297,7 +304,6 @@ void s21::OpenGLModel::Translation(Matrix4f& mvp) {
 
 void s21::OpenGLModel::Projection(Matrix4f& mvp) {
   Affine3D affine;
-  // mvp *= affine.GetTranslation(0,0,5);
   if (data_->GetProjection() == 0) {
     mvp *= affine.GetParralelProjection();
   } else {

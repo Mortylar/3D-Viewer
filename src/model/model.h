@@ -30,10 +30,10 @@ class Model {
 
   int GetEdgesCount();
 
-  void SetGLArea(GtkGLArea *area);    
-  void ConnectData(s21::Data *data);  
-  void SetBuffers();                  
-  void Draw();                        
+  void SetGLArea(GtkGLArea *area);
+  void ConnectData(s21::Data *data);
+  void SetBuffers();
+  void Draw();
 
  private:
   Affine3D *affine_;

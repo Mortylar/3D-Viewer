@@ -4,6 +4,7 @@
 #include <epoxy/gl.h>
 #include <gtk/gtk.h>
 
+#include <string>
 #include <vector>
 
 #include "../libs/data.h"
@@ -89,6 +90,7 @@ class OpenGLModel {
 
   void InitShaders();
   void InitBuffer();
+  void RebuildPath(std::string& path);
 
   void ComputeMVP(Matrix4f& mvp);
   void Rotation(Matrix4f& mvp);
