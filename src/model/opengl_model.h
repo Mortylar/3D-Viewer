@@ -2,7 +2,6 @@
 #define SRC_MODEL_OPENGL_MODEL_H_
 
 #include <epoxy/gl.h>
-#include <gtk/gtk.h>
 
 #include <string>
 #include <vector>
@@ -14,10 +13,7 @@ namespace s21 {
 
 class Buffer {
  public:
-  Buffer() {
-    vertex_ = 0;
-    element_ = 0;
-  }
+  Buffer() : vertex_(0), element_(0) {}
 
   ~Buffer() { Clear(); }
 
@@ -61,8 +57,6 @@ class OpenGLModel {
 
   ~OpenGLModel() { delete vertex_; }
 
-  inline void SetGLArea(GtkGLArea* area) { area_ = area; }
-
   inline void ConnectData(s21::Data* data) { data_ = data; }
 
   void SetBuffer();
@@ -70,7 +64,6 @@ class OpenGLModel {
 
  private:
   s21::Data* data_ = nullptr;
-  GtkGLArea* area_ = nullptr;
 
   GLuint vao_ = 0;
   Shader point_shader;
@@ -81,6 +74,11 @@ class OpenGLModel {
   GLuint point_size_location_ = 0;
 
   Buffer* vertex_ = nullptr;
+
+  OpenGLModel(OpenGLModel&);
+  OpenGLModel(OpenGLModel&&);
+  OpenGLModel& operator=(const OpenGLModel&);
+  OpenGLModel& operator=(OpenGLModel&&);
 
   void DrawFigure();
   void ResetField();

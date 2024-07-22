@@ -13,6 +13,5 @@ void s21::DrawingArea::InitArea() {
   gtk_frame_set_child(GTK_FRAME(GetFrame()), area_);
   g_signal_connect(area_, "realize", G_CALLBACK(Realize), this);
   g_signal_connect(area_, "render", G_CALLBACK(Render), this);
-  controller_->SetGLArea(GTK_GL_AREA(area_));
   controller_->ConnectData(data_);
 }

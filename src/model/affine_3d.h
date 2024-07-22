@@ -18,8 +18,8 @@ class Affine3D {
   Matrix4f GetTranslation(float x, float y, float z);
   Matrix4f GetRotation(float x, float y, float z);
   Matrix4f GetScaling(float x, float y, float z);
-  Matrix4f GetCentralProjection();   // TODO
-  Matrix4f GetParralelProjection();  // TODO
+  Matrix4f GetCentralProjection();
+  Matrix4f GetParralelProjection();
 
  private:
   const size_t dim_ = 3;

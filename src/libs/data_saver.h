@@ -6,7 +6,7 @@
 namespace s21 {
 class DataSaver {
  public:
-  DataSaver(Data* data) : data_(data){};
+  explicit DataSaver(Data* data) : data_(data){};
 
   void LoadData() {
     if (IsValidConfigFile()) {

@@ -11,7 +11,6 @@ class Figure;
 
 class FigureKiller {
  public:
-  //   FigureKiller();
   ~FigureKiller();
 
   void Initialize(Figure *figure) { figure_ = figure; }

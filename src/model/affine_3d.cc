@@ -1,7 +1,6 @@
 #include "affine_3d.h"
 
 #include <cmath>
-//#include <iostream>  //TODO remove
 #include <stdexcept>
 
 s21::Matrix4f s21::Affine3D::GetTranslation(float x, float y, float z) {
@@ -59,9 +58,7 @@ s21::Matrix4f s21::Affine3D::GetParralelProjection() {
   result(1, 1) = 1;
   result(2, 2) = 2.0 / (far - near);
   result(2, 3) = (near + far) / (near - far);
-  // result(3,2) = 0.0;
   result(3, 3) = 1.0;
-  // result.Print();
   return result;
 }
 
@@ -76,7 +73,6 @@ s21::Matrix4f s21::Affine3D::GetCentralProjection() {
   result(2, 3) = 2 * (far * near) / (near - far);
   result(3, 2) = 1.0;
   result(3, 3) = 0.0;
-  // result.Print();
   return result;
 }
 

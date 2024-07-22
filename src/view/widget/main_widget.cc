@@ -20,8 +20,6 @@ void s21::MainWidget::CreatePannel() {
 void s21::MainWidget::InitGrid() {
   grid_ = gtk_grid_new();
   gtk_frame_set_child(GTK_FRAME(GetFrame()), grid_);
-  // gtk_grid_set_row_homogeneous(GTK_GRID(grid_), true);
-  // gtk_grid_set_column_homogeneous(GTK_GRID(grid_), true);
 }
 
 void s21::MainWidget::GridPlacement() {
@@ -81,11 +79,11 @@ void s21::MainWidget::CreateFileChooser() {
   g_signal_connect(start_button_, "clicked", G_CALLBACK(LoadFile), this);
 }
 
-void s21::MainWidget::CreateMediaPannel() {
-  media_pannel_ = new s21::MediaPannel(window_, controller_);
-  media_pannel_->BuildWidget();
-  media_pannel_->SetMother(this);
-}
+// void s21::MainWidget::CreateMediaPannel() {
+//   media_pannel_ = new s21::MediaPannel(window_, controller_);
+//   media_pannel_->BuildWidget();
+//   media_pannel_->SetMother(this);
+// }
 
 void s21::MainWidget::CreateProjectionPannel() {
   projection_ = new s21::ProjectionPannel();

@@ -35,7 +35,7 @@ class Label : public Widget {
  public:
   Label() { InitLabel(); }
 
-  Label(const char *text) {
+  explicit Label(const char *text) {
     InitLabel();
     SetName(text);
   }
@@ -77,7 +77,7 @@ class DSpinButton : public Widget {
     InitSpinButton();
   }
 
-  DSpinButton(GtkAdjustment *adjustment) : adjustment_(adjustment) {
+  explicit DSpinButton(GtkAdjustment *adjustment) : adjustment_(adjustment) {
     InitSpinButton();
   }
 
@@ -131,7 +131,9 @@ class DSlider : public Widget {
     InitSlider();
   }
 
-  DSlider(GtkAdjustment *adjustment) : adjustment_(adjustment) { InitSlider(); }
+  explicit DSlider(GtkAdjustment *adjustment) : adjustment_(adjustment) {
+    InitSlider();
+  }
 
   ~DSlider(){};
 
@@ -176,7 +178,7 @@ class FileChooser : public Widget {
  public:
   FileChooser() { InitButton(); }
 
-  FileChooser(const char *name) { InitButton(name); }
+  explicit FileChooser(const char *name) { InitButton(name); }
 
   ~FileChooser() { ClearFile(); };
 
@@ -238,7 +240,7 @@ class FileSaver : public Widget {
  public:
   FileSaver() { InitButton(); }
 
-  FileSaver(const char *name) { InitButton(name); }
+  explicit FileSaver(const char *name) { InitButton(name); }
 
   ~FileSaver() { ClearFile(); };
 
@@ -302,7 +304,7 @@ class FileChooser : public Widget {
  public:
   FileChooser() { InitButton(); }
 
-  FileChooser(const char *name) { InitButton(name); }
+  explicit FileChooser(const char *name) { InitButton(name); }
 
   ~FileChooser() { ClearFile(); };
 
@@ -362,7 +364,7 @@ class FileSaver : public Widget {
  public:
   FileSaver() { InitButton(); }
 
-  FileSaver(const char *name) { InitButton(name); }
+  explicit FileSaver(const char *name) { InitButton(name); }
 
   ~FileSaver() { ClearFile(); };
 
@@ -513,7 +515,9 @@ class ColorButton : public Widget {
 
 class DropDownButton : public Widget {
  public:
-  DropDownButton(const char *const *strings) { InitDropDownButton(strings); }
+  explicit DropDownButton(const char *const *strings) {
+    InitDropDownButton(strings);
+  }
 
   DropDownButton(GListModel *model, GtkExpression *expression) {
     InitDropDownButton(model, expression);

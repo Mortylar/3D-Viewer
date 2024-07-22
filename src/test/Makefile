@@ -1,5 +1,4 @@
 CC=g++ -std=c++17 -g
-GTK_FLAGS=`pkg-config --libs --cflags gtk4`
 EPOXY_FLAGS=`pkg-config --libs --cflags epoxy`
 GTEST_FLAGS= -lgtest
 COVERAGE_FLAGS = -lgcov --coverage
@@ -43,8 +42,7 @@ coverage:
 
 #endif	
 	lcov -a matrix.info  -a affine.info -a figure.info -a parser.info -o test.info
-#	lcov -a affine.info -a figure.info -a matrix_4f.info -a parser.info -a model.info -o test.info
-	lcov --remove test.info "/usr/include/*" "/Library/*" "/usr/local/*" "/opt/goinfree/*" "stb/*" --ignore-errors unused -o mini_test.info
+	lcov --remove test.info "/usr/include/*" "/Library/*" "/usr/local/*" "/opt/goinfree/*" --ignore-errors unused -o mini_test.info
 	genhtml -o report mini_test.info
 	$(OPEN) report/index.html
 

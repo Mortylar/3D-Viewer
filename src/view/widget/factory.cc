@@ -112,7 +112,7 @@ s21::Widget *s21::GifPannelFactory::CreateWidget() {
   GtkAdjustment *adjustment = gtk_adjustment_new(0.0, 0.0, 60.0, 1.0, 0.0, 0.0);
   s21::FileSaverDSpinButtonPair *gif_pannel =
       new s21::FileSaverDSpinButtonPair(adjustment);
-  gif_pannel->SetName("Gif Pannel");
+  gif_pannel->SetName(name);
   return gif_pannel;
 }
 

@@ -2,7 +2,6 @@
 
 #include <cstring>
 #include <fstream>
-#include <iostream>  //TODO remove
 #include <stdexcept>
 #include <vector>
 
@@ -56,8 +55,8 @@ void s21::Parser::ReadVertexes(const std::string &buffer) {
 }
 
 int s21::Parser::ExtractVertexData(const std::string &buffer,
-                                   std::string format, float *x, float *y,
-                                   float *z) {
+                                   const std::string &format, float *x,
+                                   float *y, float *z) {
   return sscanf(buffer.data(), format.data(), x, y, z);
 }
 
