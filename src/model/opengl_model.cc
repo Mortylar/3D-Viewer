@@ -1,4 +1,3 @@
-
 #include "opengl_model.h"
 
 #include <stdexcept>
@@ -141,6 +140,7 @@ char* s21::Shader::LoadFile(const char* file_name) {
     text[length] = 0;
     fclose(fp);
   } else {
+    delete[] text;
     std::string error_message =
         "s21::Shader::LoadFile : error opening shader file \"";
     error_message += file_name;
@@ -151,7 +151,6 @@ char* s21::Shader::LoadFile(const char* file_name) {
 }
 
 void s21::OpenGLModel::SetBuffer() {
-  gtk_gl_area_make_current(GTK_GL_AREA(area_));
   InitBuffer();
   InitShaders();
 }
@@ -242,11 +241,11 @@ void s21::OpenGLModel::DrawLines(Matrix4f& mvp) {
 
     size_t last_position = 0;
     glDrawElements(GL_LINE_LOOP, offset[0], GL_UNSIGNED_INT,
-                   (void*)(last_position));
+                   reinterpret_cast<void*>(last_position));
     for (size_t i = 1; i < offset.size(); ++i) {
       last_position += offset[i - 1] * sizeof(unsigned int);
       glDrawElements(GL_LINE_LOOP, offset[i], GL_UNSIGNED_INT,
-                     (void*)(last_position));
+                     reinterpret_cast<void*>(last_position));
     }
     glFlush();
   }

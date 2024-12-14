@@ -1,5 +1,4 @@
 #include "common.h"
-//#include "../model/affine_3d.h"
 
 TEST(AffineTest, TestTranslation) {
   s21::Affine3D A;
@@ -57,27 +56,82 @@ TEST(AffineTest, TestRotation) {
   e(3, 3) = 1;
 
   Compare(e, res, epsilon);
-
-  for (int i = 0; i < 4; ++i) {
-    for (int j = 0; j < 4; ++j) {
-      std::cout << res(i, j) << "\t";
-    }
-    std::cout << std::endl;
-  }
 }
 
-// TEST(AffineTest, Test) {
-// }
+TEST(AffineTest, TestScaling) {
+  s21::Affine3D A;
+  float dx = 1, dy = 2, dz = 3;
+  s21::Matrix4f e;
+  e(0, 0) = dx;
+  e(1, 1) = dy;
+  e(2, 2) = dz;
 
-// TEST(AffineTest, Test) {
-// }
-
-/*
-TEST(AffineTest, Test7) {
-  s21::Model A;
-  std::vector<double> v {1, 2, 3};
-  EXPECT_THROW(A.Scaling(v, 0, 1, 2), std::invalid_argument);
-  EXPECT_THROW(A.Scaling(v, -1, 0, 1), std::invalid_argument);
-  EXPECT_THROW(A.Scaling(v, -2, -1, 0), std::invalid_argument);
+  s21::Matrix4f res = A.GetScaling(dx, dy, dz);
+  Compare(e, res);
 }
-*/
+
+TEST(AffineTest, TestParralelProjection) {
+  s21::Affine3D A;
+  float dx = 0.02020202, dy = -1.020202;
+  s21::Matrix4f e;
+  e(2, 2) = dx;
+  e(2, 3) = dy;
+
+  s21::Matrix4f res = A.GetParralelProjection();
+  Compare(e, res);
+}
+
+TEST(AffineTest, TestCentralProjection) {
+  s21::Affine3D A;
+  float dx = 1.02020202, dy = -2.0202019;
+  float angle = 1.1917536;
+  s21::Matrix4f e;
+  e(0, 0) = angle;
+  e(1, 1) = angle;
+  e(2, 2) = dx;
+  e(2, 3) = dy;
+  e(3, 2) = 1.0;
+  e(3, 3) = 0.0;
+
+  s21::Matrix4f res = A.GetCentralProjection();
+  Compare(e, res);
+}
+
+TEST(AffineTest, TestNormalize) {
+  s21::Affine3D A;
+  std::vector<float> v1{1, 2, 3};
+  std::vector<float> v2{0.33333334, 0.66666669, 1};
+
+  A.Normalize(v1);
+  Compare(v1, v2, 3);
+}
+
+TEST(AffineTest, TestCentring) {
+  s21::Affine3D A;
+  std::vector<float> v1{1, 2, 3, 4, 5, 6};
+  std::vector<float> v2{-1.5, -1.5, -1.5, -1.5, -1.5, -1.5};
+
+  A.Centring(v1);
+  Compare(v1, v2, 3);
+}
+
+TEST(AffineTest, TestDimension1) {
+  s21::Affine3D A;
+  std::vector<float> v{};
+
+  EXPECT_THROW(A.Normalize(v), std::invalid_argument);
+}
+
+TEST(AffineTest, TestDimension2) {
+  s21::Affine3D A;
+  std::vector<float> v{1, 2, 3, 4};
+
+  EXPECT_THROW(A.Centring(v), std::invalid_argument);
+}
+
+TEST(AffineTest, TestScalingNilpotency) {
+  s21::Affine3D A;
+  float dx = 1, dy = 2, dz = 0;
+
+  EXPECT_THROW(A.GetScaling(dx, dy, dz), std::invalid_argument);
+}

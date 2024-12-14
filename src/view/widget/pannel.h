@@ -14,7 +14,7 @@ class LabelPannel : public PairWidget {
  public:
   LabelPannel() : size_(1) { InitPannel(); }
 
-  LabelPannel(size_t size) : size_(size) { InitPannel(); }
+  explicit LabelPannel(size_t size) : size_(size) { InitPannel(); }
 
   ~LabelPannel() {
     for (size_t i = 0; i < size_; ++i) {
@@ -40,11 +40,9 @@ class LabelPannel : public PairWidget {
     pair_[pos]->SetName(name);
   }
 
-  void SetName(const char *name) override {  // TODO override
-    s21::Widget::SetName(name);
-  }
+  void SetName(const char *name) override { s21::Widget::SetName(name); }
 
-  void SetMother(s21::Widget *mother) {
+  void SetMother(s21::Widget *mother) override {
     for (size_t i = 0; i < size_; ++i) {
       pair_[i]->SetMother(mother);
     }
@@ -76,9 +74,10 @@ class DSpinButtonPannel : public PairWidget {
  public:
   DSpinButtonPannel() : size_(1) { InitPannel(); }
 
-  DSpinButtonPannel(size_t size) : size_(size) { InitPannel(); }
+  explicit DSpinButtonPannel(size_t size) : size_(size) { InitPannel(); }
 
-  DSpinButtonPannel(std::initializer_list<GtkAdjustment *> const &items) {
+  explicit DSpinButtonPannel(
+      std::initializer_list<GtkAdjustment *> const &items) {
     size_ = items.size();
     auto it = items.begin();
     for (size_t i = 0; i < size_; ++i) {
@@ -118,7 +117,7 @@ class DSpinButtonPannel : public PairWidget {
 
   void SetName(const char *name) override { s21::Widget::SetName(name); }
 
-  void SetMother(s21::Widget *mother) {
+  void SetMother(s21::Widget *mother) override {
     for (size_t i = 0; i < size_; ++i) {
       pair_[i]->SetMother(mother);
     }
@@ -154,9 +153,9 @@ class DSliderPannel : public PairWidget {
  public:
   DSliderPannel() : size_(1) { InitPannel(); }
 
-  DSliderPannel(size_t n) : size_(n) { InitPannel(); }
+  explicit DSliderPannel(size_t n) : size_(n) { InitPannel(); }
 
-  DSliderPannel(std::initializer_list<GtkAdjustment *> const &items) {
+  explicit DSliderPannel(std::initializer_list<GtkAdjustment *> const &items) {
     size_ = items.size();
     auto it = items.begin();
     for (size_t i = 0; i < size_; ++i) {
@@ -200,7 +199,7 @@ class DSliderPannel : public PairWidget {
     pair_[pos]->SetName(name);
   }
 
-  void SetMother(s21::Widget *mother) {
+  void SetMother(s21::Widget *mother) override {
     for (size_t i = 0; i < size_; ++i) {
       pair_[i]->SetMother(mother);
     }

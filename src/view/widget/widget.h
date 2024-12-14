@@ -35,9 +35,9 @@ class Label : public Widget {
  public:
   Label() { InitLabel(); }
 
-  Label(const char *text) {
+  explicit Label(const char *text) {
     InitLabel();
-    SetName(text);
+    Label::SetName(text);
   }
 
   ~Label(){};
@@ -52,7 +52,7 @@ class Label : public Widget {
     gtk_label_set_text(GTK_LABEL(label_), value);
   }
 
-  void SendSignal() override{};
+  void SendSignal() override {};
 
   void SetMother(s21::Widget *mother) override { mother_ = mother; }
 
@@ -77,7 +77,7 @@ class DSpinButton : public Widget {
     InitSpinButton();
   }
 
-  DSpinButton(GtkAdjustment *adjustment) : adjustment_(adjustment) {
+  explicit DSpinButton(GtkAdjustment *adjustment) : adjustment_(adjustment) {
     InitSpinButton();
   }
 
@@ -131,7 +131,9 @@ class DSlider : public Widget {
     InitSlider();
   }
 
-  DSlider(GtkAdjustment *adjustment) : adjustment_(adjustment) { InitSlider(); }
+  explicit DSlider(GtkAdjustment *adjustment) : adjustment_(adjustment) {
+    InitSlider();
+  }
 
   ~DSlider(){};
 
@@ -176,7 +178,7 @@ class FileChooser : public Widget {
  public:
   FileChooser() { InitButton(); }
 
-  FileChooser(const char *name) { InitButton(name); }
+  explicit FileChooser(const char *name) { InitButton(name); }
 
   ~FileChooser() { ClearFile(); };
 
@@ -186,7 +188,7 @@ class FileChooser : public Widget {
     if (mother_) mother_->CatchSignal();
   }
 
-  void CatchSignal() override{};
+  void CatchSignal() override {};
 
   void SetName(const char *name) override {
     gtk_button_set_label(GTK_BUTTON(button_), name);
@@ -238,7 +240,7 @@ class FileSaver : public Widget {
  public:
   FileSaver() { InitButton(); }
 
-  FileSaver(const char *name) { InitButton(name); }
+  explicit FileSaver(const char *name) { InitButton(name); }
 
   ~FileSaver() { ClearFile(); };
 
@@ -248,7 +250,7 @@ class FileSaver : public Widget {
     if (mother_) mother_->CatchSignal();
   }
 
-  void CatchSignal() override{};
+  void CatchSignal() override {};
 
   void SetName(const char *name) override {
     gtk_button_set_label(GTK_BUTTON(button_), name);
@@ -302,7 +304,7 @@ class FileChooser : public Widget {
  public:
   FileChooser() { InitButton(); }
 
-  FileChooser(const char *name) { InitButton(name); }
+  explicit FileChooser(const char *name) { InitButton(name); }
 
   ~FileChooser() { ClearFile(); };
 
@@ -312,7 +314,7 @@ class FileChooser : public Widget {
     if (mother_) mother_->CatchSignal();
   }
 
-  void CatchSignal() override{};
+  void CatchSignal() override {};
 
   void SetName(const char *name) override {
     gtk_button_set_label(GTK_BUTTON(button_), name);
@@ -362,7 +364,7 @@ class FileSaver : public Widget {
  public:
   FileSaver() { InitButton(); }
 
-  FileSaver(const char *name) { InitButton(name); }
+  explicit FileSaver(const char *name) { InitButton(name); }
 
   ~FileSaver() { ClearFile(); };
 
@@ -372,7 +374,7 @@ class FileSaver : public Widget {
     if (mother_) mother_->CatchSignal();
   }
 
-  void CatchSignal() override{};
+  void CatchSignal() override {};
 
   void SetName(const char *name) override {
     gtk_button_set_label(GTK_BUTTON(button_), name);
@@ -513,7 +515,9 @@ class ColorButton : public Widget {
 
 class DropDownButton : public Widget {
  public:
-  DropDownButton(const char *const *strings) { InitDropDownButton(strings); }
+  explicit DropDownButton(const char *const *strings) {
+    InitDropDownButton(strings);
+  }
 
   DropDownButton(GListModel *model, GtkExpression *expression) {
     InitDropDownButton(model, expression);

@@ -39,7 +39,7 @@ s21::Matrix4f& s21::Matrix4f::operator=(Matrix4f&& other) {
 
 s21::Matrix4f::~Matrix4f() { Clear(); }
 
-s21::Matrix4f& s21::Matrix4f::operator+=(Matrix4f& other) {
+s21::Matrix4f& s21::Matrix4f::operator+=(const Matrix4f& other) {
   for (int i = 0; i < size_; ++i) {
     for (int j = 0; j < size_; ++j) {
       data_[i][j] += other.data_[i][j];
@@ -48,7 +48,7 @@ s21::Matrix4f& s21::Matrix4f::operator+=(Matrix4f& other) {
   return *this;
 }
 
-s21::Matrix4f& s21::Matrix4f::operator-=(Matrix4f& other) {
+s21::Matrix4f& s21::Matrix4f::operator-=(const Matrix4f& other) {
   for (int i = 0; i < size_; ++i) {
     for (int j = 0; j < size_; ++j) {
       data_[i][j] -= other.data_[i][j];
@@ -57,25 +57,17 @@ s21::Matrix4f& s21::Matrix4f::operator-=(Matrix4f& other) {
   return *this;
 }
 
-s21::Matrix4f s21::Matrix4f::operator+(Matrix4f& other) {
+s21::Matrix4f s21::Matrix4f::operator+(const Matrix4f& other) {
   Matrix4f result(*this);
   return result += other;
 }
 
-s21::Matrix4f s21::Matrix4f::operator-(Matrix4f& other) {
+s21::Matrix4f s21::Matrix4f::operator-(const Matrix4f& other) {
   Matrix4f result(*this);
   return result -= other;
 }
 
-//----------------------------------end block-----------------------------//
-//--------------------------------multiply block-------------------------//
-/*
-s21::Matrix4f& s21::Matrix4f::operator*=(Matrix4f& other) {
-  *this = (*this) * other;
-  return *this;
-}*/
-
-s21::Matrix4f s21::Matrix4f::operator*(Matrix4f& other) {
+s21::Matrix4f s21::Matrix4f::operator*(const Matrix4f& other) {
   Matrix4f result;
   result.Clear();
   for (int i = 0; i < size_; ++i) {
@@ -101,7 +93,6 @@ s21::Matrix4f& s21::Matrix4f::operator*=(Matrix4f other) {
   *this = (*this) * other;
   return *this;
 }
-//---------------------------------end block --------------------------//
 
 float& s21::Matrix4f::operator()(int i, int j) { return data_[i][j]; }
 

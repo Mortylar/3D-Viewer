@@ -13,11 +13,9 @@ class Parser {
   void ParserMethod(const char *file_name);
 
  private:
-  // const int buffer_length_ = 255;
-
   void ReadVertexes(const std::string &buffer);
-  int ExtractVertexData(const std::string &, std::string, float *, float *,
-                        float *);
+  int ExtractVertexData(const std::string &, const std::string &, float *,
+                        float *, float *);
 
   void ReadSurface(const std::string &buffer);
   size_t ExtractFragment(const std::string &, size_t,

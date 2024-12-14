@@ -105,5 +105,91 @@ TEST(Matrix4fTest, MoveAssignmentOperator) {
   Compare(e, other);
 }
 
-// TEST(Matrix4fTest, ) {
-// }
+TEST(Matrix4fTest, SumAssignmentOperator) {
+  s21::Matrix4f e;
+  s21::Matrix4f m;
+
+  Compare(m, e);
+
+  s21::Matrix4f other;
+  other = e + m;
+
+  e += m;
+
+  Compare(e, other);
+}
+
+TEST(Matrix4fTest, SubAssignmentOperator) {
+  s21::Matrix4f e;
+  s21::Matrix4f m;
+
+  Compare(m, e);
+
+  s21::Matrix4f other;
+  other = e - m;
+
+  e -= m;
+
+  Compare(e, other);
+}
+
+TEST(Matrix4fTest, MulMatrix) {
+  s21::Matrix4f e;
+  s21::Matrix4f m;
+
+  Compare(m, e);
+
+  e(0, 0) = 2.0f;
+  e(1, 1) = 2.0f;
+  e(2, 2) = 2.0f;
+  e(3, 3) = 2.0f;
+
+  m(0, 0) = 1.0f;
+  m(1, 1) = 2.0f;
+  m(2, 2) = 3.0f;
+  m(3, 3) = 4.0f;
+
+  s21::Matrix4f result;
+  result(0, 0) = 2.0f;
+  result(1, 1) = 4.0f;
+  result(2, 2) = 6.0f;
+  result(3, 3) = 8.0f;
+
+  s21::Matrix4f other;
+  other = e * m;
+
+  Compare(result, other);
+}
+
+TEST(Matrix4fTest, MulNumMatrix) {
+  s21::Matrix4f e;
+  float num = 2.0f;
+
+  s21::Matrix4f result;
+  result(0, 0) = 2.0f;
+  result(1, 1) = 2.0f;
+  result(2, 2) = 2.0f;
+  result(3, 3) = 2.0f;
+
+  s21::Matrix4f other;
+  other = e * num;
+
+  Compare(result, other);
+}
+
+TEST(Matrix4fTest, MulAssignmentOperator) {
+  s21::Matrix4f e;
+  s21::Matrix4f m;
+
+  Compare(m, e);
+
+  m(1, 1) = 2;
+  m(2, 2) = 3;
+
+  s21::Matrix4f other;
+  other = e * m;
+
+  e *= m;
+
+  Compare(e, other);
+}

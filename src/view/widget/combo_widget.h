@@ -11,7 +11,7 @@
 namespace s21 {
 class AffinePannel : public Widget {
  public:
-  AffinePannel(s21::AffineData *data) : data_(data) {
+  explicit AffinePannel(s21::AffineData *data) : data_(data) {
     InitGrid();
     s21::Widget::SetName("_AFFINE_PANNEL_");
   }
@@ -96,7 +96,7 @@ enum class LineType {
 
 class LinePannel : public Widget {
  public:
-  LinePannel(s21::FormatData *data) : data_(data) {
+  explicit LinePannel(s21::FormatData *data) : data_(data) {
     InitGrid();
     s21::Widget::SetName("_LINE_PANNEL_");
   }
@@ -146,7 +146,7 @@ enum class PointType {
 
 class PointPannel : public Widget {
  public:
-  PointPannel(s21::FormatData *data) : data_(data) {
+  explicit PointPannel(s21::FormatData *data) : data_(data) {
     InitGrid();
     s21::Widget::SetName("_POINT_PANNEL_");
   }
@@ -212,7 +212,7 @@ class InfoPannel : public Widget {
   }
 
   void SetEdgesCount(size_t edges_count) {
-    edges_count_->SetValue(std::to_string(edges_count).data());  // TODO
+    edges_count_->SetValue(std::to_string(edges_count).data());
   }
 
  private:
@@ -232,6 +232,7 @@ class MediaPannel : public Widget {
  public:
   MediaPannel(GtkWidget *window, s21::Controller *controller)
       : main_window_(window), controller_(controller) {
+    InitWindow();
     InitGrid();
   };
 
@@ -243,8 +244,8 @@ class MediaPannel : public Widget {
 
   void SetMother(s21::Widget *mother) override { mother_ = mother; };
 
-  void CatchSignal() override{};
-  void SendSignal() override{};
+  void CatchSignal() override {};
+  void SendSignal() override {};
 
  private:
   GtkApplication *app_ = nullptr;
@@ -265,17 +266,7 @@ class MediaPannel : public Widget {
   void InitCaptureButton();
   void InitGifButton();
 
-  static void CreateCapture(GtkWidget *button_, s21::MediaPannel *self) {
-    std::string file_name = self->capture_pannel_->GetFileName();
-    if (file_name != "") {
-      int extension = self->capture_pannel_->GetExtension();
-      std::string ext_string =
-          ((extension == 2) ? "bmp" : ((extension == 1) ? "jpg" : "png"));
-      size_t width = gtk_widget_get_width(self->main_window_);
-      size_t height = gtk_widget_get_height(self->main_window_);
-      file_name = file_name + "." + ext_string;
-    }
-  }
+  static void CreateCapture(GtkWidget *button_, s21::MediaPannel *self) {};
 };
 
 class ProjectionPannel : public Widget {
@@ -313,7 +304,7 @@ class ProjectionPannel : public Widget {
 
 class AreaColorPannel : public Widget {
  public:
-  AreaColorPannel(s21::Data *data) : data_(data) {
+  explicit AreaColorPannel(s21::Data *data) : data_(data) {
     InitGrid();
     s21::Widget::SetName("_AREA_PANNEL_");
   }

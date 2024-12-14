@@ -11,7 +11,7 @@ void s21::View::RunWindow(char* exe_name) {
 void s21::View::InitWindow() {
   window_ = gtk_application_window_new(application_);
   gtk_window_set_title(GTK_WINDOW(window_), "3DViewer");
-  gtk_window_set_default_size(GTK_WINDOW(window_), 90, 10);  // TODO
+  gtk_window_set_default_size(GTK_WINDOW(window_), 90, 10);
 }
 
 void s21::View::InitGrid() {

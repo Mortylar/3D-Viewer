@@ -14,10 +14,6 @@ size_t s21::Model::GetVertexCount() {
   return s21::Figure::GetInstance()->GetVertexCount();
 }
 
-const std::vector<float> &s21::Model::GetVertex() {
-  return s21::Figure::GetInstance()->GetVertex();
-}
-
 int s21::Model::GetEdgesCount() {
   return s21::Figure::GetInstance()->GetEdgesCount();
 }
@@ -25,12 +21,6 @@ int s21::Model::GetEdgesCount() {
 size_t s21::Model::GetSurfacesCount() {
   return s21::Figure::GetInstance()->GetSurfacesCount();
 }
-
-const std::vector<unsigned int> &s21::Model::GetSurface() {
-  return s21::Figure::GetInstance()->GetVSurface();
-}
-
-void s21::Model::SetGLArea(GtkGLArea *area) { opengl_model_->SetGLArea(area); }
 
 void s21::Model::ConnectData(s21::Data *data) {
   opengl_model_->ConnectData(data);

@@ -21,7 +21,7 @@ class MainWidget : public Widget {
     InitGrid();
   };
 
-  ~MainWidget(){};
+  ~MainWidget() { RemoveWidget(); };
 
   void SetName(const char* name) override { s21::Widget::SetName(name); }
 
@@ -70,26 +70,17 @@ class MainWidget : public Widget {
   void CreateLinePannel();
   void CreatePointPannel();
   void CreateFileChooser();
-  void CreateMediaPannel();
   void CreateProjectionPannel();
   void CreateAreaColorPannel();
   void CreateDrawingArea();
   void CreateMediaButton();
 
   static void OpenMedia(GtkWidget* button, s21::MainWidget* self) {
-    size_t scale = gtk_widget_get_scale_factor(self->GetFrame());
-    size_t width = gtk_widget_get_width(self->GetFrame());
-    size_t height = gtk_widget_get_height(self->GetFrame());
     if (self->media_pannel_) delete self->media_pannel_;
     self->media_pannel_ =
         new s21::MediaPannel(self->window_, self->controller_);
     self->media_pannel_->BuildWidget();
     gtk_widget_set_visible(self->media_pannel_->GetWindow(), true);
-  }
-
-  static void CloseMediaPannel(GtkWidget* media_window, s21::MainWidget* self) {
-    delete self->media_pannel_;
-    self->media_pannel_ = nullptr;
   }
 
   void Update();

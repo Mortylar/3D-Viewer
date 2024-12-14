@@ -9,7 +9,7 @@ namespace s21 {
 class Factory {
  public:
   Factory(){};
-  ~Factory(){};
+  virtual ~Factory(){};
   virtual s21::Widget *CreateWidget() = 0;
 };
 

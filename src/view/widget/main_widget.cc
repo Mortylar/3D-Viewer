@@ -20,8 +20,6 @@ void s21::MainWidget::CreatePannel() {
 void s21::MainWidget::InitGrid() {
   grid_ = gtk_grid_new();
   gtk_frame_set_child(GTK_FRAME(GetFrame()), grid_);
-  // gtk_grid_set_row_homogeneous(GTK_GRID(grid_), true);
-  // gtk_grid_set_column_homogeneous(GTK_GRID(grid_), true);
 }
 
 void s21::MainWidget::GridPlacement() {
@@ -81,12 +79,6 @@ void s21::MainWidget::CreateFileChooser() {
   g_signal_connect(start_button_, "clicked", G_CALLBACK(LoadFile), this);
 }
 
-void s21::MainWidget::CreateMediaPannel() {
-  media_pannel_ = new s21::MediaPannel(window_, controller_);
-  media_pannel_->BuildWidget();
-  media_pannel_->SetMother(this);
-}
-
 void s21::MainWidget::CreateProjectionPannel() {
   projection_ = new s21::ProjectionPannel();
   projection_->SetValue(data_->GetProjection());
@@ -125,7 +117,7 @@ void s21::MainWidget::UpdateData() {
 void s21::MainWidget::SetInfo() {
   info_pannel_->SetFileName(file_->GetFileName());
   info_pannel_->SetVertexCount(controller_->GetVertexCount());
-  info_pannel_->SetEdgesCount(controller_->GetSurfacesCount());  // TODO
+  info_pannel_->SetEdgesCount(controller_->GetSurfacesCount());
 }
 
 void s21::MainWidget::ReadAndDrawFile(const char* file_name) {

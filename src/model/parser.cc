@@ -2,7 +2,6 @@
 
 #include <cstring>
 #include <fstream>
-#include <iostream>  //TODO remove
 #include <stdexcept>
 #include <vector>
 
@@ -20,9 +19,19 @@ void s21::Parser::ParserMethod(const char *file_name) {
   while (file_length) {
     std::string buffer = ReadString(fp, &file_length);
     if ('v' == buffer[0]) {
-      ReadVertexes(buffer);
+      try {
+        ReadVertexes(buffer);
+      } catch (std::invalid_argument &err) {
+        fclose(fp);
+        throw std::invalid_argument(err.what());
+      }
     } else if (('f' == buffer[0]) && (' ' == buffer[1])) {
-      ReadSurface(buffer);
+      try {
+        ReadSurface(buffer);
+      } catch (std::invalid_argument &err) {
+        fclose(fp);
+        throw std::invalid_argument(err.what());
+      }
     }
   }
 
@@ -56,8 +65,8 @@ void s21::Parser::ReadVertexes(const std::string &buffer) {
 }
 
 int s21::Parser::ExtractVertexData(const std::string &buffer,
-                                   std::string format, float *x, float *y,
-                                   float *z) {
+                                   const std::string &format, float *x,
+                                   float *y, float *z) {
   return sscanf(buffer.data(), format.data(), x, y, z);
 }
 
@@ -94,7 +103,7 @@ size_t s21::Parser::ExtractFragment(const std::string &buffer, size_t pos,
       fragment += ' ';
       ++mod_count;
       if (buffer[pos + 1] == '/') {
-        fragment += "0 ";
+        fragment += ' ';
         pos += 2;
         ++mod_count;
       } else {

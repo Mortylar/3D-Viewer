@@ -274,7 +274,6 @@ void s21::MediaPannel::InitCaptureButton() {
 
 void s21::MediaPannel::InitGifButton() {
   gif_button_ = gtk_button_new_with_label("Create Gif");
-  // g_signal_connect(gif_button_, "clicked", G_CALLBACK(CreateGif), this);
   gtk_grid_attach(GTK_GRID(grid_), gif_button_, 0, 3, 1, 1);
 }
 

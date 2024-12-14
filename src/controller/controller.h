@@ -13,12 +13,7 @@ class Controller {
 
   size_t GetVertexCount() { return model_->GetVertexCount(); }
 
-  size_t GetSurfacesCount() {
-    return model_->GetEdgesCount();
-    // return model_->GetSurfacesCount();
-  }
-
-  void SetGLArea(GtkGLArea* area) { model_->SetGLArea(area); }
+  size_t GetSurfacesCount() { return model_->GetEdgesCount(); }
 
   void ConnectData(s21::Data* data) { model_->ConnectData(data); }
 

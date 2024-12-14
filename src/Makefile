@@ -28,6 +28,8 @@ DIST_NAME=3D_Viewer-2.0.tar.gz
 BUILD_DIR=~/3D_Viewer
 TARGET_NAME=3D_Viewer
 
+all: gcov_report leaks install open
+
 install: build
 	-rm -r $(BUILD_DIR)
 	-mkdir $(BUILD_DIR)
@@ -52,7 +54,20 @@ tests:
 gcov_report:
 	cd test/ && make coverage
 
+valgrind:
+	cd test/ && make valgrind
+
+leaks:
+	cd test/ && make leaks
+
 dvi:
+	cd report/ && make dvi
+
+pdf:
+	cd report/ && make pdf
+
+open_report:
+	cd report/ && make open
 
 dist:
 	tar -czf $(DIST_NAME) .
@@ -64,6 +79,8 @@ clean:
 	cd model/ && make clean  
 	cd view/ && make clean
 	cd test/ && make clean
+	cd report/ && make clean
+	-rm $(TARGET_NAME) .3D_conf
 
 libs21_model.a:
 	cd model/ && make libs21_model.a
@@ -79,3 +96,7 @@ fix_style:
 
 cppcheck:
 	cppcheck --language=c++ --enable=all --suppress=missingIncludeSystem main.cc $(FULL_SOURCE) $(TEST_FILES)
+
+add: fix_style
+	git add $(shell find . -name "*.cc") $(shell find . -name "*.h")	
+

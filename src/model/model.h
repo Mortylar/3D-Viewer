@@ -23,14 +23,9 @@ class Model {
   void ReadFile(const char *file_name);
 
   size_t GetVertexCount();
-  const std::vector<float> &GetVertex();
-
   size_t GetSurfacesCount();
-  const std::vector<unsigned int> &GetSurface();
-
   int GetEdgesCount();
 
-  void SetGLArea(GtkGLArea *area);
   void ConnectData(s21::Data *data);
   void SetBuffers();
   void Draw();

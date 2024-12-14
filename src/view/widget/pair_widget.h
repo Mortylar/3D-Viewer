@@ -10,7 +10,7 @@ class PairWidget : public Widget {
  public:
   PairWidget() { InitGrid(); };
 
-  ~PairWidget(){};
+  virtual ~PairWidget(){};
 
   virtual GtkWidget *GetGrid() { return grid_; }
 
@@ -34,11 +34,9 @@ class LabelPair : public PairWidget {
     delete second_;
   };
 
-  void SetName(const char *name) override {  // TODO override
-    first_->SetName(name);
-  }
+  void SetName(const char *name) override { first_->SetName(name); }
 
-  const char *GetName() { return first_->GetValue(); }
+  const char *GetName() override { return first_->GetValue(); }
 
   void SetValue(const char *value) { second_->SetValue(value); }
 
@@ -87,11 +85,9 @@ class LabelDSpinButtonPair : public PairWidget {
     delete second_;
   };
 
-  void SetName(const char *name) override {  // TODO override
-    first_->SetName(name);
-  }
+  void SetName(const char *name) override { first_->SetName(name); }
 
-  const char *GetName() { return first_->GetValue(); }
+  const char *GetName() override { return first_->GetValue(); }
 
   void SetValue(const float value) { second_->SetValue(value); }
 
@@ -135,7 +131,7 @@ class LabelDSliderPair : public PairWidget {
     InitSlider();
   }
 
-  LabelDSliderPair(GtkAdjustment *adjustment) {
+  explicit LabelDSliderPair(GtkAdjustment *adjustment) {
     InitLabel();
     InitSlider(adjustment);
   }
@@ -147,7 +143,7 @@ class LabelDSliderPair : public PairWidget {
 
   void SetName(const char *name) override { first_->SetName(name); }
 
-  const char *GetName() { return first_->GetValue(); }
+  const char *GetName() override { return first_->GetValue(); }
 
   void SetValue(const float value) { second_->SetValue(value); }
 
@@ -201,7 +197,7 @@ class LabelColorButtonPair : public PairWidget {
     InitColorButton();
   };
 
-  LabelColorButtonPair(const char *name) {
+  explicit LabelColorButtonPair(const char *name) {
     InitLabel(name);
     InitColorButton();
   };
@@ -273,8 +269,8 @@ class LabelDropDownButtonPair : public PairWidget {
     second_->SetMother(mother);
   }
 
-  void CatchSignal() override{};
-  void SendSignal() override{};
+  void CatchSignal() override {};
+  void SendSignal() override {};
 
  private:
   Label *first_ = nullptr;
@@ -298,7 +294,7 @@ class LabelDropDownButtonPair : public PairWidget {
 
 class FileSaverDropDownButtonPair : public PairWidget {
  public:
-  FileSaverDropDownButtonPair(const char *const *strings) {
+  explicit FileSaverDropDownButtonPair(const char *const *strings) {
     InitFileSaver();
     InitDropDownButton(strings);
   }
@@ -313,15 +309,13 @@ class FileSaverDropDownButtonPair : public PairWidget {
 
   const char *GetFileName() { return file_->GetValue(); }
 
-  int GetExtension() { return drop_down_->GetValue(); }
-
   void SetMother(s21::Widget *mother) override {
     file_->SetMother(mother);
     drop_down_->SetMother(mother);
   }
 
-  void CatchSignal() override{};
-  void SendSignal() override{};
+  void CatchSignal() override {};
+  void SendSignal() override {};
 
  private:
   FileSaver *file_ = nullptr;
@@ -345,7 +339,7 @@ class FileSaverDSpinButtonPair : public PairWidget {
     InitDSpinButton();
   };
 
-  FileSaverDSpinButtonPair(GtkAdjustment *adjustment) {
+  explicit FileSaverDSpinButtonPair(GtkAdjustment *adjustment) {
     InitFileSaver();
     InitDSpinButton(adjustment);
   }

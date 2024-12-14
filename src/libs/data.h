@@ -3,7 +3,6 @@
 
 #include <cstring>
 #include <string>
-//#include <algorithm>
 #include <gtk/gtk.h>
 
 #include <initializer_list>
@@ -17,9 +16,9 @@ class VectorData {
     Allocate();
   }
 
-  VectorData(size_t size) : size_(size) { Allocate(); }
+  explicit VectorData(size_t size) : size_(size) { Allocate(); }
 
-  VectorData(std::initializer_list<float> const& items) {
+  explicit VectorData(std::initializer_list<float> const& items) {
     size_ = items.size();
     Allocate();
     auto it = items.begin();
@@ -115,12 +114,9 @@ class InfoData {
  public:
   InfoData() {}
 
-  InfoData(const char* file_name, size_t vertex_count = 0,
-           size_t edges_count = 0) {
-    file_name_ = file_name;
-    vertex_count_ = vertex_count;
-    edges_count_ = edges_count;
-  }
+  explicit InfoData(const char* file_name, size_t vertex_count = 0,
+           size_t edges_count = 0): file_name_(file_name),
+					                          vertex_count_(vertex_count), edges_count_(edges_count) {}
 
   InfoData(const InfoData& other) {
     if (this != &other) {

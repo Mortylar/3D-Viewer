@@ -54,3 +54,22 @@ TEST(ParserTest, Test5) {
   const char* file_name = "files/no_vertex_file";
   EXPECT_THROW(p.ParserMethod(file_name), std::invalid_argument);
 }
+
+TEST(ParserTest, Test_6) {
+  s21::Parser p;
+  s21::Figure* f = s21::Figure::GetInstance();
+  const char* file_name = "files/cube_test";
+  p.ParserMethod(file_name);
+
+  size_t orig_count = 8;
+  EXPECT_EQ(orig_count, f->GetVertexCount());
+
+  orig_count = 14;
+  EXPECT_EQ(orig_count, f->GetTextures().size() / 3);
+
+  orig_count = 6;
+  EXPECT_EQ(orig_count, f->GetNormals().size() / 3);
+
+  orig_count = 12;
+  EXPECT_EQ(orig_count, f->GetSurfacesCount());
+}
